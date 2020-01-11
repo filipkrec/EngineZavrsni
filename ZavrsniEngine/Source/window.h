@@ -29,7 +29,7 @@ namespace engine {
 		~Window();
 		bool closed() const;
 		void update();
-		void clear() const;
+		void clear();
 		bool toggleVsync();
 		void getMousePosition(double& x, double& y);
 		

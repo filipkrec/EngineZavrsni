@@ -22,11 +22,6 @@ namespace engine{
 
 	void Window::update() 
 	{
-		if (_requireInputReset == true)
-		{
-			_requireInputReset = false;
-			resetInputPress();
-		}
 		glfwPollEvents();
 		glfwGetFramebufferSize(_window, &_width, &_height);
 		glfwSwapBuffers(_window);
@@ -96,8 +91,13 @@ namespace engine{
 		return _Vsync;
 	}
 
-	void Window::clear() const
+	void Window::clear()
 	{
+		if (_requireInputReset == true)
+		{
+			_requireInputReset = false;
+			resetInputPress();
+		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
