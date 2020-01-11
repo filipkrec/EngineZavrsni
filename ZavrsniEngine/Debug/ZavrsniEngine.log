@@ -1,1 +1,5 @@
-﻿  ZavrsniEngine.vcxproj -> C:\Users\ficom\source\repos\ZavrsniEngine\Debug\ZavrsniEngine.exe
+﻿  Matrix4.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\Matrix4.cpp(10,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+  Generating Code...
+  ZavrsniEngine.vcxproj -> C:\Users\ficom\source\repos\ZavrsniEngine\Debug\ZavrsniEngine.exe

@@ -1,0 +1,104 @@
+#include "Vector2.h"
+
+namespace math {
+	Vector2::Vector2()
+	{
+		x = 0.0f;
+		y = 0.0f;
+	}
+
+	Vector2::Vector2(const float& x, const float& y)
+	{
+		this->x = x;
+		this->y = y;
+	}
+
+	Vector2& Vector2::add(const Vector2& other)
+	{
+		y += other.y;
+		x += other.x;
+
+		return *this;
+	}
+
+	Vector2& Vector2::subtract(const Vector2& other)
+	{
+		y -= other.y;
+		x -= other.x;
+
+		return *this;
+	}
+
+	Vector2& Vector2::multiply(const Vector2& other)
+	{
+		y *= other.y;
+		x *= other.x;
+
+		return *this;
+	}
+
+	Vector2& Vector2::divide(const Vector2& other)
+	{
+		y /= other.y;
+		x /= other.x;
+
+		return *this;
+	}
+
+	Vector2 operator+(Vector2 left, const Vector2& right)
+	{
+		return left.add(right);
+	}
+
+	Vector2 operator-(Vector2 left, const Vector2& right)
+	{
+		return left.subtract(right);
+	}
+
+	Vector2 operator*(Vector2 left, const Vector2& right)
+	{
+		return left.multiply(right);
+	}
+
+	Vector2 operator/(Vector2 left, const Vector2& right)
+	{
+		return left.divide(right);
+	}
+
+	Vector2& Vector2::operator+=(const Vector2& right)
+	{
+		return add(right);
+	}
+
+	Vector2& Vector2::operator-=(const Vector2& right)
+	{
+		return subtract(right);
+	}
+
+	Vector2& Vector2::operator*=(const Vector2& right)
+	{
+		return multiply(right);
+	}
+
+	Vector2& Vector2::operator/=(const Vector2& right)
+	{
+		return divide(right);
+	}
+
+	bool Vector2::operator==(const Vector2& right)
+	{
+		return (right.x == x && right.y == y);
+	}
+
+	bool Vector2::operator!=(const Vector2& right)
+	{
+		return (right.x != x && right.y != y);
+	}
+
+	std::ostream& operator<<(std::ostream& stream, const Vector2& vector2)
+	{
+		return stream << "Vector2: " << vector2.x << "," << vector2.y;
+	}
+
+
+}
