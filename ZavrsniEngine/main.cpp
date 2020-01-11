@@ -7,13 +7,34 @@ int main()
 {
 	using namespace engine;
 	Window* display = new Window("Display", 1280, 920);
-	double x, y;
+
 	while (display)
 	{
 		display->update();
-		display->getMousePosition(x, y);
-		std::cout << x << "," << y << std::endl;
-		std::cout << display->getHeight() << "," << display->getWidth() << std::endl;
+		
+		if (display->getKey(GLFW_KEY_A))
+		{
+			std::cout << "A" << std::endl;
+		}
+		/*
+		if (display->getKeyPressed(GLFW_KEY_A))
+		{
+			std::cout << "a" << std::endl;
+		}
+		*/
+
+		if (display->getMouseButton(GLFW_MOUSE_BUTTON_1))
+		{
+			std::cout << "LMB" << std::endl;
+		}
+
+		/*
+		if (display->getMouseButtonPressed(GLFW_MOUSE_BUTTON_1))
+		{
+			std::cout << "l" << std::endl;
+		}
+		*/
+
 		display->clear();
 	}
 
