@@ -6,26 +6,26 @@
 
 namespace engine {
 
-#define MAX_KEYS 1024
-#define MAX_BUTTONS 32
+#define MAX_KEYS 348
+#define MAX_BUTTONS 8
 	class Window
 	{
 	private:
 		const char* _title;
 		int _width, _height;
 		GLFWwindow* _window;
-		bool _closed;
 
-		bool _Keys[MAX_KEYS];
-		bool _KeysPressed[MAX_KEYS];
-		bool _MouseButtons[MAX_BUTTONS];
-		bool _MouseButtonsPressed[MAX_BUTTONS];
+		bool _keys[MAX_KEYS];
+		bool _keysPressed[MAX_KEYS];
+		bool _mouseButtons[MAX_BUTTONS];
+		bool _mouseButtonsPressed[MAX_BUTTONS];
 		bool _requireInputReset;
-
-		bool _Vsync;
+		
+		bool _fullscreen;
+		bool _vsync;
 		double _mouseX, _mouseY;
 	public:
-		Window(const char* title, int width, int height);
+		Window(const char* title, int width, int height, bool fullscreen = false);
 		~Window();
 		bool closed() const;
 		void update();

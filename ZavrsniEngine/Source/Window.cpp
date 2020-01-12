@@ -6,11 +6,12 @@ namespace engine {
 	void key_pressed(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void mouse_button_pressed(GLFWwindow* window, int button, int action, int mods);
 
-	Window::Window(const char* title, int width, int height)
+	Window::Window(const char* title, int width, int height, bool fullscreen)
 	{
 		_title = title;
 		_width = width;
 		_height = height;
+		_fullscreen = fullscreen;
 
 		init();
 	}
@@ -40,7 +41,12 @@ namespace engine {
 			glfwTerminate();
 			return;
 		}
-		_window = glfwCreateWindow(_width, _height, _title, NULL, NULL);
+
+		if(_fullscreen)
+			_window = glfwCreateWindow(_width, _height, _title, glfwGetPrimaryMonitor(), NULL); //fullscreen
+		else
+			_window = glfwCreateWindow(_width, _height, _title, NULL, NULL); //windowed
+
 		if (!_window)
 		{
 			std::cout << "Failed to create GLFW window" << std::endl;
@@ -58,11 +64,11 @@ namespace engine {
 		glfwSetMouseButtonCallback(_window, mouse_button_pressed);
 		//postavljanje svih input booleana na false
 		resetInputPress();
-		memcpy(_KeysPressed, _Keys, MAX_KEYS);
-		memcpy(_MouseButtonsPressed, _MouseButtons, MAX_BUTTONS);
+		memcpy(_keysPressed, _keys, MAX_KEYS);
+		memcpy(_mouseButtonsPressed, _mouseButtons, MAX_BUTTONS);
 
 		glfwSwapInterval(0); //vsync
-		_Vsync = false;
+		_vsync = false;
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //enable texture transparency 
@@ -77,18 +83,18 @@ namespace engine {
 
 	bool Window::toggleVsync()
 	{
-		if (_Vsync == false)
+		if (_vsync == false)
 		{
-			_Vsync = true;
+			_vsync = true;
 			glfwSwapInterval(1);
 		}
 		else
 		{
-			_Vsync = false;
+			_vsync = false;
 			glfwSwapInterval(0);
 		}
 
-		return _Vsync;
+		return _vsync;
 	}
 
 	void Window::clear()
@@ -118,29 +124,29 @@ namespace engine {
 	void Window::resetInputPress()
 	{
 		for (int i = 0; i < MAX_KEYS; ++i)
-			_Keys[i] = false;
+			_keys[i] = false;
 		for (int i = 0; i < MAX_BUTTONS; ++i)
-			_MouseButtons[i] = false;
+			_mouseButtons[i] = false;
 	}
 
 	bool Window::getKeyPressed(int key)
 	{
-		return _KeysPressed[key];
+		return _keysPressed[key];
 	}
 
 	bool Window::getKey(int key)
 	{
-		return _Keys[key];
+		return _keys[key];
 	}
 
 	bool Window::getMouseButtonPressed(int mouseButton)
 	{
-		return _MouseButtonsPressed[mouseButton];
+		return _mouseButtonsPressed[mouseButton];
 	}
 
 	bool Window::getMouseButton(int mouseButton)
 	{
-		return _MouseButtons[mouseButton];
+		return _mouseButtons[mouseButton];
 	}
 
 
@@ -157,13 +163,13 @@ namespace engine {
 		Window* win = (Window*)glfwGetWindowUserPointer(window);
 		if (action == GLFW_PRESS)
 		{
-			win->_Keys[key] = true;
-			win->_KeysPressed[key] = true;
+			win->_keys[key] = true;
+			win->_keysPressed[key] = true;
 			win->_requireInputReset = true;
 		}
 		else if (action == GLFW_RELEASE)
 		{
-			win->_KeysPressed[key] = false;
+			win->_keysPressed[key] = false;
 		}
 	}
 
@@ -172,13 +178,13 @@ namespace engine {
 		Window* win = (Window*)glfwGetWindowUserPointer(window);
 		if (action == GLFW_PRESS)
 		{
-			win->_MouseButtons[button] = true;
-			win->_MouseButtonsPressed[button] = true;
+			win->_mouseButtons[button] = true;
+			win->_mouseButtonsPressed[button] = true;
 			win->_requireInputReset = true;
 		}
 		else if (action == GLFW_RELEASE)
 		{
-			win->_MouseButtonsPressed[button] = false;
+			win->_mouseButtonsPressed[button] = false;
 		}
 	}
 }
