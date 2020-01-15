@@ -4,7 +4,6 @@
 #include "Matrix4.h"
 
 namespace math {
-	//staviti ovo u math.h
 	inline float toRadians(float degrees)
 	{
 		return degrees * (M_PI / 180.0f);
@@ -117,7 +116,7 @@ namespace math {
 		return multiply(other);
 	}
 
-	Matrix4 Matrix4::ortographic(float left, float right, float bottom, float top, float near, float far)
+	Matrix4 Matrix4::orthographic(float left, float right, float bottom, float top, float near, float far)
 	{
 		Matrix4 result;
 

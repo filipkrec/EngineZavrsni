@@ -1,0 +1,11 @@
+﻿  main.cpp
+  Shader.cpp
+  Sprite.cpp
+  Matrix4.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\Matrix4.cpp(10,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  Vector2.cpp
+  Vector3.cpp
+  Vector4.cpp
+  Renderer.cpp
+  Window.cpp
+LINK : fatal error LNK1181: cannot open input file 'gorilla.lib'
