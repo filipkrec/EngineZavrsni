@@ -1,6 +1,7 @@
 #version 330 core
 
 layout (location = 0) in vec4 position;
+layout (location = 1) in vec4 color;
 
 uniform mat4 projection_matrix;
 uniform mat4 vm_matrix = mat4(1.0);
@@ -16,5 +17,5 @@ void main()
 {
 	gl_Position = position;
 	vs_out.position = ml_matrix * position;
-	vs_out.color = vec4(1.0,0.0,0.0,1.0);
+	vs_out.color = color;
 }

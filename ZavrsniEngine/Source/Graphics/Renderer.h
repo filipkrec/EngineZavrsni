@@ -9,16 +9,19 @@
 namespace graphics {
 
 #define SHADER_VERTEX_INDEX					0
+#define SHADER_COLOR_INDEX					1
+
 #define MAX_SPRITES							100
 #define MAX_INDEX_BUFFER_SIZE				sizeof(unsigned int) * MAX_SPRITES
 #define MAX_VERTEX_BUFFER_SIZE				sizeof(VertexData) * MAX_SPRITES
 
 	struct VertexData {
 		math::Vector3 Position;
+		unsigned int Color;
 
 		bool operator==(const VertexData& right)
 		{
-			return (Position == right.Position);
+			return (Position == right.Position && Color == right.Color);
 		}
 	};
 

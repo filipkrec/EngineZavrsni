@@ -18,7 +18,9 @@ namespace graphics {
 		glBindBuffer(GL_ARRAY_BUFFER, _VBO); 
 		glBufferData(GL_ARRAY_BUFFER, MAX_VERTEX_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW); //Odredivanje podataka u bufferu A velicine B, nullptr za data jer je mapirana kasnije, dynamic draw za brzi drawcall
 		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)0); //1. atribut na indeksu 0, 3 floata, ne treba normalizacija, svaki vertex velicine vertexdata, lokacija na 0. mjestu svake vertexdate
+		glVertexAttribPointer(SHADER_COLOR_INDEX, 1, GL_UNSIGNED_INT, GL_TRUE, sizeof(VertexData), (const GLvoid*)offsetof(VertexData, VertexData::Color)); //1. atribut na indeksu 0, 3 floata, ne treba normalizacija, svaki vertex velicine vertexdata, lokacija na 0. mjestu svake vertexdate
 		glEnableVertexAttribArray(SHADER_VERTEX_INDEX);//enable
+		glEnableVertexAttribArray(SHADER_COLOR_INDEX);//enable
 
 
 		glGenBuffers(1, &_IBO); //generiranje index buffera, stavljnaje ID-a u IBO
@@ -44,17 +46,21 @@ namespace graphics {
 		const unsigned int color = sprite->getColor();
 		VertexData temp;
 
-		temp.Position = position; 
-		unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
+		temp.Position = position;
+		temp.Color = color;
+		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
 
 		temp.Position = math::Vector3(position.x, position.y + size.y, position.z);
-		unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
+		temp.Color = color;
+		const unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
 
 		temp.Position = math::Vector3(position.x + size.x, position.y + size.y, position.z);
-		unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
+		temp.Color = color;
+		const unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
 
 		temp.Position = math::Vector3(position.x + size.x, position.y, position.z);
-		unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
+		temp.Color = color;
+		const unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
 
 		//Rasporedivanje odgovarajucih indexa u 2 polovice(trokuta) za crtanje
 		*_indices = indexA;
