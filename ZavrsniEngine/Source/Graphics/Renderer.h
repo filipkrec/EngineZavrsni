@@ -9,18 +9,34 @@
 namespace graphics {
 
 #define SHADER_VERTEX_INDEX					0
+#define MAX_SPRITES							100
+#define MAX_INDEX_BUFFER_SIZE				sizeof(unsigned int) * MAX_SPRITES
+#define MAX_VERTEX_BUFFER_SIZE				sizeof(VertexData) * MAX_SPRITES
 
 	struct VertexData {
 		math::Vector3 Position;
+
+		bool operator==(const VertexData& right)
+		{
+			return (Position == right.Position);
+		}
 	};
 
 	class Renderer
 	{
 	private:
 		GLuint _VBO;
-		VertexData* _vertexBufferData;
+		GLuint _IBO;
+		int test = 0;
 
-		int _count;
+		unsigned int* _indices;
+		VertexData* _vertexBufferData;
+		VertexData* _vertexBufferDataBegin;
+
+		unsigned int _count;
+		unsigned int _indexCount;
+	private: 
+		void init();
 	public:
 		Renderer();
 		~Renderer();
@@ -30,7 +46,7 @@ namespace graphics {
 		void end();
 		void flush();
 	private:
-		void init();
+		const unsigned int& setIndex(VertexData& current);
 	};
 
 }
