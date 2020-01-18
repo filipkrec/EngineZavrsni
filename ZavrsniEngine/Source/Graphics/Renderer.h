@@ -11,7 +11,7 @@ namespace graphics {
 #define SHADER_VERTEX_INDEX					0
 #define SHADER_COLOR_INDEX					1
 
-#define MAX_SPRITES							100
+#define MAX_SPRITES							10000
 #define MAX_INDEX_BUFFER_SIZE				sizeof(unsigned int) * MAX_SPRITES
 #define MAX_VERTEX_BUFFER_SIZE				sizeof(VertexData) * MAX_SPRITES
 
@@ -30,6 +30,7 @@ namespace graphics {
 	private:
 		GLuint _VBO;
 		GLuint _IBO;
+		GLuint _VAO;
 		int test = 0;
 
 		unsigned int* _indices;

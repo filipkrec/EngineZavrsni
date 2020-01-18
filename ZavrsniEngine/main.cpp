@@ -5,7 +5,7 @@
 #include "Source/Graphics/Renderer.h"
 #include "Source/Graphics/Sprite.h"
 #include <iostream>
-#define AT_JOB 1
+#define AT_JOB 0
 
 
 int main()
@@ -22,10 +22,10 @@ int main()
 	shader->enable();
 	Renderer renderer;
 	Sprite* sprite = new Sprite(0.0f, 0.0f, 0.1f, 0.1f, 0xff00ff00);
-	Sprite* sprite2 = new Sprite(-1.0f, 0.0f, 0.1f, 0.1f, 0xff00ff00);
+	Sprite* sprite2 = new Sprite(-1.0f, 0.0f, 0.1f, 0.1f, 0xfffc2011);
 	Sprite* sprite3 = new Sprite(0.0f, -1.0f, 0.1f, 0.1f, 0xff00ff00);
 
-	while (display)
+	while (!display->closed())
 	{
 		display->clear();
 
@@ -38,6 +38,4 @@ int main()
 
 		display->update();
 	}
-
-	system("PAUSE");
 }

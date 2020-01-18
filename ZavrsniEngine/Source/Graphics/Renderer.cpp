@@ -9,33 +9,37 @@ namespace graphics {
 
 	Renderer::~Renderer()
 	{
+		glDeleteBuffers(1, &_IBO); //brisanje buffer objecta sa zadanim indexom
 		glDeleteBuffers(1, &_VBO); //brisanje buffer objecta sa zadanim indexom
 	}
 
 	void Renderer::init()
 	{
+		glGenVertexArrays(1,&_VAO); //globalni VertexArrayObject bindan za potrebe novijih verzija OpenGL-a
+		glBindVertexArray(_VAO); 
+
 		glGenBuffers(1, &_VBO); //generiranje vertex buffera, stavlanje ID-a u VBO
-		glBindBuffer(GL_ARRAY_BUFFER, _VBO); 
+		glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+		glGenBuffers(1, &_IBO); //generiranje index buffera, stavljnaje ID-a u IBO
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_IBO);
+
 		glBufferData(GL_ARRAY_BUFFER, MAX_VERTEX_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW); //Odredivanje podataka u bufferu A velicine B, nullptr za data jer je mapirana kasnije, dynamic draw za brzi drawcall
 		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)0); //1. atribut na indeksu 0, 3 floata, ne treba normalizacija, svaki vertex velicine vertexdata, lokacija na 0. mjestu svake vertexdate
-		glVertexAttribPointer(SHADER_COLOR_INDEX, 1, GL_UNSIGNED_INT, GL_TRUE, sizeof(VertexData), (const GLvoid*)offsetof(VertexData, VertexData::Color)); //1. atribut na indeksu 0, 3 floata, ne treba normalizacija, svaki vertex velicine vertexdata, lokacija na 0. mjestu svake vertexdate
+		glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(VertexData), (const GLvoid*)offsetof(VertexData, VertexData::Color)); //1. atribut na indeksu 1, 4 unsigned bytea (4 bytea = 1 int), treba normalizacija, svaki vertex velicine vertexdata, lokacija na mjestu offseta boje svake vertexdate
 		glEnableVertexAttribArray(SHADER_VERTEX_INDEX);//enable
 		glEnableVertexAttribArray(SHADER_COLOR_INDEX);//enable
 
 
-		glGenBuffers(1, &_IBO); //generiranje index buffera, stavljnaje ID-a u IBO
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_INDEX_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW); //Odredivanje podataka u bufferu A velicine B, nullptr za data jer je mapirana kasnije, dynamic draw za brzi drawcall
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0); 
+		glBindVertexArray(0);
 	}
 
 	void Renderer::begin()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, _VBO); 
+		glBindVertexArray(_VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_IBO);
 		_vertexBufferData = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY); //mapiranje vertexbufferdata kao tocke unosa vertex podataka;
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
 		_indices = (unsigned int*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY); //mapiranje indices kao tocke unosa index buffer podataka;
 	}
 
@@ -86,13 +90,20 @@ namespace graphics {
 
 		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		glBindVertexArray(0);
 		//ciscenje da se moze crtat
 	}
 
 	void Renderer::flush()
 	{
+		glBindVertexArray(_VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
+
 		glDrawElements(GL_TRIANGLES, _indexCount, GL_UNSIGNED_INT, (void*)0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 		_indexCount = 0;
 		_count = 0;
 		//crtanje
