@@ -30,6 +30,7 @@ namespace math {
 		}
 	}
 
+
 	Matrix4::Matrix4(float inputElements[])
 	{
 		for (int i = 0; i < 4 * 4; ++i)
@@ -91,6 +92,17 @@ namespace math {
 			columns[0].z * other.x + columns[1].z * other.y + columns[2].z * other.z + columns[3].z * other.w,
 			columns[0].w * other.x + columns[1].w * other.y + columns[2].w * other.z + columns[3].w * other.w
 		);
+	}
+
+
+	bool Matrix4::isEmpty()
+	{               
+		for (int i = 0; i < 4 * 4; ++i)
+		{
+			if (elements[i] != 0.0f)
+				return false;
+		}
+		return true;
 	}
 
 	Matrix4 operator*(Matrix4 left, const Matrix4& right)

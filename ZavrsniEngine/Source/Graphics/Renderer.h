@@ -31,7 +31,6 @@ namespace graphics {
 		GLuint _VBO;
 		GLuint _IBO;
 		GLuint _VAO;
-		int test = 0;
 
 		unsigned int* _indices;
 		VertexData* _vertexBufferData;

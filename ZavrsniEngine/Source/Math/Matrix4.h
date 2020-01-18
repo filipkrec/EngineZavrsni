@@ -20,6 +20,8 @@ namespace math {
 		Vector3 multiply(const Vector3& other) const;
 		Vector4 multiply(const Vector4& other) const;
 
+		bool isEmpty();
+
 		static Matrix4 orthographic(float left, float right, float bottom, float top, float near, float far);
 
 		static Matrix4 translation(const Vector3& translation);

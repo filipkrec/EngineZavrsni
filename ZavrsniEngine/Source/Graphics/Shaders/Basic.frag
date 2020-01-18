@@ -10,5 +10,5 @@ in DATA
 
 void main()
 {
-	color = fs_in.color; 
+	color = fs_in.color;	
 }
