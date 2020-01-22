@@ -9,8 +9,13 @@ namespace graphics {
 #else
 			new Shader("C:/Users/fkrec/source/repos/EngineZavrsni/ZavrsniEngine/Source/Graphics/Shaders/Basic.vert", "C:/Users/fkrec/source/repos/EngineZavrsni/ZavrsniEngine/Source/Graphics/Shaders/Basic.frag");
 #endif
+		else
+		_shader = shader;
+		
 		if (renderer == nullptr) //ako nije unesen renderer defaultni renderer
 			_renderer = new Renderer();
+		else
+			_renderer = renderer;
 		
 		if (projectionMatrix.isEmpty()) //ako nije unesena matrica jedinicna matrica
 			_projectionMatrix = math::Matrix4(1.0);
@@ -18,8 +23,15 @@ namespace graphics {
 			_projectionMatrix = projectionMatrix;
 
 		_shader->enable();
+		int textureIds[] =
+		{
+			 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
+			10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+			20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+			30, 31
+		};
+		_shader->setUniform1iv("textures",32, textureIds);
 		_shader->setUniformMat4("projection_matrix", _projectionMatrix);
-		_shader->disable();
 	}
 	Layer::~Layer() {
 		delete _shader;

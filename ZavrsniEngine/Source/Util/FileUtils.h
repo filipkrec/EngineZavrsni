@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <FreeImage.h>
 
 char* read_file(const char* filepath)
 {
@@ -14,3 +15,4 @@ char* read_file(const char* filepath)
 
 	return data;
 }
+

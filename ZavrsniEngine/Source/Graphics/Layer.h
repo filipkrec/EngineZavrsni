@@ -8,10 +8,10 @@ namespace graphics {
 	class Layer
 	{
 	protected:
-		Renderer* _renderer;
-		Shader* _shader;
 		std::vector<Sprite*> _sprites;
 		math::Matrix4 _projectionMatrix;
+		Renderer* _renderer;
+		Shader* _shader;
 	public:
 		Layer(
 			math::Matrix4 projectionMatrix = math::Matrix4(),

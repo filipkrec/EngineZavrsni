@@ -12,7 +12,7 @@ namespace graphics {
 	Shader::~Shader() {
 		glDeleteProgram(_shaderID);
 	}
-	unsigned int Shader::load(const char* vertPath, const char* fragPath)
+	GLuint Shader::load(const char* vertPath, const char* fragPath)
 	{
 		unsigned int program = glCreateProgram();
 		unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
