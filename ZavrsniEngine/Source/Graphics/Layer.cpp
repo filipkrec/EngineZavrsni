@@ -29,8 +29,8 @@ namespace graphics {
 			10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
 			20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
 			30, 31
-		};
-		_shader->setUniform1iv("textures",32, textureIds);
+		}; 
+		_shader->setUniform1iv("textures",32, textureIds); //textureId's popunjeni za sampler sa maximalnim brojam sampleova (32 za openGL)
 		_shader->setUniformMat4("projection_matrix", _projectionMatrix);
 	}
 	Layer::~Layer() {

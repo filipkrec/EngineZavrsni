@@ -10,8 +10,8 @@
 namespace graphics {
 
 #define SHADER_VERTEX_INDEX					0
-#define SHADER_TEXTURE_SLOT_INDEX			2
-#define SHADER_TEXTURE_CORDS_INDEX			1
+#define SHADER_TEXTURE_SLOT_INDEX			1
+#define SHADER_TEXTURE_CORDS_INDEX			2
 #define SHADER_COLOR_INDEX					3
 
 #define MAX_SPRITES							10000
@@ -26,7 +26,7 @@ namespace graphics {
 
 		bool operator==(const VertexData& right)
 		{
-			return (Position == right.Position && Color == right.Color && TextureSlot == right.TextureSlot);
+			return (Position == right.Position && Color == right.Color && TextureSlot == right.TextureSlot && TextureCoordinate == right.TextureCoordinate);
 		}
 	};
 
@@ -40,6 +40,7 @@ namespace graphics {
 		unsigned int* _indices;
 		VertexData* _vertexBufferData;
 		VertexData* _vertexBufferDataBegin;
+		unsigned int* _indicesBegin;
 
 		unsigned int _count;
 		unsigned int _indexCount;

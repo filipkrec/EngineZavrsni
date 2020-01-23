@@ -49,7 +49,9 @@ namespace graphics {
 		glBindTexture(GL_TEXTURE_2D, _textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //omogucuje minificiranje (smanjenje kvalitete ukoliko je textura manja u prikazu od originala)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //omogucuje magnificiranje (povecanje kvalitete ukoliko je textura veca u prikazu od originala)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, pixels);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); //onemogucuje ponavljanje ucitanih tekstura
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER); //onemogucuje ponavljanje ucitanih tekstura
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		delete[] pixels;

@@ -1,8 +1,8 @@
 #version 330 core
 
 layout (location = 0) in vec4 position;
-layout (location = 2) in float textureSlot;
-layout (location = 1) in vec2 textureCoordinates;
+layout (location = 1) in float textureSlot;
+layout (location = 2) in vec2 textureCoordinates;
 layout (location = 3) in vec4 color;
 
 uniform mat4 projection_matrix; // camera matrix 
@@ -20,7 +20,7 @@ out DATA
 
 void main()
 {
-	gl_Position = position * projection_matrix * view_matrix * model_matrix; //pozicija u svijetu
+	gl_Position = position; //* projection_matrix * view_matrix * model_matrix; //pozicija u svijetu
 	vs_out.position = model_matrix * position; //pozicija za lightning
 	vs_out.color = color;
 	vs_out.textureSlot = textureSlot;

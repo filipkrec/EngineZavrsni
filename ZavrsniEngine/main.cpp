@@ -5,8 +5,10 @@
 #include "Source/Graphics/Renderer.h"
 #include "Source/Graphics/Sprite.h"
 #include "Source/Graphics/Layer.h"
+#include "Source/Util/Timer.h"
 #include <iostream>
 #define AT_JOB 0
+
 
 #if 1
 int main()
@@ -15,23 +17,34 @@ int main()
 	using namespace graphics;
 	Window* display = new Window("Display", 1280, 920);
 	Layer* layer = new Layer();
-	Texture* texture = new Texture("test.png");
-	Sprite* sprite = new Sprite(0.0f, 0.0f, 0.5f, 0.5f, 0xffffff00);
-	Sprite* sprite2 = new Sprite(-1.0f, 0.0f, 0.5f, 0.5f, texture);
-	Sprite* sprite3 = new Sprite(-1.0f, -1.0f, 0.5f, 0.5f, 0xff00ffff);
-	Sprite* sprite4 = new Sprite(0.0f, -1.0f, 0.5f, 0.5f, texture);
-	layer->add(sprite);
-	layer->add(sprite2);
-	layer->add(sprite3);
-	layer->add(sprite4);
-
+	Texture* texture = new Texture("test2.png");
+	Texture* texture2 = new Texture("test3.png");
+	Sprite* testBoja = new Sprite(-1.0f, -1.0f, 2.0f, 2.0f, texture2);
+	Sprite* test = new Sprite(-0.3f, -0.3f, 0.5f, 0.5f, texture);
+	layer->add(testBoja);
+	layer->add(test);
+	Timer* timer = new Timer();
+	Timer* timerPosition = new Timer();
+	int fps = 0;
 	while (!display->closed())
 	{
 		display->clear();
-		
 		layer->render();
-
 		display->update();
+		fps++;
+		if (timerPosition->elapsed() >= 0.01f)
+		{
+			test->RotatePosition(1);
+			timerPosition->reset();
+		}
+		test->Rotate(1);
+
+		if (timer->elapsed() >= 1.0f)
+		{
+			std::cout << fps << std::endl;
+			timer->reset();
+			fps = 0;
+		}
 	}
 }
 #endif
@@ -41,34 +54,33 @@ int main()
 {
 	using namespace engine;
 	using namespace graphics;
-	using namespace math;
-
-	Window window("Sparky!", 960, 540);
-
+	Window* display = new Window("Display", 1280, 920);
 	Layer* layer = new Layer();
-	layer->_shader->enable();
-	glActiveTexture(GL_TEXTURE0);
-	Texture texture("test.png");
-	glBindTexture(GL_TEXTURE_2D, texture.getId());
-	layer->_shader->enable();
-	while (!window.closed())
+	Texture* texture = new Texture("test.png");
+	Texture* texture2 = new Texture("test2.png");
+	layer->add(new Sprite(-1.0f, -1.0f, 2.0f, 2.0f, 0xffff00ff));
+	for (float x = -1; x < 1; x += 0.5)
 	{
-		window.clear();
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0, 0);
-		glVertex2f(0, 0);
-		glTexCoord2f(0, 1);
-		glVertex2f(0, 4);
-		glTexCoord2f(1, 1);
-		glVertex2f(4, 4);
-		glTexCoord2f(1, 0);
-		glVertex2f(4, 0);
-		glEnd();
-
-		window.update();
+		for (float y = -1; y < 1; y += 0.5)
+		{
+			if(((int)(y*2) + (int)(x * 2)) % 8 != 0)
+				layer->add(new Sprite(x, y, 0.5f, 0.5f, texture2));
+		}
 	}
-
-	return 0;
+	Timer* timer = new Timer();
+	int fps = 0;
+	while (!display->closed())
+	{
+		display->clear();
+		layer->render();
+		display->update();
+		fps++;
+		if (timer->elapsed() >= 1.0f)
+		{
+			std::cout << fps << std::endl;
+			timer->reset();
+			fps = 0;
+		}
+	}
 }
 #endif

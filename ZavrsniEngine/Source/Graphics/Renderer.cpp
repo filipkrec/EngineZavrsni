@@ -5,11 +5,6 @@ namespace graphics {
 		:_count(0)
 	{
 		init();
-
-		_defaultCoordinates.push_back(math::Vector2(0, 0));
-		_defaultCoordinates.push_back(math::Vector2(0, 1));
-		_defaultCoordinates.push_back(math::Vector2(1, 1));
-		_defaultCoordinates.push_back(math::Vector2(1, 0));
 	}
 
 	Renderer::~Renderer()
@@ -30,8 +25,8 @@ namespace graphics {
 
 		glBufferData(GL_ARRAY_BUFFER, MAX_VERTEX_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW); //Odredivanje podataka u bufferu A velicine B, nullptr za data jer je mapirana kasnije, dynamic draw za brzi drawcall
 		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)0); //1. atribut na indeksu 0, 3 floata, ne treba normalizacija, svaki vertex velicine vertexdata, lokacija na 0. mjestu svake vertexdate
-		glVertexAttribPointer(SHADER_TEXTURE_CORDS_INDEX, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)(offsetof(VertexData, VertexData::TextureCoordinate)));
 		glVertexAttribPointer(SHADER_TEXTURE_SLOT_INDEX, 1, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)(offsetof(VertexData, VertexData::TextureSlot)));
+		glVertexAttribPointer(SHADER_TEXTURE_CORDS_INDEX, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)(offsetof(VertexData, VertexData::TextureCoordinate)));
 		glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(VertexData), (const GLvoid*)offsetof(VertexData, VertexData::Color)); //1. atribut na indeksu 1, 4 unsigned bytea (4 bytea = 1 int), treba normalizacija, svaki vertex velicine vertexdata, lokacija na mjestu offseta boje svake vertexdate
 		glEnableVertexAttribArray(SHADER_VERTEX_INDEX);//enable
 		glEnableVertexAttribArray(SHADER_COLOR_INDEX);//enable
@@ -54,14 +49,15 @@ namespace graphics {
 
 	void Renderer::submit(const Sprite* sprite)
 	{
-		const math::Vector3& position = sprite->getPosition();
+		const math::Vector3* position = sprite->getPosition();
 		const math::Vector2& size = sprite->getSize();
 		const unsigned int color = sprite->getColor();
 		const Texture* texture = sprite->getTexture();
+		const math::Vector2* textureCoordinates = sprite->getTextureCoordinates();
 		int textureSlot;
 		if (texture != nullptr) 
 		{
-			textureSlot = getTextureSlot(texture->getId());
+			textureSlot = getTextureSlot(texture->getId()); //ukoliko je tekstura vec ucitana, uzima se postojeci texture slot, inace uzima sljedeci
 		}
 		else
 		{
@@ -70,28 +66,28 @@ namespace graphics {
 
 		VertexData temp;
 
-		temp.Position = position;
+		temp.Position = position[0];
 		temp.Color = color;
 		temp.TextureSlot = textureSlot;
-		temp.TextureCoordinate = _defaultCoordinates[0];
+		temp.TextureCoordinate = textureCoordinates[0];
 		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
 
-		temp.Position = math::Vector3(position.x, position.y + size.y, position.z);
+		temp.Position = position[1];
 		temp.Color = color;
 		temp.TextureSlot = textureSlot;
-		temp.TextureCoordinate = _defaultCoordinates[1];
+		temp.TextureCoordinate = textureCoordinates[1];
 		const unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
 
-		temp.Position = math::Vector3(position.x + size.x, position.y + size.y, position.z);
+		temp.Position = position[2];
 		temp.Color = color;
 		temp.TextureSlot = textureSlot;
-		temp.TextureCoordinate = _defaultCoordinates[2];
+		temp.TextureCoordinate = textureCoordinates[2];
 		const unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
 
-		temp.Position = math::Vector3(position.x + size.x, position.y, position.z);
+		temp.Position = position[3];
 		temp.Color = color;
 		temp.TextureSlot = textureSlot;
-		temp.TextureCoordinate = _defaultCoordinates[3];
+		temp.TextureCoordinate = textureCoordinates[3];
 		const unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
 
 		//Rasporedivanje odgovarajucih indexa u 2 polovice(trokuta) za crtanje
@@ -127,14 +123,14 @@ namespace graphics {
 	{
 		for (int i = 0; i < _textures.size(); ++i)
 		{
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, _textures[i]);
+			glActiveTexture(GL_TEXTURE0 + i); //aktiviranje teksture slotova (0-i (max32))
+			glBindTexture(GL_TEXTURE_2D, _textures[i]); //bindanje svih aktivnih tekstura 
 		}
 
 		glBindVertexArray(_VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
 
-		glDrawElements(GL_TRIANGLES, _indexCount, GL_UNSIGNED_INT, (void*)0);
+		glDrawElements(GL_TRIANGLES, _indexCount, GL_UNSIGNED_INT, (void*)0);  //crtanje
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -185,7 +181,7 @@ namespace graphics {
 			}
 		}
 
-		if (_textures.size() >= 32)
+		if (_textures.size() >= 32) //ako su texture slotovi puni, prazni ih i poziva se dodatan draw call
 		{
 			end();
 			flush();
