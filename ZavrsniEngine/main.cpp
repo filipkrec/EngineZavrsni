@@ -16,28 +16,67 @@ int main()
 	using namespace engine;
 	using namespace graphics;
 	Window* display = new Window("Display", 1280, 920);
-	Layer* layer = new Layer();
-	Texture* texture = new Texture("test2.png");
-	Texture* texture2 = new Texture("test3.png");
-	Sprite* testBoja = new Sprite(-1.0f, -1.0f, 2.0f, 2.0f, texture2);
-	Sprite* test = new Sprite(-0.3f, -0.3f, 0.5f, 0.5f, texture);
-	layer->add(testBoja);
-	layer->add(test);
+	Layer* layer = new Layer(math::Matrix4::orthographic(-16.0f,16.0f,-9.0f,9.0f,-1.0f,1.0f));
+	Texture* texturePlanet = new Texture("test2.png");
+	Texture* textureSpace = new Texture("test3.png", true);
+	Texture* texturePlayer = new Texture("playertest.png");
+	Texture* texturePlanet2 = new Texture("test2.png");
+
+	for (int x = -9; x < 9; ++x)
+	{
+		for (int y = -16; y < 16; ++y)
+		{
+			layer->add(new Sprite(x, y, 0.9f, 0.9f, 1.0f, texturePlanet));
+		}
+	}
+
 	Timer* timer = new Timer();
 	Timer* timerPosition = new Timer();
+	Timer* timerBackground = new Timer();
+	struct PlayerState {
+		enum state {
+			UP,
+			DOWN,
+			LEFT,
+			RIGHT
+		};
+		state currentState;
+	};
+	PlayerState state;
+	state.currentState = state.RIGHT;
 	int fps = 0;
 	while (!display->closed())
 	{
 		display->clear();
-		layer->render();
-		display->update();
 		fps++;
+		if (display->getKey(GLFW_KEY_RIGHT))
+		{
+			if (state.currentState != state.RIGHT)
+			{
+				switch (state.currentState)
+				{
+				case state.UP:
+					break;
+				case state.DOWN:
+					break;
+				case state.LEFT:
+					break;
+				}
+			}
+		}
+
+		if (timerBackground->elapsed() >= 1.0f/60.0f)
+		{
+			//testBackground->Rotate(0.1);
+			timerBackground->reset();
+		}
+
 		if (timerPosition->elapsed() >= 0.01f)
 		{
-			test->RotatePosition(1);
+			//test->RotatePosition(1);
 			timerPosition->reset();
 		}
-		test->Rotate(1);
+		//test->Rotate(1);
 
 		if (timer->elapsed() >= 1.0f)
 		{
@@ -45,6 +84,8 @@ int main()
 			timer->reset();
 			fps = 0;
 		}
+		layer->render();
+		display->update();
 	}
 }
 #endif

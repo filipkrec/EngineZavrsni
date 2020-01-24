@@ -11,12 +11,12 @@ namespace graphics {
 		std::vector<Sprite*> _sprites;
 		math::Matrix4 _projectionMatrix;
 		Renderer* _renderer;
-		Shader* _shader;
+		Shader _shader;
 	public:
 		Layer(
-			math::Matrix4 projectionMatrix = math::Matrix4(),
-			Shader* shader = nullptr,
-			Renderer * renderer = nullptr
+			math::Matrix4 projectionMatrix = math::Matrix4(1.0),
+			Shader shader = Shader("Source/Graphics/Shaders/Basic.vert", "Source/Graphics/Shaders/Basic.frag"),
+			Renderer* renderer = new Renderer()
 			);
 		virtual ~Layer();
 		virtual void add(Sprite* sprite);

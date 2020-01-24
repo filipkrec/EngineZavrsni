@@ -2,13 +2,14 @@
 
 namespace graphics {
 	Renderer::Renderer()
-		:_count(0)
+		:_count(0),_indexCount(0)
 	{
 		init();
 	}
 
 	Renderer::~Renderer()
 	{
+		delete _indices;
 		glDeleteBuffers(1, &_IBO); //brisanje buffer objecta sa zadanim indexom
 		glDeleteBuffers(1, &_VBO); //brisanje buffer objecta sa zadanim indexom
 	}
@@ -95,13 +96,13 @@ namespace graphics {
 		_indices++;
 		*_indices = indexB;
 		_indices++;
-		*_indices = indexD;
+		*_indices = indexC;
 		_indices++;
-		*_indices = indexD;
-		_indices++;
-		*_indices = indexB;
+		*_indices = indexA;
 		_indices++;
 		*_indices = indexC;
+		_indices++;
+		*_indices = indexD;
 		_indices++;
 
 		_indexCount += 6;

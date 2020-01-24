@@ -2,27 +2,32 @@
 
 namespace graphics {
 
-	Sprite::Sprite(float x, float y, float width, float height, const unsigned int color)
+	Sprite::Sprite(float x, float y, float width, float height, float zindex, const unsigned int color)
 		: _size(math::Vector2(width, height)), _color(color),_texture(nullptr)
 	{
-		_position[0] = math::Vector3(x, y, 0);
-		_position[1] = math::Vector3(x, y + height, 0);
-		_position[2] = math::Vector3(x + width, y + height, 0);
-		_position[3] = math::Vector3(x + width, y, 0);
+		_textureCoordinates[0] = math::Vector2(0, 0);
+		_textureCoordinates[1] = math::Vector2(0, 0.9f);
+		_textureCoordinates[2] = math::Vector2(0.9f, 0.9f);
+		_textureCoordinates[3] = math::Vector2(0.9f, 0);
+
+		_position[0] = math::Vector3(x, y, zindex);
+		_position[1] = math::Vector3(x, y + height, zindex);
+		_position[2] = math::Vector3(x + width, y + height, zindex);
+		_position[3] = math::Vector3(x + width, y, zindex);
 	}
 
-	Sprite::Sprite(float x, float y, float width, float height, const Texture* texture)
-		: _size(math::Vector2(width, height)), _color(0xffffffff), _texture(texture)
+	Sprite::Sprite(float x, float y, float width, float height, float zindex, const Texture* texture)
+		: _size(math::Vector2(width, height)), _color(0x00000000), _texture(texture)
 	{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 1);
 		_textureCoordinates[2] = math::Vector2(1, 1);
 		_textureCoordinates[3] = math::Vector2(1, 0);
 
-		_position[0] = math::Vector3(x, y, 0);
-		_position[1] = math::Vector3(x, y + height, 0);
-		_position[2] = math::Vector3(x + width, y + height, 0);
-		_position[3] = math::Vector3(x + width, y, 0);
+		_position[0] = math::Vector3(x, y, zindex);
+		_position[1] = math::Vector3(x, y + height, zindex);
+		_position[2] = math::Vector3(x + width, y + height, zindex);
+		_position[3] = math::Vector3(x + width, y, zindex);
 	}
 
 

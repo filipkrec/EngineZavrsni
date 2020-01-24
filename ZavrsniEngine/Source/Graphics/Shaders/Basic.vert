@@ -20,7 +20,7 @@ out DATA
 
 void main()
 {
-	gl_Position = position; //* projection_matrix * view_matrix * model_matrix; //pozicija u svijetu
+	gl_Position = position * projection_matrix * view_matrix * model_matrix; //pozicija u svijetu
 	vs_out.position = model_matrix * position; //pozicija za lightning
 	vs_out.color = color;
 	vs_out.textureSlot = textureSlot;

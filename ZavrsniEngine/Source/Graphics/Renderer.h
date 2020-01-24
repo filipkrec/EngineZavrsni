@@ -15,7 +15,7 @@ namespace graphics {
 #define SHADER_COLOR_INDEX					3
 
 #define MAX_SPRITES							10000
-#define MAX_INDEX_BUFFER_SIZE				sizeof(unsigned int) * MAX_SPRITES
+#define MAX_INDEX_BUFFER_SIZE				sizeof(unsigned int) * MAX_SPRITES * 6
 #define MAX_VERTEX_BUFFER_SIZE				sizeof(VertexData) * MAX_SPRITES
 
 	struct VertexData {
@@ -45,7 +45,6 @@ namespace graphics {
 		unsigned int _count;
 		unsigned int _indexCount;
 		std::vector<GLuint> _textures;
-		std::vector<math::Vector2> _defaultCoordinates;
 	private: 
 		void init();
 		unsigned int getTextureSlot(unsigned int textureId);

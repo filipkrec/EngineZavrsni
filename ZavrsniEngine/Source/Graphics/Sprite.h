@@ -15,8 +15,8 @@ namespace graphics {
 		math::Vector2 _textureCoordinates[4];
 	private:
 	public:
-		Sprite(float x, float y, float width, float height, const unsigned int color);
-		Sprite(float x, float y, float width, float height, const Texture* texture);
+		Sprite(float x, float y, float width, float height, float zindex, const unsigned int color);
+		Sprite(float x, float y, float width, float height, float zindex, const Texture* texture);
 
 		void Rotate(float degrees);
 		void RotatePosition(float degrees);
