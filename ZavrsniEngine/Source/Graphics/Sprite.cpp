@@ -2,32 +2,32 @@
 
 namespace graphics {
 
-	Sprite::Sprite(float x, float y, float width, float height, float zindex, const unsigned int color)
-		: _size(math::Vector2(width, height)), _color(color),_texture(nullptr)
+	Sprite::Sprite(float x, float y, float width, float height, const unsigned int color, float zindex)
+		: _size(math::Vector2(width, height)), _color(color), _texture(nullptr), _zindex(zindex)
 	{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 0.9f);
 		_textureCoordinates[2] = math::Vector2(0.9f, 0.9f);
 		_textureCoordinates[3] = math::Vector2(0.9f, 0);
 
-		_position[0] = math::Vector3(x, y, zindex);
-		_position[1] = math::Vector3(x, y + height, zindex);
-		_position[2] = math::Vector3(x + width, y + height, zindex);
-		_position[3] = math::Vector3(x + width, y, zindex);
+		_position[0] = math::Vector2(x, y);
+		_position[1] = math::Vector2(x, y + height);
+		_position[2] = math::Vector2(x + width, y + height);
+		_position[3] = math::Vector2(x + width, y);
 	}
 
-	Sprite::Sprite(float x, float y, float width, float height, float zindex, const Texture* texture)
-		: _size(math::Vector2(width, height)), _color(0x00000000), _texture(texture)
+	Sprite::Sprite(float x, float y, float width, float height, const Texture* texture, float zindex)
+		: _size(math::Vector2(width, height)), _color(0x00000000), _texture(texture), _zindex(zindex)
 	{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 1);
 		_textureCoordinates[2] = math::Vector2(1, 1);
 		_textureCoordinates[3] = math::Vector2(1, 0);
 
-		_position[0] = math::Vector3(x, y, zindex);
-		_position[1] = math::Vector3(x, y + height, zindex);
-		_position[2] = math::Vector3(x + width, y + height, zindex);
-		_position[3] = math::Vector3(x + width, y, zindex);
+		_position[0] = math::Vector2(x, y);
+		_position[1] = math::Vector2(x, y + height);
+		_position[2] = math::Vector2(x + width, y + height);
+		_position[3] = math::Vector2(x + width, y);
 	}
 
 
@@ -52,7 +52,7 @@ namespace graphics {
 	{
 		using namespace math;
 		Vector3 axis(0, 0, 1);
-		Vector3 temp = (Matrix4::rotation(degrees, axis) * _position[0]) - _position[0]; //trazenje pomaka s obzirom na sredinu 
+		Vector2 temp = (Matrix4::rotation(degrees, axis) * _position[0]) - _position[0]; //trazenje pomaka s obzirom na sredinu 
 
 		for (int i = 0; i < 4; ++i)
 		{

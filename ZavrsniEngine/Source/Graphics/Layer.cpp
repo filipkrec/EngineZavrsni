@@ -1,4 +1,5 @@
 #include "Layer.h"
+#include <algorithm>
 namespace graphics {
 	Layer::Layer(math::Matrix4 projectionMatrix, Shader shader, Renderer* renderer):
 		_shader(shader),_renderer(renderer),_projectionMatrix(projectionMatrix)
@@ -25,13 +26,22 @@ namespace graphics {
 		_sprites.push_back(renderable);
 	}
 
+	bool sortSprite(Sprite* first, Sprite* second)
+	{
+		return (first->getZindex() < second->getZindex());
+	}
+
 	void Layer::render() {
 		_shader.enable();
 		_renderer->begin();
+		std::sort(_sprites.begin(), _sprites.end(), sortSprite);
 		for (const Sprite* sprite : _sprites) {
 			_renderer->submit(sprite);
 		}
 		_renderer->end();
 		_renderer->flush();
 	}
+
+
+	
 }

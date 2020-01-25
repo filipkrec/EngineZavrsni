@@ -19,15 +19,10 @@ namespace graphics {
 #define MAX_VERTEX_BUFFER_SIZE				sizeof(VertexData) * MAX_SPRITES
 
 	struct VertexData {
-		math::Vector3 Position;
+		math::Vector2 Position;
 		unsigned int Color;
 		float TextureSlot;
 		math::Vector2 TextureCoordinate;
-
-		bool operator==(const VertexData& right)
-		{
-			return (Position == right.Position && Color == right.Color && TextureSlot == right.TextureSlot && TextureCoordinate == right.TextureCoordinate);
-		}
 	};
 
 	class Renderer

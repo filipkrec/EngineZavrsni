@@ -17,6 +17,7 @@ namespace math {
 		Matrix4(float inputElements[]);
 
 		Matrix4& multiply(const Matrix4& other);
+		Vector2 multiply(const Vector2& other) const;
 		Vector3 multiply(const Vector3& other) const;
 		Vector4 multiply(const Vector4& other) const;
 
@@ -29,6 +30,7 @@ namespace math {
 		static Matrix4 scale(const Vector3& scale);
 
 		friend Matrix4 operator*(Matrix4 left, const Matrix4& right);
+		friend Vector2 operator*(const Matrix4& left, const Vector2& right);
 		friend Vector3 operator*(const Matrix4& left, const Vector3& right);
 		friend Vector4 operator*(const Matrix4& left, const Vector4& right);
 

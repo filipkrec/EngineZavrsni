@@ -75,6 +75,14 @@ namespace math {
 	return *this;
 	}
 
+	Vector2 Matrix4::multiply(const Vector2& other)  const
+	{
+		return Vector2(
+			columns[0].x * other.x + columns[1].x * other.y + columns[2].x,
+			columns[0].y * other.x + columns[1].y * other.y + columns[2].y
+		);
+	}
+
 	Vector3 Matrix4::multiply(const Vector3 & other)  const
 	{
 		return Vector3(
@@ -109,6 +117,12 @@ namespace math {
 	{
 		Matrix4 result = left.multiply(right);
 		return left;
+	}
+	
+	Vector2 operator*(const Matrix4& left, const Vector2& right)
+	{
+		Vector2 result = left.multiply(right);
+		return result;
 	}
 
 	Vector3 operator*(const Matrix4& left, const Vector3& right)

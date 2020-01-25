@@ -25,7 +25,7 @@ namespace graphics {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_IBO);
 
 		glBufferData(GL_ARRAY_BUFFER, MAX_VERTEX_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW); //Odredivanje podataka u bufferu A velicine B, nullptr za data jer je mapirana kasnije, dynamic draw za brzi drawcall
-		glVertexAttribPointer(SHADER_VERTEX_INDEX, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)0); //1. atribut na indeksu 0, 3 floata, ne treba normalizacija, svaki vertex velicine vertexdata, lokacija na 0. mjestu svake vertexdate
+		glVertexAttribPointer(SHADER_VERTEX_INDEX, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)0); //1. atribut na indeksu 0, 3 floata, ne treba normalizacija, svaki vertex velicine vertexdata, lokacija na 0. mjestu svake vertexdate
 		glVertexAttribPointer(SHADER_TEXTURE_SLOT_INDEX, 1, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)(offsetof(VertexData, VertexData::TextureSlot)));
 		glVertexAttribPointer(SHADER_TEXTURE_CORDS_INDEX, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)(offsetof(VertexData, VertexData::TextureCoordinate)));
 		glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(VertexData), (const GLvoid*)offsetof(VertexData, VertexData::Color)); //1. atribut na indeksu 1, 4 unsigned bytea (4 bytea = 1 int), treba normalizacija, svaki vertex velicine vertexdata, lokacija na mjestu offseta boje svake vertexdate
@@ -50,7 +50,7 @@ namespace graphics {
 
 	void Renderer::submit(const Sprite* sprite)
 	{
-		const math::Vector3* position = sprite->getPosition();
+		const math::Vector2* position = sprite->getPosition();
 		const math::Vector2& size = sprite->getSize();
 		const unsigned int color = sprite->getColor();
 		const Texture* texture = sprite->getTexture();
@@ -144,28 +144,9 @@ namespace graphics {
 
 	const unsigned int& Renderer::setIndex(VertexData& current)
 	{
-		if (_count == 0)
-		{
-			_vertexBufferDataBegin = _vertexBufferData;
 			*_vertexBufferData = current;
 			_vertexBufferData++;
 			return _count++;
-		}
-		else
-		{
-			VertexData* _vertexBufferTemp = _vertexBufferDataBegin;
-			for (unsigned int i = 0; i < _count; ++i)
-			{
-				if (*_vertexBufferTemp == current)
-				{
-					return i;
-				}
-				_vertexBufferTemp++;
-			}
-			*_vertexBufferData = current;
-			_vertexBufferData++;
-			return _count++;
-		}
 	}
 
 

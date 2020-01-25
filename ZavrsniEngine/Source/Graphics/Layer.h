@@ -22,4 +22,5 @@ namespace graphics {
 		virtual void add(Sprite* sprite);
 		void render();
 	};
+	
 }

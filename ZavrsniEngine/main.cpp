@@ -20,15 +20,9 @@ int main()
 	Texture* texturePlanet = new Texture("test2.png");
 	Texture* textureSpace = new Texture("test3.png", true);
 	Texture* texturePlayer = new Texture("playertest.png");
-	Texture* texturePlanet2 = new Texture("test2.png");
-
-	for (int x = -9; x < 9; ++x)
-	{
-		for (int y = -16; y < 16; ++y)
-		{
-			layer->add(new Sprite(x, y, 0.9f, 0.9f, 1.0f, texturePlanet));
-		}
-	}
+	layer->add(new Sprite(-4.0f, -4.0f, 2.0f, 2.0f, texturePlanet,1.0f));
+	layer->add(new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, textureSpace,0.0f));
+	layer->add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, texturePlayer,2.0f));
 
 	Timer* timer = new Timer();
 	Timer* timerPosition = new Timer();
