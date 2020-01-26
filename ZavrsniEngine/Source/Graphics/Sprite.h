@@ -14,6 +14,7 @@ namespace graphics {
 		const Texture* _texture;
 
 		math::Vector2 _textureCoordinates[4];
+		friend class Group;
 	private:
 	public:
 		Sprite(float x, float y, float width, float height,  const unsigned int color, float zindex = 0.0f);

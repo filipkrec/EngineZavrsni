@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "Sprite.h" 
 #include "Shaders/Shader.h"
+#include "Group.h"
 
 namespace graphics {
 	class Layer
@@ -20,6 +21,7 @@ namespace graphics {
 			);
 		virtual ~Layer();
 		virtual void add(Sprite* sprite);
+		virtual void add(const Group& group);
 		void render();
 	};
 	

@@ -26,6 +26,14 @@ namespace graphics {
 		_sprites.push_back(renderable);
 	}
 
+	void Layer::add(const Group& group)
+	{
+		for (Sprite* sprite : group._sprites)
+		{
+			_sprites.push_back(sprite);
+		}
+	}
+
 	bool sortSprite(Sprite* first, Sprite* second)
 	{
 		return (first->getZindex() < second->getZindex());
