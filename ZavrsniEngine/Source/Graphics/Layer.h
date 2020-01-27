@@ -21,6 +21,7 @@ namespace graphics {
 			);
 		virtual ~Layer();
 		virtual void add(Sprite* sprite);
+		virtual void add(Label* label);
 		virtual void add(const Group& group);
 		void render();
 	};

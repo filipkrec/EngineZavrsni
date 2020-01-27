@@ -60,4 +60,14 @@ namespace graphics {
 		}
 	}
 
+	void Sprite::setPosition(const math::Vector2& value,const int& index) 
+	{
+		_position[index] = value;
+	}
+
+	void Sprite::setTextureCoordinates(const math::Vector2& value, const int& index)
+	{
+		_textureCoordinates[index] = value;
+	}
+
 }

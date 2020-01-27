@@ -6,6 +6,7 @@
 #include "Sprite.h"
 #include "../Math/Math.h"
 #include "Shaders/Shader.h"
+#include "Label.h"
 
 namespace graphics {
 

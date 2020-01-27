@@ -53,17 +53,20 @@ namespace graphics {
 		const math::Vector2* position = sprite->getPosition();
 		const math::Vector2& size = sprite->getSize();
 		const unsigned int color = sprite->getColor();
-		const Texture* texture = sprite->getTexture();
 		const math::Vector2* textureCoordinates = sprite->getTextureCoordinates();
-		int textureSlot;
-		if (texture != nullptr) 
+		const Texture* texture = sprite->getTexture();
+		float textureSlot;
+
+		if (texture != nullptr)
 		{
 			textureSlot = getTextureSlot(texture->getId()); //ukoliko je tekstura vec ucitana, uzima se postojeci texture slot, inace uzima sljedeci
 		}
 		else
 		{
+
 			textureSlot = -1;
 		}
+
 
 		VertexData temp;
 
@@ -107,6 +110,8 @@ namespace graphics {
 
 		_indexCount += 6;
 	}
+
+	
 
 	void Renderer::end()
 	{

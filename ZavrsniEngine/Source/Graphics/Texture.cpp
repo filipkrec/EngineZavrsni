@@ -9,6 +9,15 @@ namespace graphics {
 		}
 	}
 
+	Texture::Texture(, const bool& repeat)
+	{
+		if (load(filename.c_str(), repeat) == -1)
+		{
+			_textureId = 0;
+		}
+	}
+
+
 	Texture::~Texture()
 	{
 	}

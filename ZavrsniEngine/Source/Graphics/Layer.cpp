@@ -50,6 +50,60 @@ namespace graphics {
 		_renderer->flush();
 	}
 
+	void Layer::add(Label* label)
+	{
+		VertexData temp;
+
+		const math::Vector2* position = label->getPosition();
+
+		Font* currentFont = label->getFont();
+		float textureId = currentFont->getId();
+		const math::Vector2& scale = currentFont->getScale();
+		texture_font_t* FTFont = currentFont->getFont();
+		std::string text = label->getText();
+		float posy = position->y;
+		float posx = position->x;
+
+		for (int i = 0; i < text.size(); ++i)
+		{
+			char c = text.at(i);
+			texture_glyph_t* glyph = texture_font_get_glyph(FTFont, c);
+			if (glyph != NULL)
+			{
+				if (i > 0) {
+					float kerning = texture_glyph_get_kerning(glyph, text[i - 1]);
+					posx += kerning / scale.x;
+				}
+
+
+				float x0 = posx + glyph->offset_x / scale.x;
+				float y0 = posy + glyph->offset_y / scale.y;
+				float x1 = x0 + glyph->width / scale.x;
+				float y1 = y0 - glyph->height / scale.y;
+
+				float u0 = glyph->s0;
+				float v0 = glyph->t0;
+				float u1 = glyph->s1;
+				float v1 = glyph->t1;
+
+
+				Sprite* sprite = (Sprite*)label;
+				sprite->setPosition(math::Vector2(x0, y0), 0);
+				sprite->setPosition(math::Vector2(x0, y1), 1);
+				sprite->setPosition(math::Vector2(x1, y1), 2);
+				sprite->setPosition(math::Vector2(x1, y0), 3);
+				sprite->setTextureCoordinates(math::Vector2(u0, v0), 0);
+				sprite->setTextureCoordinates(math::Vector2(u0, v1), 1);
+				sprite->setTextureCoordinates(math::Vector2(u1, v1), 2);
+				sprite->setTextureCoordinates(math::Vector2(u1, v0), 3);
+
+				submit(sprite, textureSlot);
+
+				posx += glyph->advance_x / scale.x;
+			}
+		}
+	}
+
 
 	
 }

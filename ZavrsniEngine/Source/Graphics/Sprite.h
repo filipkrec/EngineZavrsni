@@ -23,6 +23,11 @@ namespace graphics {
 		void Rotate(float degrees);
 		void RotatePosition(float degrees);
 
+		void setPosition(const math::Vector2& value,const int& index);
+		void setTextureCoordinates(const math::Vector2& value, const int& index);
+		void setTextureId(const int& index);
+		void setZindex(const unsigned int& zindex);
+
 		inline const math::Vector2* getPosition() const { return _position; }
 		inline const math::Vector2& getSize() const { return _size; }
 		inline const unsigned int& getColor() const { return _color; }
