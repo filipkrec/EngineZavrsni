@@ -2,6 +2,8 @@
 
 namespace graphics {
 
+	Sprite::Sprite() {}
+
 	Sprite::Sprite(float x, float y, float width, float height, const unsigned int color, float zindex)
 		: _size(math::Vector2(width, height)), _color(color), _texture(nullptr), _zindex(zindex)
 	{
@@ -17,7 +19,21 @@ namespace graphics {
 	}
 
 	Sprite::Sprite(float x, float y, float width, float height, const Texture* texture, float zindex)
-		: _size(math::Vector2(width, height)), _color(0x00000000), _texture(texture), _zindex(zindex)
+		: _size(math::Vector2(width, height)), _color(0xffffffff), _texture(texture), _zindex(zindex)
+	{
+		_textureCoordinates[0] = math::Vector2(0, 0);
+		_textureCoordinates[1] = math::Vector2(0, 1);
+		_textureCoordinates[2] = math::Vector2(1, 1);
+		_textureCoordinates[3] = math::Vector2(1, 0);
+
+		_position[0] = math::Vector2(x, y);
+		_position[1] = math::Vector2(x, y + height);
+		_position[2] = math::Vector2(x + width, y + height);
+		_position[3] = math::Vector2(x + width, y);
+	}
+
+	Sprite::Sprite(float x, float y, float width, float height, unsigned int color, const Texture* texture, float zindex)
+		: _size(math::Vector2(width, height)), _color(color), _texture(texture), _zindex(zindex)
 	{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 1);

@@ -86,8 +86,9 @@ namespace graphics {
 				float u1 = glyph->s1;
 				float v1 = glyph->t1;
 
-
-				Sprite* sprite = (Sprite*)label;
+				Sprite* spriteTemp = (Sprite*)label;
+				Sprite* sprite = new Sprite();
+				memcpy(sprite, spriteTemp, sizeof(Sprite));
 				sprite->setPosition(math::Vector2(x0, y0), 0);
 				sprite->setPosition(math::Vector2(x0, y1), 1);
 				sprite->setPosition(math::Vector2(x1, y1), 2);
@@ -97,7 +98,7 @@ namespace graphics {
 				sprite->setTextureCoordinates(math::Vector2(u1, v1), 2);
 				sprite->setTextureCoordinates(math::Vector2(u1, v0), 3);
 
-				submit(sprite, textureSlot);
+				_sprites.push_back(sprite);
 
 				posx += glyph->advance_x / scale.x;
 			}

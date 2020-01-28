@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "../../../External/freetype-gl/freetype-gl.h"
+#include <freetype-gl.h>
 #include "../Math/Vector2.h"
 
 namespace graphics {
@@ -13,7 +13,7 @@ namespace graphics {
 
 		math::Vector2 _scale;
 	public:
-		Font(std::string filename, std::string name, unsigned int size);
+		Font(std::string filename,  unsigned int size);
 
 		void setScale(float x, float y);
 

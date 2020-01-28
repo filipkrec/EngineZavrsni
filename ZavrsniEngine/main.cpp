@@ -16,19 +16,24 @@ int main()
 {
 	using namespace engine;
 	using namespace graphics;
-	Window* display = new Window("Display", 1280, 920);
-	Layer* layer = new Layer(math::Matrix4::orthographic(-16.0f,16.0f,-9.0f,9.0f,-1.0f,1.0f));
+	Window* display = new Window("Display", 800, 600);
+	Layer* layer = new Layer(math::Matrix4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 	Texture* texturePlanet = new Texture("test2.png");
 	Texture* textureSpace = new Texture("test3.png", true);
 	Texture* texturePlayer = new Texture("playertest.png");
 	Sprite* planet = new Sprite(-4.0f, -4.0f, 2.0f, 2.0f, texturePlanet, 1.0f);
 	Sprite* space = new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, textureSpace, 0.0f);
 	Sprite* player = new Sprite(0.0f, 0.0f, 6.0f, 2.0f, texturePlayer, 2.0f);
+	const std::string text = "Test text HELLLOU!!!";
+	Font* arial = new Font("arial.ttf", 32);
+	arial->setScale(800.0f / 32.0f, 600.0f / 18.0f);
+	Label* label = new Label(text, 0.0f, 0.0f, 0xff00ffff, arial, 3.0f);
 
 	Group planetPlayerer;
 	planetPlayerer.add(planet);
 	planetPlayerer.add(player);
 
+	layer->add(label);
 	layer->add(planetPlayerer);
 	layer->add(space);
 
@@ -40,7 +45,7 @@ int main()
 		display->clear();
 		fps++;
 
-		if (timerPlanetPlayer->elapsed() >= 1.0f/60.0f)
+		if (timerPlanetPlayer->elapsed() >= 1.0f / 60.0f)
 		{
 			planetPlayerer.rotate(0.1f);
 			timerPlanetPlayer->reset();

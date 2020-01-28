@@ -20,9 +20,9 @@ namespace graphics {
 			Renderer* renderer = new Renderer()
 			);
 		virtual ~Layer();
-		virtual void add(Sprite* sprite);
-		virtual void add(Label* label);
-		virtual void add(const Group& group);
+		void add(Sprite* sprite);
+		void add(Label* label);
+		void add(const Group& group);
 		void render();
 	};
 	

@@ -9,7 +9,7 @@ namespace graphics {
 		std::string _text;
 		Font* _font;
 	public:
-		Label(std::string text, float x, float y, unsigned int color, Font* font, float zindex = 0.0f);
+		Label(const std::string text, float x, float y, unsigned int color, Font* font, float zindex = 0.0f);
 
 		inline std::string getText() const { return _text; }
 		inline Font* getFont() const { return _font; }

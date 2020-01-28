@@ -17,7 +17,7 @@ void main()
 	if(fs_in.textureSlot >= 0.0f)
 	{
 	int textureSlot = int(fs_in.textureSlot);
-	color  = texture(textures[textureSlot], fs_in.textureCoordinates);
+	color  = fs_in.color * texture(textures[textureSlot], fs_in.textureCoordinates);
 	}
 	else 
 	color = fs_in.color;
