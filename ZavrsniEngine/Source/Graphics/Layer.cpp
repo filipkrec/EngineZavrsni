@@ -22,8 +22,14 @@ namespace graphics {
 		}
 	}
 
+	bool sortSprite(Sprite* first, Sprite* second)
+	{
+		return (first->getZindex() < second->getZindex());
+	}
+
 	void Layer::add(Sprite* renderable) {
 		_sprites.push_back(renderable);
+		std::sort(_sprites.begin(), _sprites.end(), sortSprite);
 	}
 
 	void Layer::add(const Group& group)
@@ -32,22 +38,7 @@ namespace graphics {
 		{
 			_sprites.push_back(sprite);
 		}
-	}
-
-	bool sortSprite(Sprite* first, Sprite* second)
-	{
-		return (first->getZindex() < second->getZindex());
-	}
-
-	void Layer::render() {
-		_shader.enable();
-		_renderer->begin();
 		std::sort(_sprites.begin(), _sprites.end(), sortSprite);
-		for (const Sprite* sprite : _sprites) {
-			_renderer->submit(sprite);
-		}
-		_renderer->end();
-		_renderer->flush();
 	}
 
 	void Layer::add(Label* label)
@@ -99,9 +90,19 @@ namespace graphics {
 
 				posx += glyph->advance_x / scale.x;
 			}
+			std::sort(_sprites.begin(), _sprites.end(), sortSprite);
 		}
 	}
 
+	void Layer::render() {
+		_shader.enable();
+		_renderer->begin();
+		for (const Sprite* sprite : _sprites) {
+			_renderer->submit(sprite);
+		}
+		_renderer->end();
+		_renderer->flush();
+	}
 
 	
 }

@@ -25,9 +25,9 @@ namespace math {
 
 		static Matrix4 orthographic(float left, float right, float bottom, float top, float near, float far);
 
-		static Matrix4 translation(const Vector3& translation);
+		static Matrix4 translation(const Vector2& translation);
 		static Matrix4 rotation(float angle, const Vector3& axis);
-		static Matrix4 scale(const Vector3& scale);
+		static Matrix4 scale(const Vector2& scale);
 
 		friend Matrix4 operator*(Matrix4 left, const Matrix4& right);
 		friend Vector2 operator*(const Matrix4& left, const Vector2& right);

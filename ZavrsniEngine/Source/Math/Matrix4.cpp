@@ -158,22 +158,20 @@ namespace math {
 		return result;
 	}
 
-	Matrix4 Matrix4::translation(const Vector3& translation)
+	Matrix4 Matrix4::translation(const Vector2& translation)
 	{
 		Matrix4 result(1.0f);
 		result.elements[0 + 3 * 4] = translation.x;
 		result.elements[1 + 3 * 4] = translation.y;
-		result.elements[2 + 3 * 4] = translation.z;
 
 		return result;
 	}
 
-	Matrix4 Matrix4::scale(const Vector3& scale)
+	Matrix4 Matrix4::scale(const Vector2& scale)
 	{
 		Matrix4 result(1.0f);
 		result.elements[0 + 0 * 4] = scale.x;
 		result.elements[1 + 1 * 4] = scale.y;
-		result.elements[2 + 2 * 4] = scale.z;
 
 		return result;
 	}

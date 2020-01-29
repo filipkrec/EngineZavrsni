@@ -51,6 +51,7 @@ namespace graphics {
 		FreeImage_Unload(dib);
 
 		glGenTextures(1, &_textureId);
+
 		glBindTexture(GL_TEXTURE_2D, _textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //omogucuje minificiranje (smanjenje kvalitete ukoliko je textura manja u prikazu od originala)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //omogucuje magnificiranje (povecanje kvalitete ukoliko je textura veca u prikazu od originala)
