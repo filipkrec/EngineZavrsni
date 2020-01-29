@@ -52,17 +52,14 @@ namespace graphics {
 
 	void Layer::add(Label* label)
 	{
-		VertexData temp;
-
 		const math::Vector2* position = label->getPosition();
+		float posy = position->y;
+		float posx = position->x;
 
 		Font* currentFont = label->getFont();
-		float textureId = currentFont->getId();
 		const math::Vector2& scale = currentFont->getScale();
 		texture_font_t* FTFont = currentFont->getFont();
 		std::string text = label->getText();
-		float posy = position->y;
-		float posx = position->x;
 
 		for (int i = 0; i < text.size(); ++i)
 		{

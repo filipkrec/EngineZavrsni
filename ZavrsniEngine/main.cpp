@@ -21,20 +21,30 @@ int main()
 	Texture* texturePlanet = new Texture("test2.png");
 	Texture* textureSpace = new Texture("test3.png", true);
 	Texture* texturePlayer = new Texture("playertest.png");
+
 	Sprite* planet = new Sprite(-4.0f, -4.0f, 2.0f, 2.0f, texturePlanet, 1.0f);
-	Sprite* space = new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, textureSpace, 0.0f);
 	Sprite* player = new Sprite(0.0f, 0.0f, 6.0f, 2.0f, texturePlayer, 2.0f);
-	const std::string text = "Test text HELLLOU!!!";
-	Font* arial = new Font("arial.ttf", 32);
+
+	Sprite* space = new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, textureSpace, 0.0f);
+
+	Sprite* healthBar = new Sprite(-10.0f, 5.0f, 4.0f, 0.5f, 0xff00ff00,3.0f);
+	Font* arial = new Font("arial.ttf", 16);
 	arial->setScale(800.0f / 32.0f, 600.0f / 18.0f);
-	Label* label = new Label(text, 0.0f, 0.0f, 0xff00ffff, arial, 3.0f);
+	Label* label = new Label("100 / 100", -10.0f, 5.0f, 0x000000000, arial, 3.0f);
 
 	Group planetPlayerer;
 	planetPlayerer.add(planet);
 	planetPlayerer.add(player);
 
+	Group health;
+	health.add(healthBar);
+	health.add(label);
+
+	health.applyTransformation(math::Matrix4::translation(math::Vector3(-7.0f, 7.0f, 0.0f)));
+
 	layer->add(label);
 	layer->add(planetPlayerer);
+	layer->add(health);
 	layer->add(space);
 
 	Timer* timer = new Timer();
