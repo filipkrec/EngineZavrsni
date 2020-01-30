@@ -10,6 +10,8 @@ namespace graphics {
 	{
 	protected:
 		std::vector<Sprite*> _sprites;
+		std::vector<Label*> _labels;
+		std::vector<Sprite*> _renderingSprites;
 		math::Matrix4 _projectionMatrix;
 		Renderer* _renderer;
 		Shader _shader;
@@ -22,6 +24,7 @@ namespace graphics {
 		virtual ~Layer();
 		void add(Sprite* sprite);
 		void add(Label* label);
+		void labelToSprite(Label* label);
 		void add(const Group& group);
 		void render();
 	};

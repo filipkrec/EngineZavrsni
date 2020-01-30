@@ -1,4 +1,5 @@
 #include "Font.h"
+#include <freetype-gl.h>
 
 namespace graphics {
 	Font::Font(std::string filename, unsigned int size)

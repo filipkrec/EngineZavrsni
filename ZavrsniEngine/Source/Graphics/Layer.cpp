@@ -1,8 +1,8 @@
 #include "Layer.h"
 #include <algorithm>
 namespace graphics {
-	Layer::Layer(math::Matrix4 projectionMatrix, Shader shader, Renderer* renderer):
-		_shader(shader),_renderer(renderer),_projectionMatrix(projectionMatrix)
+	Layer::Layer(math::Matrix4 projectionMatrix, Shader shader, Renderer* renderer) :
+		_shader(shader), _renderer(renderer), _projectionMatrix(projectionMatrix)
 	{
 		_shader.enable();
 		int textureIds[] =
@@ -11,8 +11,8 @@ namespace graphics {
 			10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
 			20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
 			30, 31
-		}; 
-		_shader.setUniform1iv("textures",32, textureIds); //textureId's popunjeni za sampler sa maximalnim brojam sampleova (32 za openGL)
+		};
+		_shader.setUniform1iv("textures", 32, textureIds); //textureId's popunjeni za sampler sa maximalnim brojam sampleova (32 za openGL)
 		_shader.setUniformMat4("projection_matrix", _projectionMatrix);
 	}
 	Layer::~Layer() {
@@ -29,7 +29,6 @@ namespace graphics {
 
 	void Layer::add(Sprite* renderable) {
 		_sprites.push_back(renderable);
-		std::sort(_sprites.begin(), _sprites.end(), sortSprite);
 	}
 
 	void Layer::add(const Group& group)
@@ -38,10 +37,18 @@ namespace graphics {
 		{
 			_sprites.push_back(sprite);
 		}
-		std::sort(_sprites.begin(), _sprites.end(), sortSprite);
+		for (Label* label : group._labels)
+		{
+			_labels.push_back(label);
+		}
 	}
 
 	void Layer::add(Label* label)
+	{
+		_labels.push_back(label);
+	}
+
+	void Layer::labelToSprite(Label* label)
 	{
 		const math::Vector2* position = label->getPosition();
 		float posy = position->y;
@@ -86,22 +93,31 @@ namespace graphics {
 				sprite->setTextureCoordinates(math::Vector2(u1, v1), 2);
 				sprite->setTextureCoordinates(math::Vector2(u1, v0), 3);
 
-				_sprites.push_back(sprite);
+				_renderingSprites.push_back(sprite);
 
 				posx += glyph->advance_x / scale.x;
 			}
-			std::sort(_sprites.begin(), _sprites.end(), sortSprite);
 		}
 	}
 
 	void Layer::render() {
 		_shader.enable();
 		_renderer->begin();
-		for (const Sprite* sprite : _sprites) {
+		if (_labels.empty() == false)
+		{
+			for (Label* label : _labels)
+			{
+				labelToSprite(label);
+			}
+		}
+		_renderingSprites.insert(_renderingSprites.end(), _sprites.begin(), _sprites.end());
+		std::sort(_renderingSprites.begin(), _renderingSprites.end(), sortSprite);
+		for (const Sprite* sprite : _renderingSprites) {
 			_renderer->submit(sprite);
 		}
 		_renderer->end();
 		_renderer->flush();
+		_renderingSprites.clear();
 	}
 
 	

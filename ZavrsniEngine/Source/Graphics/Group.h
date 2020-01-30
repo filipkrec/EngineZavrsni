@@ -10,6 +10,7 @@ namespace graphics
 	class Group 
 	{
 		std::vector<Sprite*> _sprites;
+		std::vector<Label*> _labels;
 	public:
 		~Group();
 		void applyTransformation(const math::Matrix4& transformation);

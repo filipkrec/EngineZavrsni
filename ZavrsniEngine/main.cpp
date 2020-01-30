@@ -22,15 +22,15 @@ int main()
 	Texture* textureSpace = new Texture("test3.png", true);
 	Texture* texturePlayer = new Texture("playertest.png");
 
-	Sprite* planet = new Sprite(-4.0f, -4.0f, 2.0f, 2.0f, texturePlanet, 1.0f);
-	Sprite* player = new Sprite(0.0f, 0.0f, 6.0f, 2.0f, texturePlayer, 2.0f);
+	Sprite* planet = new Sprite(-4.0f, -4.0f, 2.0f, 2.0f, texturePlanet, 1);
+	Sprite* player = new Sprite(0.0f, 0.0f, 6.0f, 2.0f, texturePlayer, 2);
 
-	Sprite* space = new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, textureSpace, 0.0f);
+	Sprite* space = new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, textureSpace);
 
-	Sprite* healthBar = new Sprite(-10.0f, 5.0f, 4.0f, 0.5f, 0xff00ff00,3.0f);
+	Sprite* healthBar = new Sprite(-10.0f, 5.0f, 4.0f, 0.5f, 0xff00ff00,3);
 	Font* arial = new Font("arial.ttf", 16);
 	arial->setScale(800.0f / 32.0f, 600.0f / 18.0f);
-	Label* label = new Label("100 / 100", -10.0f, 5.0f, 0x000000000, arial, 3.0f);
+	Label* label = new Label("100 / 100", -10.0f, 5.0f, 0xff000000, arial, 4);
 
 	Group planetPlayerer;
 	planetPlayerer.add(planet);
@@ -40,9 +40,9 @@ int main()
 	health.add(healthBar);
 	health.add(label);
 
-	health.applyTransformation(math::Matrix4::translation(math::Vector3(-7.0f, 7.0f, 0.0f)));
+	health.applyTransformation(math::Matrix4::translation(math::Vector2(-7.0f, 7.0f)));
 
-	layer->add(label);
+	//layer->add(label);
 	layer->add(planetPlayerer);
 	layer->add(health);
 	layer->add(space);
@@ -50,6 +50,7 @@ int main()
 	Timer* timer = new Timer();
 	Timer* timerPlanetPlayer = new Timer();
 	int fps = 0;
+	std::string fpsstr = std::to_string(fps);
 	while (!display->closed())
 	{
 		display->clear();
@@ -63,7 +64,8 @@ int main()
 
 		if (timer->elapsed() >= 1.0f)
 		{
-			std::cout << fps << std::endl;
+			fpsstr = std::to_string(fps);
+			label->setText(fpsstr);
 			timer->reset();
 			fps = 0;
 		}
