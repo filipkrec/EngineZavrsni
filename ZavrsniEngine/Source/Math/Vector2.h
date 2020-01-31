@@ -14,14 +14,10 @@ namespace math {
 		Vector2& multiply(const Vector2& other);
 		Vector2& divide(const Vector2& other);
 
-		Vector2& divide(const float& scalar);
-
 		friend Vector2 operator+(Vector2 left, const Vector2& right);
 		friend Vector2 operator-(Vector2 left, const Vector2& right);
 		friend Vector2 operator*(Vector2 left, const Vector2& right);
 		friend Vector2 operator/(Vector2 left, const Vector2& right);
-
-		friend Vector2 operator/(Vector2 left, const float& scalar);
 
 
 		Vector2& operator+=(const Vector2& right);

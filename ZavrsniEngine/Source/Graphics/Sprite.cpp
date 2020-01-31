@@ -86,10 +86,4 @@ namespace graphics {
 		_textureCoordinates[index] = value;
 	}
 
-
-	void Sprite::setColor(const unsigned int& color)
-	{
-		_color = color;
-	}
-
 }
