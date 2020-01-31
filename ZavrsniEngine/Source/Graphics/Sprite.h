@@ -8,7 +8,7 @@ namespace graphics {
 	{
 	protected:
 		math::Vector2 _position[4];
-		math::Vector2 _size;
+		math::Vector2 _size; //width , height
 		unsigned int _color;
 		unsigned int  _zindex;
 		const Texture* _texture;
@@ -29,6 +29,7 @@ namespace graphics {
 		void setTextureCoordinates(const math::Vector2& value, const int& index);
 		void setTextureId(const int& index);
 		void setZindex(const unsigned int& zindex);
+		void setColor(const unsigned int& color);
 
 		inline const math::Vector2* getPosition() const { return _position; }
 		inline const math::Vector2& getSize() const { return _size; }

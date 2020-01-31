@@ -17,8 +17,8 @@ namespace graphics {
 		unsigned int program = glCreateProgram();
 		unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
 		unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
-		const char* vertexSource = read_file(vertPath);
-		const char* fragmentSource = read_file(fragPath);
+		const char* vertexSource = engine::read_file(vertPath);
+		const char* fragmentSource = engine::read_file(fragPath);
 
 		glShaderSource(vertex, 1, &vertexSource, NULL);
 		glCompileShader(vertex);

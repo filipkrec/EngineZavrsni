@@ -7,6 +7,7 @@
 #include "Source/Graphics/Layer.h"
 #include "Source/Util/Timer.h"
 #include "Source/Graphics/Group.h"
+#include "Source/Physics/Hitbox.h"
 #include <iostream>
 #define AT_JOB 0
 
@@ -16,8 +17,10 @@ int main()
 {
 	using namespace engine;
 	using namespace graphics;
+	using namespace physics;
+	using namespace math;
 	Window* display = new Window("Display", 800, 600);
-	Layer* layer = new Layer(math::Matrix4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+	Layer* layer = new Layer(Matrix4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 	Texture* texturePlanet = new Texture("test2.png");
 	Texture* textureSpace = new Texture("test3.png", true);
 	Texture* texturePlayer = new Texture("playertest.png");
@@ -27,7 +30,10 @@ int main()
 
 	Sprite* space = new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, textureSpace);
 
-	Sprite* healthBar = new Sprite(-10.0f, 5.0f, 4.0f, 0.5f, 0xff00ff00,3);
+	Sprite* healthBar = new Sprite(-10.0f, 5.0f, 4.0f, 0.5f, 0xff00ff00, 3);
+
+	Sprite* hitSprite = new Sprite(-5.0f, 5.0f, 4.0f, 4.0f, 0xff0000ff, 5);
+
 	Font* arial = new Font("arial.ttf", 16);
 	arial->setScale(800.0f / 32.0f, 600.0f / 18.0f);
 	Label* label = new Label("100 / 100", -10.0f, 5.0f, 0xff000000, arial, 4);
@@ -40,24 +46,33 @@ int main()
 	health.add(healthBar);
 	health.add(label);
 
-	health.applyTransformation(math::Matrix4::translation(math::Vector2(-7.0f, 7.0f)));
+	Hitbox hitbox(hitSprite, Shape::SQUARE, 4.0f);
+
+	health.applyTransformation(Matrix4::translation(Vector2(-7.0f, 7.0f)));
 
 	//layer->add(label);
 	layer->add(planetPlayerer);
 	layer->add(health);
 	layer->add(space);
+	layer->add(hitSprite);
 
 	Timer* timer = new Timer();
 	Timer* timerPlanetPlayer = new Timer();
 	int fps = 0;
 	std::string fpsstr = std::to_string(fps);
+
+	double x, y;
 	while (!display->closed())
 	{
 		display->clear();
 		fps++;
+		display->getMousePosition(x, y);
+		x = (x / 800) * 32 - 16;
+		y = - ((y / 600) * 18 - 9);
 
 		if (timerPlanetPlayer->elapsed() >= 1.0f / 60.0f)
 		{
+			std::cout << "X:" << x << " Y:" << y << std::endl;
 			planetPlayerer.rotate(0.1f);
 			timerPlanetPlayer->reset();
 		}
@@ -69,6 +84,12 @@ int main()
 			timer->reset();
 			fps = 0;
 		}
+
+		if (hitbox.isHit(Vector2(x, y)))
+			hitSprite->setColor(0xff00ff00);
+		else 
+			hitSprite->setColor(0xff0000ff);
+
 		layer->render();
 		display->update();
 	}
