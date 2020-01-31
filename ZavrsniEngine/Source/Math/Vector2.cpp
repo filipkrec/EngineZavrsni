@@ -45,6 +45,15 @@ namespace math {
 		return *this;
 	}
 
+	Vector2& Vector2::divide(const float& scalar)
+	{
+		y /= scalar;
+		x /= scalar;
+
+		return *this;
+	}
+
+
 	Vector2 operator+(Vector2 left, const Vector2& right)
 	{
 		return left.add(right);
@@ -63,6 +72,11 @@ namespace math {
 	Vector2 operator/(Vector2 left, const Vector2& right)
 	{
 		return left.divide(right);
+	}
+
+	Vector2 operator/(Vector2 left, const float& scalar)
+	{
+		return left.divide(scalar);
 	}
 
 	Vector2& Vector2::operator+=(const Vector2& right)
