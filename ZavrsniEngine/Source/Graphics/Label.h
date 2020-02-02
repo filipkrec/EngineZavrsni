@@ -10,6 +10,7 @@ namespace graphics {
 		Font* _font;
 	public:
 		Label(const std::string text, float x, float y, unsigned int color, Font* font, float zindex = 0.0f);
+		~Label();
 
 		inline std::string getText() const { return _text; }
 		inline Font* getFont() const { return _font; }

@@ -11,4 +11,7 @@ namespace graphics {
 	{
 		_text = text;
 	}
+
+	Label::~Label()
+	{}
 }

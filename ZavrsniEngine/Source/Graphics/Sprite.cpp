@@ -2,7 +2,23 @@
 
 namespace graphics {
 
-	Sprite::Sprite() {}
+	Sprite::Sprite()
+		:_size(math::Vector2(0, 0)), _color(0), _zindex(0), _texture(nullptr) 
+		{
+		_textureCoordinates[0] = math::Vector2(0, 0);
+		_textureCoordinates[1] = math::Vector2(0, 0);
+		_textureCoordinates[2] = math::Vector2(0, 0);
+		_textureCoordinates[3] = math::Vector2(0, 0);
+
+		_position[0] = math::Vector2(0, 0);
+		_position[1] = math::Vector2(0, 0);
+		_position[2] = math::Vector2(0, 0);
+		_position[3] = math::Vector2(0, 0);
+	}
+	
+	Sprite::~Sprite()
+	{
+	}
 
 	Sprite::Sprite(float x, float y, float width, float height, const unsigned int color, float zindex)
 		: _size(math::Vector2(width, height)), _color(color), _texture(nullptr), _zindex(zindex)
@@ -90,6 +106,14 @@ namespace graphics {
 	void Sprite::setColor(const unsigned int& color)
 	{
 		_color = color;
+	}
+
+	void Sprite::applyTransformation(const math::Matrix4& transformation)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			_position[i] = transformation * _position[i];
+		}
 	}
 
 }

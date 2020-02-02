@@ -11,6 +11,7 @@ namespace graphics {
 	protected:
 		std::vector<Sprite*> _sprites;
 		std::vector<Label*> _labels;
+		std::vector<Sprite*> _labelSprites;
 		std::vector<Sprite*> _renderingSprites;
 		math::Matrix4 _projectionMatrix;
 		Renderer* _renderer;

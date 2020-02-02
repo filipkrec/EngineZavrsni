@@ -78,8 +78,8 @@ namespace math {
 	Vector2 Matrix4::multiply(const Vector2& other)  const
 	{
 		return Vector2(
-			columns[0].x * other.x + columns[1].x * other.y + columns[2].x,
-			columns[0].y * other.x + columns[1].y * other.y + columns[2].y
+			columns[0].x * other.x + columns[1].x * other.y + columns[2].x + columns[3].x,
+			columns[0].y * other.x + columns[1].y * other.y + columns[2].y + columns[3].y
 		);
 	}
 
@@ -163,6 +163,7 @@ namespace math {
 		Matrix4 result(1.0f);
 		result.elements[0 + 3 * 4] = translation.x;
 		result.elements[1 + 3 * 4] = translation.y;
+		result.elements[2 + 3 * 4] = 0;
 
 		return result;
 	}
@@ -172,6 +173,7 @@ namespace math {
 		Matrix4 result(1.0f);
 		result.elements[0 + 0 * 4] = scale.x;
 		result.elements[1 + 1 * 4] = scale.y;
+		result.elements[2 + 2 * 4] = 0;
 
 		return result;
 	}

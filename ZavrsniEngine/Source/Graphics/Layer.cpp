@@ -16,10 +16,12 @@ namespace graphics {
 		_shader.setUniformMat4("projection_matrix", _projectionMatrix);
 	}
 	Layer::~Layer() {
-		for (int i = 0; i < _sprites.size(); ++i)
-		{
-			delete _sprites[i];
-		}
+		_sprites.clear();
+		std::vector<Sprite*>().swap(_sprites);
+
+		std::vector<Sprite*>().swap(_renderingSprites);
+
+		std::vector<Sprite*>().swap(_renderingSprites);
 	}
 
 	bool sortSprite(Sprite* first, Sprite* second)
@@ -93,7 +95,7 @@ namespace graphics {
 				sprite->setTextureCoordinates(math::Vector2(u1, v1), 2);
 				sprite->setTextureCoordinates(math::Vector2(u1, v0), 3);
 
-				_renderingSprites.push_back(sprite);
+				_labelSprites.push_back(sprite);
 
 				posx += glyph->advance_x / scale.x;
 			}
@@ -103,6 +105,7 @@ namespace graphics {
 	void Layer::render() {
 		_shader.enable();
 		_renderer->begin();
+		//label se razbija na više spriteova s istom texturom ali razlicitim koordinatima
 		if (_labels.empty() == false)
 		{
 			for (Label* label : _labels)
@@ -110,13 +113,20 @@ namespace graphics {
 				labelToSprite(label);
 			}
 		}
+		//spriteove labelova i ostali spriteovi se stavlaju u isti vektor, sortiraju i renderaju
 		_renderingSprites.insert(_renderingSprites.end(), _sprites.begin(), _sprites.end());
+		_renderingSprites.insert(_renderingSprites.end(), _labelSprites.begin(), _labelSprites.end());
 		std::sort(_renderingSprites.begin(), _renderingSprites.end(), sortSprite);
 		for (const Sprite* sprite : _renderingSprites) {
 			_renderer->submit(sprite);
 		}
 		_renderer->end();
 		_renderer->flush();
+		//brišu se 'novonastali' spriteovi labele
+		for (std::vector<Sprite*>::iterator i = _labelSprites.begin(); i != _labelSprites.end(); ++i) {
+			delete *i;
+		}
+		_labelSprites.clear();
 		_renderingSprites.clear();
 	}
 

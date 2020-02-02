@@ -37,6 +37,7 @@ int main()
 	Font* arial = new Font("arial.ttf", 16);
 	arial->setScale(800.0f / 32.0f, 600.0f / 18.0f);
 	Label* label = new Label("100 / 100", -10.0f, 5.0f, 0xff000000, arial, 4);
+	Label* label2 = new Label("Puno textaPuno textaPuno textaPuno textaPuno textaPuno textaPuno textaPuno textaPuno texta", -14.0f, 2.0f, 0xff0000ff, arial, 4);
 
 	Group health;
 	health.add(healthBar);
@@ -45,13 +46,15 @@ int main()
 	Hitbox hitbox(hitSprite, Shape::SQUARE, 4.0f);
 	Hitbox hitboxPlanet(planet, Shape::SQUARE, 2.0f);
 
-	health.applyTransformation(Matrix4::translation(Vector2(-7.0f, 7.0f)));
+	health.applyTransformation(Matrix4::scale(Vector2(1.5f, 1.5f)));
+
 
 	layer->add(planet);
 	layer->add(player);
 	layer->add(health);
 	layer->add(space);
 	layer->add(hitSprite);
+	layer->add(label2);
 
 	Timer* timer = new Timer();
 	Timer* timerPlanetPlayer = new Timer();
@@ -82,6 +85,7 @@ int main()
 			fps = 0;
 		}
 
+		
 		if (hitbox.isHit(Vector2(x, y)))
 			hitSprite->setColor(0xff00ff00);
 		else if (hitbox.isHit(hitboxPlanet))

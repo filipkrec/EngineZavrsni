@@ -18,6 +18,7 @@ namespace graphics {
 	private:
 	public:
 		Sprite();
+		~Sprite();
 		Sprite(float x, float y, float width, float height,  const unsigned int color, float zindex = 0.0f);
 		Sprite(float x, float y, float width, float height, const Texture* texture, float zindex = 0.0f);
 		Sprite(float x, float y, float width, float height, unsigned int color, const Texture* texture, float zindex);
@@ -30,6 +31,8 @@ namespace graphics {
 		void setTextureId(const int& index);
 		void setZindex(const unsigned int& zindex);
 		void setColor(const unsigned int& color);
+
+		void applyTransformation(const math::Matrix4& transformation);
 
 		inline const math::Vector2* getPosition() const { return _position; }
 		inline const math::Vector2& getSize() const { return _size; }
