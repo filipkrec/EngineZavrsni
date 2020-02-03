@@ -23,6 +23,7 @@ namespace engine {
 		
 		bool _fullscreen;
 		bool _vsync;
+		bool _showCursor;
 		double _mouseX, _mouseY;
 	public:
 		Window(const char* title, int width, int height, bool fullscreen = false);
@@ -32,6 +33,7 @@ namespace engine {
 		void update();
 		void clear();
 		bool toggleVsync();
+		bool toggleCursor();
 		void getMousePosition(double& x, double& y);
 
 		bool getKeyPressed(int key);

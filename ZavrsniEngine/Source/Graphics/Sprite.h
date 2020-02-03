@@ -26,7 +26,7 @@ namespace graphics {
 		void Rotate(float degrees);
 		void RotatePosition(float degrees);
 
-		void setPosition(const math::Vector2& value,const int& index);
+		void setPosition(const math::Vector2& value,const int& index = 5);
 		void setTextureCoordinates(const math::Vector2& value, const int& index);
 		void setTextureId(const int& index);
 		void setZindex(const unsigned int& zindex);

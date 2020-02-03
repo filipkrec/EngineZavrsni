@@ -94,7 +94,15 @@ namespace graphics {
 
 	void Sprite::setPosition(const math::Vector2& value,const int& index) 
 	{
+		if(index != 5)
 		_position[index] = value;
+		else
+		{
+			_position[0] = math::Vector2(value.x, value.y);
+			_position[1] = math::Vector2(value.x, value.y + _size.x);
+			_position[2] = math::Vector2(value.x + _size.x, value.y + _size.y);
+			_position[3] = math::Vector2(value.x + _size.x, value.y);
+		}
 	}
 
 	void Sprite::setTextureCoordinates(const math::Vector2& value, const int& index)

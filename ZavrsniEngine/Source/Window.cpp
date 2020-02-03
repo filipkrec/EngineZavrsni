@@ -7,12 +7,8 @@ namespace engine {
 	void mouse_button_pressed(GLFWwindow* window, int button, int action, int mods);
 
 	Window::Window(const char* title, int width, int height, bool fullscreen)
+		:_title(title),_width(width),_height(height),_fullscreen(fullscreen),_vsync(false),_showCursor(true)
 	{
-		_title = title;
-		_width = width;
-		_height = height;
-		_fullscreen = fullscreen;
-
 		init();
 	}
 
@@ -94,17 +90,21 @@ namespace engine {
 	bool Window::toggleVsync()
 	{
 		if (_vsync == false)
-		{
-			_vsync = true;
 			glfwSwapInterval(1);
-		}
 		else
-		{
-			_vsync = false;
 			glfwSwapInterval(0);
-		}
 
-		return _vsync;
+		return _vsync = !_vsync;
+	}
+
+	bool Window::toggleCursor()
+	{
+		if (_showCursor == true)
+			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		else
+			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		
+		return _showCursor = !_showCursor;
 	}
 
 	void Window::clear()
