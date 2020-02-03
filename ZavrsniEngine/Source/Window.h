@@ -27,6 +27,7 @@ namespace engine {
 	public:
 		Window(const char* title, int width, int height, bool fullscreen = false);
 		~Window();
+		void close();
 		bool closed() const;
 		void update();
 		void clear();

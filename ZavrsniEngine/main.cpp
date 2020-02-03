@@ -1,3 +1,4 @@
+#if 0
 #include <windows.system.h>
 #include "Source/Math/Math.h"
 #include "Source/window.h"
@@ -11,8 +12,6 @@
 #include <iostream>
 #define AT_JOB 0
 
-
-#if 1
 int main()
 {
 	using namespace engine;
