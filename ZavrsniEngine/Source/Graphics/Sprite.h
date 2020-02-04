@@ -26,11 +26,11 @@ namespace graphics {
 		void Rotate(float degrees);
 		void RotatePosition(float degrees);
 
-		void setPosition(const math::Vector2& value,const int& index = 5);
-		void setTextureCoordinates(const math::Vector2& value, const int& index);
-		void setTextureId(const int& index);
-		void setZindex(const unsigned int& zindex);
-		void setColor(const unsigned int& color);
+		void setPosition(const math::Vector2& value, int index = 5);
+		void setTextureCoordinates(const math::Vector2& value, int index);
+		void setZindex(unsigned int zindex);
+		void setColor(unsigned int color);
+		const Texture* swapTexture(const Texture* texture);
 
 		void applyTransformation(const math::Matrix4& transformation);
 

@@ -1,7 +1,7 @@
 #include "Hitbox.h"
 
 namespace physics {
-	Hitbox::Hitbox(graphics::Sprite* sprite, Shape shape, const float& width, const float& height) :
+	Hitbox::Hitbox(graphics::Sprite const* sprite, Shape shape, const float width, const float height) :
 		_boundSprite(sprite), _shape(shape)
 	{
 		//math::Vector2 spriteSize = sprite->getSize();
@@ -27,7 +27,7 @@ namespace physics {
 	{
 	}
 
-	bool Hitbox::isHit(const math::Vector2& point)
+	bool Hitbox::isHit(const math::Vector2& point) const
 	{
 		math::Vector2 spriteCenter((_boundSprite->getSize() / 2) + _boundSprite->getPosition()[0]);
 		math::Vector2 collisionRangeFinal[2];
@@ -46,7 +46,7 @@ namespace physics {
 		return false;
 	}
 
-	bool Hitbox::isHit(const Hitbox& other)
+	bool Hitbox::isHit(const Hitbox& other) const
 	{
 		math::Vector2 spriteCenter((getSpriteSize() / 2) + getSpritePosition()[0]);
 		math::Vector2 collisionRangeFinal[2];

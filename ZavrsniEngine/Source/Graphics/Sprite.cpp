@@ -92,7 +92,7 @@ namespace graphics {
 		}
 	}
 
-	void Sprite::setPosition(const math::Vector2& value,const int& index) 
+	void Sprite::setPosition(const math::Vector2& value,int index) 
 	{
 		if(index != 5)
 		_position[index] = value;
@@ -105,13 +105,13 @@ namespace graphics {
 		}
 	}
 
-	void Sprite::setTextureCoordinates(const math::Vector2& value, const int& index)
+	void Sprite::setTextureCoordinates(const math::Vector2& value, int index)
 	{
 		_textureCoordinates[index] = value;
 	}
 
 
-	void Sprite::setColor(const unsigned int& color)
+	void Sprite::setColor(unsigned int color)
 	{
 		_color = color;
 	}
@@ -124,4 +124,14 @@ namespace graphics {
 		}
 	}
 
+	const Texture* Sprite::swapTexture(const Texture* texture)
+	{
+		if (texture != _texture)
+		{
+			const Texture* textureOld = _texture;
+			_texture = texture;
+			return textureOld;
+		}
+		return _texture;
+	}
 }

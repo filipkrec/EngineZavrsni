@@ -7,6 +7,7 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Layer.h"
 #include "Physics/Hitbox.h"
+#include "Physics/GameObject.h"
 
 #include "Math/Math.h"
 #include "Util/Timer.h"

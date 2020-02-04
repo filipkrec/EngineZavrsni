@@ -12,9 +12,10 @@ class Game : public engine::Engine
 	graphics::Sprite* background;
 	graphics::Sprite* newGame;
 	graphics::Sprite* score;
-	graphics::Sprite* quit;
+	physics::GameObject* quit;
 	graphics::Sprite* cursor;
-	physics::Hitbox* hitbox;
+	graphics::Texture* menuCursor = new graphics::Texture("Assets/Cursor4.png");
+	graphics::Texture* menuCursor2 = new graphics::Texture("Assets/Cursor5.png");
 	void init()
 	{
 		window->toggleCursor();
@@ -24,19 +25,17 @@ class Game : public engine::Engine
 		graphics::Texture* menuNewgame = new graphics::Texture("Assets/Newgame.png");
 		graphics::Texture* menuQuit = new graphics::Texture("Assets/Quit2.png");
 		graphics::Texture* menuScore = new graphics::Texture("Assets/Score.png");
-		graphics::Texture* menuCursor = new graphics::Texture("Assets/Cursor.png");
 
 		background = new graphics::Sprite(-16.0f, -9.0f, 32.0f, 18.0f, menuBackground, 0);
 		newGame = new graphics::Sprite(-4.0f, 0.0f, 8.0f, 8.0f, menuNewgame, 1);
 		score = new graphics::Sprite(-4.0f, -3.0f, 8.0f, 8.0f, menuScore, 1);
-		quit = new graphics::Sprite(-3.0f, -5.0f, 6.0f, 2.0f, menuQuit, 1);
-		hitbox = new physics::Hitbox(quit, physics::SQUARE, 6.0f, 2.0f);
-		cursor = new graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, menuCursor, 100);
+		quit = new physics::GameObject(new graphics::Sprite(-3.0f, -5.0f, 6.0f, 2.0f, menuQuit, 1));
+		cursor = new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, menuCursor, 100);
 		menu->add(cursor);
 		menu->add(background);
 		menu->add(newGame);
 		menu->add(score);
-		menu->add(quit);
+		menu->add(quit->_sprite);
 		menu->add(fps);
 	}
 	// jednom svake sekunde
@@ -49,23 +48,29 @@ class Game : public engine::Engine
 	// Svaki loop !mora se implementirati!
 	void render() 
 	{
-
 		window->getMousePosition(x, y);
-		x = (x / 800) * 32 - 16;
-		y = -((y / 600) * 18 - 9);
-		cursor->setPosition(math::Vector2(x - 0.5f ,y-2.0f));
+		x = (x / window->getWidth()) * 32 - 16;
+		y = -((y / window->getHeight()) * 18 - 9);
+		cursor->setPosition(math::Vector2(x - 0.3f ,y-1.0f));
+
+		if (window->getMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+			cursor->swapTexture(menuCursor2);
+		else
+			cursor->swapTexture(menuCursor);
+
 		menu->render();
 
-		if (hitbox->isHit(math::Vector2(x, y)))
+
+		if (quit->isHit(math::Vector2(x, y)))
 		{
-			hitbox->getSprite()->setColor(0xff8a8a8a);
+			quit->_sprite->setColor(0xff8a8a8a);
 			if (window->getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 			{
 				window->close();
 			}
 		}
 		else
-			hitbox->getSprite()->setColor(0xffffffff);
+			quit->_sprite->setColor(0xffffffff);
 	};
 
 public:
