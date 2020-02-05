@@ -8,7 +8,7 @@
 #include "Source/Graphics/Layer.h"
 #include "Source/Util/Timer.h"
 #include "Source/Graphics/Group.h"
-#include "Source/Physics/GameObject.h"
+#include "Source/Physics/Objects/GameObject.h"
 #include <iostream>
 #define AT_JOB 0
 

@@ -19,6 +19,7 @@ namespace graphics {
 	public:
 		Sprite();
 		~Sprite();
+		Sprite(const Sprite* sprite);
 		Sprite(float x, float y, float width, float height,  const unsigned int color, float zindex = 0.0f);
 		Sprite(float x, float y, float width, float height, const Texture* texture, float zindex = 0.0f);
 		Sprite(float x, float y, float width, float height, unsigned int color, const Texture* texture, float zindex);

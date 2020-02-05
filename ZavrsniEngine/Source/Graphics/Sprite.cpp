@@ -20,6 +20,22 @@ namespace graphics {
 	{
 	}
 
+	Sprite::Sprite(const Sprite* sprite)
+		: _size(sprite->getSize()),_color(sprite->getColor()),_texture(sprite->getTexture()),_zindex(sprite->getZindex())
+	{
+		_textureCoordinates[0] = math::Vector2(0, 0);
+		_textureCoordinates[1] = math::Vector2(0, 0.9f);
+		_textureCoordinates[2] = math::Vector2(0.9f, 0.9f);
+		_textureCoordinates[3] = math::Vector2(0.9f, 0);
+		
+		float x = sprite->getPosition()->x;
+		float y = sprite->getPosition()->y;
+		_position[0] = math::Vector2(x, y);
+		_position[1] = math::Vector2(x, y + _size.y);
+		_position[2] = math::Vector2(x + _size.x, y + _size.y);
+		_position[3] = math::Vector2(x + _size.x, y);
+	}
+
 	Sprite::Sprite(float x, float y, float width, float height, const unsigned int color, float zindex)
 		: _size(math::Vector2(width, height)), _color(color), _texture(nullptr), _zindex(zindex)
 	{
