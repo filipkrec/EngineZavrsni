@@ -34,8 +34,8 @@ namespace physics {
 		else
 		{
 			float forceDivision = force.z / _currentForce.z;
-			_currentForce.x = (_currentForce.x + force.x / forceDivision) / 2;
-			_currentForce.y = (_currentForce.y + force.y / forceDivision) / 2;
+			_currentForce.x = (_currentForce.x + force.x * forceDivision) / 2;
+			_currentForce.y = (_currentForce.y + force.y * forceDivision) / 2;
 			math::Vector2 unitVector = unitVector.calculateUnitVector(_currentForce.x, _currentForce.y);
 			_currentForce.x = unitVector.x;
 			_currentForce.y = unitVector.y;

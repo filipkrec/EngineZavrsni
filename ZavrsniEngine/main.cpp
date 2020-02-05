@@ -67,7 +67,7 @@ int main()
 		if (timerForce->elapsed() >= 3.0f)
 		{
 			//playerGO.calculateColission(math::Vector3(1.0f, 1.0f, 150));
-			planetGO.calculateColission(math::Vector3(1.0f, 1.0f, 60));
+			planetGO.calculateColission(math::Vector3(1.0f, 1.0f, 100));
 			timerForce->reset();
 		}
 
@@ -75,8 +75,8 @@ int main()
 		if (timerForce2->elapsed() >= 4.0f)
 		{
 			//playerGO.calculateColission(math::Vector3(-1.0f, 1.0f, 150));
-			planetGO.calculateColission(math::Vector3(1.0f, 1.0f, 200));
 			timerForce2->reset();
+			planetGO.calculateColission(math::Vector3(1.0f, -1.0f, 200));
 		}
 
 		layer->render();
