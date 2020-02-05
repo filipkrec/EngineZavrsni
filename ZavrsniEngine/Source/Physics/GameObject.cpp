@@ -25,7 +25,6 @@ namespace physics {
 	{
 		const math::Vector2 currentPos = *(_sprite->getPosition());
 
-		float forceDivision = force.z / _currentForce.z;
 		
 		if (_currentForce.x == 0 && _currentForce.y == 0)
 		{
@@ -34,20 +33,26 @@ namespace physics {
 		}
 		else
 		{
-			//TODO
-			_currentForce.x = (_currentForce.x + force.x) / 2;
-			_currentForce.y = (_currentForce.y + force.y) / 2;
+			float forceDivision = force.z / _currentForce.z;
+			_currentForce.x = (_currentForce.x + force.x / forceDivision) / 2;
+			_currentForce.y = (_currentForce.y + force.y / forceDivision) / 2;
+			math::Vector2 unitVector = unitVector.calculateUnitVector(_currentForce.x, _currentForce.y);
+			_currentForce.x = unitVector.x;
+			_currentForce.y = unitVector.y;
 		}
 		_currentForce.z += force.z;
 	}
 
 	void GameObject::move()
 	{
-		float speed = _currentForce.z / _weight - (_currentForce.z * FRICTION) / _weight;
-		_currentForce.z -= _currentForce.z * FRICTION;
-		_sprite->setPosition(math::Vector2(speed * _currentForce.x, speed * _currentForce.y));
-		_currentForce.z /=  FRICTION;
-		if (speed <= 0.01f)
+		if (_currentForce.z >= 1.0f)
+		{
+			//izvršava se 60 puta u sekundi
+			float speed = (_currentForce.z / _weight) / 60;
+			_currentForce.z -= (_currentForce.z * FRICTION) / 60;
+			_sprite->applyTransformation(math::Matrix4::translation(math::Vector2(speed * _currentForce.x, speed * _currentForce.y)));
+		}
+		else 
 		{
 			_currentForce.z = 0.0f;
 			_currentForce.x = 0.0f;

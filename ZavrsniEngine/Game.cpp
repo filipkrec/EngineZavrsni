@@ -1,3 +1,4 @@
+#if 0
 #include "Source/Engine.h"
 
 class Game : public engine::Engine
@@ -85,3 +86,4 @@ int main()
 	game.start();
 	return 0;
 }
+#endif

@@ -2,6 +2,7 @@
 
 #include "../Graphics/Sprite.h"
 #include "Hitbox.h"
+#include "Physics.h"
 #define FRICTION 0.8f
 
 namespace physics{
