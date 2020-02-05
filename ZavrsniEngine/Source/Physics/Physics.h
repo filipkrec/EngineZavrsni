@@ -1,3 +1,3 @@
 #pragma once 
 
-#include "GameObject.h"
+#include "Hitbox.h"
