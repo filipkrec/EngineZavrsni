@@ -2,7 +2,7 @@
 #include <freetype-gl.h>
 
 namespace graphics {
-	Font::Font(std::string filename, unsigned int size)
+	Font::Font(const std::string& filename, unsigned int size)
 	{
 		_atlas = texture_atlas_new(512, 512, 2);
 		_font = texture_font_new_from_file(_atlas, size, filename.c_str());

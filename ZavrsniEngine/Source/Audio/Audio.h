@@ -9,17 +9,17 @@ namespace audio {
 	{
 		friend void setFlagAndDestroyOnFinish(ga_Handle* in_handle, void* in_context);
 
-		std::string _Name;
-		std::string _Filename;
+		std::string _name;
+		std::string _filename;
 
-		gau_SampleSourceLoop** _Looping;
+		gau_SampleSourceLoop** _looping;
 		gau_SampleSourceLoop* _loopSource;
 
-		ga_Sound* _Sound;
-		ga_Handle* _Handle;
+		ga_Sound* _sound;
+		ga_Handle* _handle;
 
-		int _Position;
-		float _Gain;
+		int _position;
+		float _gain;
 		void loop();
 
 	public:
@@ -34,8 +34,8 @@ namespace audio {
 
 		void setGain(float gain);
 
-		inline const std::string& getName() const { return _Name; }
-		inline const std::string& getFilename() const { return _Filename; }
+		inline const std::string& getName() const { return _name; }
+		inline const std::string& getFilename() const { return _filename; }
 
 	};
 }

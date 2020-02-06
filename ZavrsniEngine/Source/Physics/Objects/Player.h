@@ -3,7 +3,7 @@
 
 namespace physics
 {
-	class Player :Actor
+	class Player :public Actor
 	{
 	public:
 		Player();

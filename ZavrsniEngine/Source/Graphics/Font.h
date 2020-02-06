@@ -13,7 +13,7 @@ namespace graphics {
 
 		math::Vector2 _scale;
 	public:
-		Font(std::string filename,  unsigned int size);
+		Font(const std::string& filename,  unsigned int size);
 
 		void setScale(float x, float y);
 

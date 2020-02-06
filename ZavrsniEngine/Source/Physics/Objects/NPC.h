@@ -3,7 +3,7 @@
 
 namespace physics
 {
-	class NPC :Actor
+	class NPC :public Actor
 	{
 		bool _friendly;
 	public:

@@ -5,7 +5,7 @@
 #include "../../Util/Timer.h"
 
 namespace physics {
-	class Actor :GameObject
+	class Actor : public GameObject
 	{
 		enum State
 		{

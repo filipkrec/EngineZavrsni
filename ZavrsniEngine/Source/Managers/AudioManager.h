@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Audio.h"
+#include "../Audio/Audio.h"
 
 namespace audio
 {
@@ -8,12 +8,11 @@ namespace audio
 	{
 	private:
 		friend class Audio;
-		friend void setLoopOnFinish(ga_Handle* in_handle, void* in_context);
 
-		static std::vector<Audio*> _Audios;
-		static gau_Manager* _Manager;
-		static ga_Mixer* _Mixer;
-		static bool _Paused;
+		static std::vector<Audio*> _audios;
+		static gau_Manager* _manager;
+		static ga_Mixer* _mixer;
+		static bool _paused;
 	public:
 
 		static void init();
