@@ -10,6 +10,11 @@ namespace physics {
 	{
 	}
 
+	GameObject::GameObject(const GameObject& other)
+		:_hitbox(other._hitbox),_sprite(other._sprite),_weight(other._weight),_currentForce(other._currentForce)
+	{
+	}
+
 	GameObject::GameObject(const graphics::Sprite& sprite, unsigned int weight, const Hitbox& hitbox)
 		:_sprite(sprite), _weight(weight), _hitbox(hitbox)
 	{
@@ -42,17 +47,26 @@ namespace physics {
 		{
 			_currentForce.x = force.x;
 			_currentForce.y = force.y;
+			_currentForce.z = force.z;
 		}
 		else
 		{
-			float forceDivision = force.z / _currentForce.z;
-			_currentForce.x = (_currentForce.x + force.x * forceDivision) / 2;
-			_currentForce.y = (_currentForce.y + force.y * forceDivision) / 2;
+			math::Vector3 tempForce = force;
+
+			_currentForce.x *= _currentForce.z;
+			_currentForce.y *= _currentForce.z;
+
+			tempForce.x *= tempForce.z;
+			tempForce.y *= tempForce.z;
+
+			_currentForce.x += tempForce.x;
+			_currentForce.y += tempForce.y;
+			_currentForce.z = (abs(_currentForce.x) + abs(_currentForce.y)) / 2;
+			
 			math::Vector2 unitVector = unitVector.calculateUnitVector(_currentForce.x, _currentForce.y);
 			_currentForce.x = unitVector.x;
 			_currentForce.y = unitVector.y;
 		}
-		_currentForce.z += force.z;
 	}
 
 	void GameObject::move()

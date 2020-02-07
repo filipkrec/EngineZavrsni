@@ -7,23 +7,26 @@
 namespace physics {
 	class Actor : public GameObject
 	{
+	protected:
 		enum State
 		{
 		STATE_MOVING,
 		STATE_DEAD,
 		STATE_STILL
 		};
-		static const engine::Timer* timer;
 
 		unsigned int _health;
 		float _movementSpeed;
-		bool _isAlive;
+		float _movementSpeedMax;
 		std::vector<unsigned int> _textureIds;
 		State _state;
 	protected:
+		Actor() {};
+		Actor(const GameObject& gameObject, unsigned int health, float movementSpeedMax,const State& state) 
+			: GameObject(gameObject), _health(health),_movementSpeedMax(movementSpeedMax),_state(state) {}
 		void addTexture(const graphics::Texture& texture) { _textureIds.push_back(texture.getId()); }
 		virtual void animate() {};
 		virtual void processState() {};
-		virtual void process() = 0;
+		virtual void process(const engine::Window& window) = 0;
 	};
 }

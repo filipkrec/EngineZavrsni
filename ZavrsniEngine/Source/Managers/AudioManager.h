@@ -21,8 +21,5 @@ namespace audio
 		static void update();
 		static Audio* get(const std::string& name);
 		static void togglePause();
-
-	private:
-		AudioManager() {};
 	};
 }

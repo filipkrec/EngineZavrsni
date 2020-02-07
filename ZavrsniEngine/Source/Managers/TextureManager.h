@@ -29,8 +29,6 @@ namespace graphics
 		static void add(Texture* texture, const std::string& name);
 		static void clean();
 		static Texture* get(const std::string& name);
-	private:
-		TextureManager() {};
 	};
 
 }

@@ -1,16 +1,13 @@
-#if 0
+#if 1
 #include <windows.system.h>
 #include "Source/Math/Math.h"
 #include "Source/window.h"
-#include "Source/Graphics/Shaders/Shader.h"
-#include "Source/Graphics/Renderer.h"
-#include "Source/Graphics/Sprite.h"
 #include "Source/Graphics/Layer.h"
 #include "Source/Util/Timer.h"
 #include "Source/Graphics/Group.h"
-#include "Source/Physics/Objects/GameObject.h"
 #include "Source/Managers/AudioManager.h"
 #include "Source/Managers/TextureManager.h"
+#include "Source/Managers/LevelAssetManager.h"
 #include <iostream>
 #define AT_JOB 0
 
@@ -27,22 +24,17 @@ int main()
 	TextureManager::add(new Texture("Assets/test3.png"), "Space");
 	TextureManager::add(new Texture("Assets/playertest.png"), "Player");
 
-	Sprite* space = new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, TextureManager::get("Space"));
+	lam::LevelAssetManager::init(new Player(GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 2), 100), 100, 100));
+	lam::LevelAssetManager::add(new Sprite(-16.0f, -9.0f, 32.0f, 18.0f, TextureManager::get("Space")), "Space");
+	lam::LevelAssetManager::add(new GameObject(Sprite(-4.0f, -4.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 1), 200), "Planet");
 
-	GameObject playerGO(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 2), 100);
-	GameObject planetGO(Sprite(-4.0f, -4.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 1), 200);
-
-	layer->add(&planetGO._sprite);
-	layer->add(&playerGO._sprite);
-	layer->add(space);
+	lam::LevelAssetManager::addToLayer(layer);
 
 	Timer* timer = new Timer();
 	Timer* timerTick = new Timer();
-	Timer* timerForce = new Timer();
-	Timer* timerForce2 = new Timer();
 	int fps = 0;
 
-	double x, y;
+	float x, y;
 	while (!display->closed())
 	{
 		display->clear();
@@ -51,33 +43,19 @@ int main()
 		x = (x / 800) * 32 - 16;
 		y = - ((y / 600) * 18 - 9);
 
+		lam::LevelAssetManager::process(*display);
+
 		if (timerTick->elapsed() >= 1.0f / 60.0f)
 		{
 			timerTick->reset();
-			playerGO.move();
-			planetGO.move();
 		}
 
 		if (timer->elapsed() >= 1.0f)
 		{
 			std::cout << fps << std::endl;
+			//lam::LevelAssetManager::getPlayer()->calculateColission(math::Vector3(1, 1, 500));
 			timer->reset();
 			fps = 0;
-		}
-
-		if (timerForce->elapsed() >= 3.0f)
-		{
-			//playerGO.calculateColission(math::Vector3(1.0f, 1.0f, 150));
-			planetGO.calculateColission(math::Vector3(1.0f, 1.0f, 100));
-			timerForce->reset();
-		}
-
-
-		if (timerForce2->elapsed() >= 4.0f)
-		{
-			//playerGO.calculateColission(math::Vector3(-1.0f, 1.0f, 150));
-			timerForce2->reset();
-			planetGO.calculateColission(math::Vector3(1.0f, -1.0f, 200));
 		}
 
 		layer->render();

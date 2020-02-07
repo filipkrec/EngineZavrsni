@@ -3,7 +3,7 @@
 namespace graphics {
 
 	Sprite::Sprite()
-		:_size(math::Vector2(0, 0)), _color(0), _zindex(0), _texture(nullptr) 
+		:_size(math::Vector2(0, 0)), _color(0), _zindex(0), _texture(nullptr),_rotation(0.0f)
 		{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 0);
@@ -21,7 +21,7 @@ namespace graphics {
 	}
 
 	Sprite::Sprite(const Sprite* sprite)
-		: _size(sprite->getSize()),_color(sprite->getColor()),_texture(sprite->getTexture()),_zindex(sprite->getZindex())
+		: _size(sprite->getSize()),_color(sprite->getColor()),_texture(sprite->getTexture()),_zindex(sprite->getZindex()), _rotation(0.0f)
 	{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 0.9f);
@@ -37,7 +37,7 @@ namespace graphics {
 	}
 
 	Sprite::Sprite(float x, float y, float width, float height, const unsigned int color, float zindex)
-		: _size(math::Vector2(width, height)), _color(color), _texture(nullptr), _zindex(zindex)
+		: _size(math::Vector2(width, height)), _color(color), _texture(nullptr), _zindex(zindex), _rotation(0.0f)
 	{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 0.9f);
@@ -51,7 +51,7 @@ namespace graphics {
 	}
 
 	Sprite::Sprite(float x, float y, float width, float height, const Texture* texture, float zindex)
-		: _size(math::Vector2(width, height)), _color(0xffffffff), _texture(texture), _zindex(zindex)
+		: _size(math::Vector2(width, height)), _color(0xffffffff), _texture(texture), _zindex(zindex), _rotation(0.0f)
 	{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 1);
@@ -65,7 +65,7 @@ namespace graphics {
 	}
 
 	Sprite::Sprite(float x, float y, float width, float height, unsigned int color, const Texture* texture, float zindex)
-		: _size(math::Vector2(width, height)), _color(color), _texture(texture), _zindex(zindex)
+		: _size(math::Vector2(width, height)), _color(color), _texture(texture), _zindex(zindex), _rotation(0.0f)
 	{
 		_textureCoordinates[0] = math::Vector2(0, 0);
 		_textureCoordinates[1] = math::Vector2(0, 1);
@@ -94,6 +94,8 @@ namespace graphics {
 			 Vector3 temp = Matrix4::rotation(degrees, axis) * Vector3(_textureCoordinates[i].x, _textureCoordinates[i].y, 0);
 			 _textureCoordinates[i] = Vector2(temp.x, temp.y) + Vector2(0.5, 0.5); //rotacija oko osi + vracanje van centra unutar granica koordinata teksture
 		}
+
+		_rotation = std::fmodf((_rotation + degrees),360);
 	}
 
 	void Sprite::RotatePosition(float degrees)

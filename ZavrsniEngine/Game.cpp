@@ -1,9 +1,8 @@
-#if 1
+#if 0
 #include "Source/Engine.h"
 
 class Game : public engine::Engine
 {
-	// na poèetku izvršavanja !mora se implementirati!
 	engine::Window* window = createWindow("Game", 800, 600, false);
 	graphics::Layer* menu = new graphics::Layer(math::Matrix4::orthographic(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 	graphics::Font* font = new graphics::Font("Assets/arial.ttf", 24);
@@ -13,6 +12,8 @@ class Game : public engine::Engine
 	{
 		window->toggleCursor();
 		font->setScale(800.0f / 32.0f, 600.0f / 18.0f);
+
+		LevelAssetManager::init(new physics::Player());
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/city.png"), "menuBackground");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Newgame.png"), "menuNewgame");

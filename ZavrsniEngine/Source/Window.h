@@ -24,7 +24,7 @@ namespace engine {
 		bool _fullscreen;
 		bool _vsync;
 		bool _showCursor;
-		double _mouseX, _mouseY;
+		float _mouseX, _mouseY;
 	public:
 		Window(const char* title, int width, int height, bool fullscreen = false);
 		~Window();
@@ -34,12 +34,12 @@ namespace engine {
 		void clear();
 		bool toggleVsync();
 		bool toggleCursor();
-		void getMousePosition(double& x, double& y);
+		void getMousePosition(float& x, float& y) const;
 
-		bool getKeyPressed(int key);
-		bool getKey(int key);
-		bool getMouseButtonPressed(int mouseButton);
-		bool getMouseButton(int mouseButton);
+		bool getKeyPressed(int key) const;
+		bool getKey(int key) const;
+		bool getMouseButtonPressed(int mouseButton) const;
+		bool getMouseButton(int mouseButton) const;
 
 		inline int getWidth() { return _width; }
 		inline int getHeight() { return _height; }

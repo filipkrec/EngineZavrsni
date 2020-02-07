@@ -8,6 +8,7 @@ namespace graphics {
 	{
 	protected:
 		math::Vector2 _position[4];
+		float _rotation;
 		math::Vector2 _size; //width , height
 		unsigned int _color;
 		unsigned int  _zindex;
@@ -36,6 +37,7 @@ namespace graphics {
 		void applyTransformation(const math::Matrix4& transformation);
 
 		inline const math::Vector2* getPosition() const { return _position; }
+		inline const float& getRotation() const { return _rotation; }
 		inline const math::Vector2& getSize() const { return _size; }
 		inline const unsigned int& getColor() const { return _color; }
 		inline const unsigned int& getZindex() const { return _zindex; }

@@ -120,7 +120,7 @@ namespace engine {
 		win->_mouseY = ypos;
 	}
 
-	void Window::getMousePosition(double& x, double& y)
+	void Window::getMousePosition(float& x, float& y) const
 	{
 		x = _mouseX;
 		y = _mouseY;
@@ -134,22 +134,22 @@ namespace engine {
 			_mouseButtons[i] = false;
 	}
 
-	bool Window::getKeyPressed(int key)
+	bool Window::getKeyPressed(int key) const
 	{
 		return _keysPressed[key];
 	}
 
-	bool Window::getKey(int key)
+	bool Window::getKey(int key) const
 	{
 		return _keys[key];
 	}
 
-	bool Window::getMouseButtonPressed(int mouseButton)
+	bool Window::getMouseButtonPressed(int mouseButton) const
 	{
 		return _mouseButtonsPressed[mouseButton];
 	}
 
-	bool Window::getMouseButton(int mouseButton)
+	bool Window::getMouseButton(int mouseButton) const
 	{
 		return _mouseButtons[mouseButton];
 	}
