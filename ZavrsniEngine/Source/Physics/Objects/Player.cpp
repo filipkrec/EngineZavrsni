@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../../Math/Matrix4.cpp"
 
 namespace physics {
 
@@ -75,23 +76,38 @@ namespace physics {
 		}
 
 		//rotation
-		float goalRotation;
-		math::Vector2 mouseVector = getVectorToMouse(window);
-		if (mouseVector.x != 0)
+		if (window.getKeyPressed(GLFW_KEY_K))
 		{
-			float mouseVectorMagnitude = sqrtf((mouseVector.x * mouseVector.x) + (mouseVector.y * mouseVector.y));			
-			goalRotation = acosf(mouseVector.x / mouseVectorMagnitude);
-		}
-		else
-		{
-			if (mouseVector.y > 0)
-				goalRotation = 90;
+			float goalRotation;
+			math::Vector2 mouseVector = getVectorToMouse(window);
+			if (mouseVector.x != 0)
+			{
+				float mouseVectorMagnitude = sqrtf((mouseVector.x * mouseVector.x) + (mouseVector.y * mouseVector.y));
+				goalRotation = acosf(mouseVector.x / mouseVectorMagnitude);
+				goalRotation = math::toDegrees(goalRotation);
+			}
 			else
-				goalRotation = 270;
-		}
+			{
+				if (mouseVector.y > 0)
+					goalRotation = 90;
+				else
+					goalRotation = 270;
+			}
 
-		float spriteRotation = _sprite.getRotation();
-		float distanceTop = _sprite.getRotation()
+			float spriteRotation = _sprite.getRotation();
+			float rotationTop = goalRotation - spriteRotation;
+			float rotationBottom = spriteRotation - goalRotation;
+			rotationBottom = rotationBottom < 0 ? rotationBottom + 360 : rotationBottom;
+			rotationTop = rotationTop < 0 ? rotationTop + 360 : rotationTop;
+			float rotationAngle = rotationBottom < rotationTop ? rotationBottom : rotationTop;
+
+			if (rotationAngle < 1)
+				_sprite.Rotate(rotationAngle);
+			else if (rotationBottom < rotationTop)
+				_sprite.Rotate(-1);
+			else
+				_sprite.Rotate(1);
+		}
 
 	}
 

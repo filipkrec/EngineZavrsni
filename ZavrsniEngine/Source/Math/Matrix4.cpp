@@ -1,13 +1,9 @@
 #pragma once
 
-#define _USE_MATH_DEFINES
 #include "Matrix4.h"
+#include "MathUtil.h"
 
 namespace math {
-	inline float toRadians(float degrees)
-	{
-		return degrees * (M_PI / 180.0f);
-	}
 
 	const void Matrix4::print()
 	{
