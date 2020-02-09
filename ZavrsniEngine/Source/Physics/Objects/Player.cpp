@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "../../Math/Matrix4.cpp"
+#include "../../Math/MathUtil.h"
 
 namespace physics {
 
@@ -76,37 +76,38 @@ namespace physics {
 		}
 
 		//rotation
-		if (window.getKeyPressed(GLFW_KEY_K))
+		float goalRotation;
+		math::Vector2 mouseVector = getVectorToMouse(window);
+		
+		float mouseVectorMagnitude = sqrtf((mouseVector.x * mouseVector.x) + (mouseVector.y * mouseVector.y));
+		goalRotation = acosf(mouseVector.x / mouseVectorMagnitude);
+
+		if (mouseVector.y < 0)
+			goalRotation = -goalRotation;
+
+		goalRotation = math::toDegrees(goalRotation);
+
+		float spriteRotation = _sprite.getRotation();
+		float rotationTop = goalRotation - spriteRotation;
+		float rotationBottom = spriteRotation - goalRotation;
+		rotationBottom = rotationBottom < 0 ? rotationBottom + 360 : rotationBottom;
+		rotationTop = rotationTop < 0 ? rotationTop + 360 : rotationTop;
+		float rotationAngle = rotationBottom < rotationTop ? rotationBottom : rotationTop;
+
+		if (rotationBottom <= rotationTop)
 		{
-			float goalRotation;
-			math::Vector2 mouseVector = getVectorToMouse(window);
-			if (mouseVector.x != 0)
-			{
-				float mouseVectorMagnitude = sqrtf((mouseVector.x * mouseVector.x) + (mouseVector.y * mouseVector.y));
-				goalRotation = acosf(mouseVector.x / mouseVectorMagnitude);
-				goalRotation = math::toDegrees(goalRotation);
-			}
+			if (rotationAngle >= 5.0f)
+				_sprite.rotate(-5.0f);
 			else
-			{
-				if (mouseVector.y > 0)
-					goalRotation = 90;
-				else
-					goalRotation = 270;
-			}
-
-			float spriteRotation = _sprite.getRotation();
-			float rotationTop = goalRotation - spriteRotation;
-			float rotationBottom = spriteRotation - goalRotation;
-			rotationBottom = rotationBottom < 0 ? rotationBottom + 360 : rotationBottom;
-			rotationTop = rotationTop < 0 ? rotationTop + 360 : rotationTop;
-			float rotationAngle = rotationBottom < rotationTop ? rotationBottom : rotationTop;
-
-			if (rotationAngle < 1)
-				_sprite.Rotate(rotationAngle);
-			else if (rotationBottom < rotationTop)
-				_sprite.Rotate(-1);
+				_sprite.rotate(-rotationAngle);
+			
+		}
+		else
+		{
+			if (rotationAngle >= 5.0f)
+				_sprite.rotate(5.0f);
 			else
-				_sprite.Rotate(1);
+				_sprite.rotate(rotationAngle);
 		}
 
 	}
@@ -125,9 +126,7 @@ namespace physics {
 		float x;
 		float y;
 		window.getMousePosition(x, y);
-		float spriteX = _sprite.getPosition()->x - _sprite.getSize().x/2;
-		float spriteY = _sprite.getPosition()->y - _sprite.getSize().y/2;
 
-		return math::Vector2(x - spriteX, y - spriteY);
+		return math::Vector2(x - _sprite.getPosition().x , y - _sprite.getPosition().y);
 	}
 }

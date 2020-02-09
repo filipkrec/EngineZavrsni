@@ -122,9 +122,9 @@ namespace engine {
 
 	void Window::getMousePosition(float& x, float& y) const
 	{
-
-		x = (_mouseX / _width) * 32 - 16;
-		y = -((_mouseY / _height) * 18 - 9);
+		
+		x = (_mouseX / _width) * 32 - 16 - Camera::getInstance()->getOffset().x;
+		y = -((_mouseY / _height) * 18 - 9) - Camera::getInstance()->getOffset().y;
 	}
 
 	void Window::resetInputPress()

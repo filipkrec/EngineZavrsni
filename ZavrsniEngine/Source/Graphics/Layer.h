@@ -13,12 +13,10 @@ namespace graphics {
 		std::vector<Label*> _labels;
 		std::vector<Sprite*> _labelSprites;
 		std::vector<Sprite*> _renderingSprites;
-		math::Matrix4 _projectionMatrix;
 		Renderer* _renderer;
 		Shader _shader;
 	public:
 		Layer(
-			math::Matrix4 projectionMatrix = math::Matrix4(1.0),
 			Shader shader = Shader("Source/Graphics/Shaders/Basic.vert", "Source/Graphics/Shaders/Basic.frag"),
 			Renderer* renderer = new Renderer()
 			);

@@ -7,6 +7,7 @@
 #include "../Math/Math.h"
 #include "Shaders/Shader.h"
 #include "Label.h"
+#include "Camera.h"
 
 namespace graphics {
 
@@ -37,6 +38,8 @@ namespace graphics {
 		VertexData* _vertexBufferData;
 		VertexData* _vertexBufferDataBegin;
 		unsigned int* _indicesBegin;
+
+		Camera* _camera;
 
 		unsigned int _count;
 		unsigned int _indexCount;

@@ -1,8 +1,8 @@
 #include "Layer.h"
 #include <algorithm>
 namespace graphics {
-	Layer::Layer(math::Matrix4 projectionMatrix, Shader shader, Renderer* renderer) :
-		_shader(shader), _renderer(renderer), _projectionMatrix(projectionMatrix)
+	Layer::Layer(Shader shader, Renderer* renderer) :
+		_shader(shader), _renderer(renderer)
 	{
 		_shader.enable();
 		int textureIds[] =
@@ -13,7 +13,6 @@ namespace graphics {
 			30, 31
 		};
 		_shader.setUniform1iv("textures", 32, textureIds); //textureId's popunjeni za sampler sa maximalnim brojam sampleova (32 za openGL)
-		_shader.setUniformMat4("projection_matrix", _projectionMatrix);
 	}
 	Layer::~Layer() {
 		_sprites.clear();
@@ -52,7 +51,7 @@ namespace graphics {
 
 	void Layer::labelToSprite(Label* label)
 	{
-		const math::Vector2* position = label->getPosition();
+		const math::Vector2* position = new math::Vector2();
 		float posy = position->y;
 		float posx = position->x;
 
@@ -86,10 +85,10 @@ namespace graphics {
 				Sprite* spriteTemp = (Sprite*)label;
 				Sprite* sprite = new Sprite();
 				memcpy(sprite, spriteTemp, sizeof(Sprite));
-				sprite->setPosition(math::Vector2(x0, y0), 0);
-				sprite->setPosition(math::Vector2(x0, y1), 1);
-				sprite->setPosition(math::Vector2(x1, y1), 2);
-				sprite->setPosition(math::Vector2(x1, y0), 3);
+				sprite->setPosition(math::Vector2(x0, y0));
+				sprite->setPosition(math::Vector2(x0, y1));
+				sprite->setPosition(math::Vector2(x1, y1));
+				sprite->setPosition(math::Vector2(x1, y0));
 				sprite->setTextureCoordinates(math::Vector2(u0, v0), 0);
 				sprite->setTextureCoordinates(math::Vector2(u0, v1), 1);
 				sprite->setTextureCoordinates(math::Vector2(u1, v1), 2);

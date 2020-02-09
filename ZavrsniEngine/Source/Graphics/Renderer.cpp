@@ -2,7 +2,7 @@
 
 namespace graphics {
 	Renderer::Renderer()
-		:_count(0),_indexCount(0)
+		:_count(0), _indexCount(0), _camera(Camera::getInstance())
 	{
 		init();
 	}
@@ -50,12 +50,13 @@ namespace graphics {
 
 	void Renderer::submit(const Sprite* sprite)
 	{
-		const math::Vector2* position = sprite->getPosition();
+		const math::Vector2& position = sprite->getPosition();
 		const math::Vector2& size = sprite->getSize();
 		const unsigned int color = sprite->getColor();
 		const math::Vector2* textureCoordinates = sprite->getTextureCoordinates();
 		const Texture* texture = sprite->getTexture();
 		float textureSlot;
+		const math::Matrix4& modelMatrix = sprite->getModelMatrix();
 
 		if (texture != nullptr)
 		{
@@ -70,27 +71,22 @@ namespace graphics {
 
 		VertexData temp;
 
-		temp.Position = position[0];
 		temp.Color = color;
 		temp.TextureSlot = textureSlot;
+
+		temp.Position = _camera->getViewMatrix() *  modelMatrix * math::Vector2(-size.x/2, -size.y / 2);
 		temp.TextureCoordinate = textureCoordinates[0];
 		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
 
-		temp.Position = position[1];
-		temp.Color = color;
-		temp.TextureSlot = textureSlot;
+		temp.Position = _camera->getViewMatrix() * modelMatrix * math::Vector2(-size.x / 2, size.y / 2);
 		temp.TextureCoordinate = textureCoordinates[1];
 		const unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
 
-		temp.Position = position[2];
-		temp.Color = color;
-		temp.TextureSlot = textureSlot;
+		temp.Position = _camera->getViewMatrix() * modelMatrix * math::Vector2(size.x / 2, size.y / 2);
 		temp.TextureCoordinate = textureCoordinates[2];
 		const unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
 
-		temp.Position = position[3];
-		temp.Color = color;
-		temp.TextureSlot = textureSlot;
+		temp.Position = _camera->getViewMatrix() * modelMatrix * math::Vector2(size.x / 2, -size.y / 2);
 		temp.TextureCoordinate = textureCoordinates[3];
 		const unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
 

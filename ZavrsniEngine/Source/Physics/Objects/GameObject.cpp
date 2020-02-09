@@ -39,10 +39,7 @@ namespace physics {
 
 
 	void GameObject::calculateColission(const math::Vector3& force)
-	{
-		const math::Vector2 currentPos = *(_sprite.getPosition());
-
-		
+	{	
 		if (_currentForce.x == 0 && _currentForce.y == 0)
 		{
 			_currentForce.x = force.x;
@@ -76,7 +73,7 @@ namespace physics {
 			//podjeljeno sa N jer se procesira N puta u sekundi
 			float speed = (_currentForce.z / _weight) / PROCESSING_INTERVAL;
 			_currentForce.z -= (_currentForce.z * FRICTION) / PROCESSING_INTERVAL;
-			_sprite.applyTransformation(math::Matrix4::translation(math::Vector2(speed * _currentForce.x, speed * _currentForce.y)));
+			_sprite.move(math::Vector2(speed * _currentForce.x, speed * _currentForce.y));
 		}
 		else 
 		{

@@ -31,10 +31,9 @@ namespace physics {
 
 	bool Hitbox::isHit(const math::Vector2& point) const
 	{
-		math::Vector2 spriteCenter((_boundSprite.getSize() / 2) + _boundSprite.getPosition()[0]);
 		math::Vector2 collisionRangeFinal[2];
-		collisionRangeFinal[0] = spriteCenter - _collisionRange;
-		collisionRangeFinal[1] = spriteCenter + _collisionRange;
+		collisionRangeFinal[0] = _boundSprite.getPosition() - _collisionRange;
+		collisionRangeFinal[1] = _boundSprite.getPosition() + _collisionRange;
 		switch (_shape) {
 		case(SQUARE):
 			if (
@@ -50,15 +49,13 @@ namespace physics {
 
 	bool Hitbox::isHit(const Hitbox& other) const
 	{
-		math::Vector2 spriteCenter((getSpriteSize() / 2) + getSpritePosition()[0]);
 		math::Vector2 collisionRangeFinal[2];
-		collisionRangeFinal[0] = spriteCenter - _collisionRange;
-		collisionRangeFinal[1] = spriteCenter + _collisionRange;
+		collisionRangeFinal[0] = _boundSprite.getPosition() - _collisionRange;
+		collisionRangeFinal[1] = _boundSprite.getPosition() + _collisionRange;
 
-		math::Vector2 otherSpriteCenter((other.getSpriteSize() / 2) + other.getSpritePosition()[0]);
 		math::Vector2 otherCollisionRangeFinal[2];
-		otherCollisionRangeFinal[0] = otherSpriteCenter - other.getCollisionRange();
-		otherCollisionRangeFinal[1] = otherSpriteCenter + other.getCollisionRange();
+		otherCollisionRangeFinal[0] = other.getSpritePosition() - other.getCollisionRange();
+		otherCollisionRangeFinal[1] = other.getSpritePosition() + other.getCollisionRange();
 		switch (_shape) {
 		case(SQUARE):
 			if (
