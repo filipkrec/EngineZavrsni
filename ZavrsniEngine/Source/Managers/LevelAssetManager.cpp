@@ -16,17 +16,50 @@ namespace lam {
 			if (_player != nullptr)
 				_player->process(window);
 
-			/*
-			for (activeObject npc : _NPCs)
+			physics::GameObject* playerObject = (physics::GameObject*)_player;
+			for (activeObject npc: _NPCs)
 			{
 				((physics::NPC*)npc._object)->process();
 			}
-			*/
+			
+			std::vector<activeObject> allObjects;
+			allObjects.push_back(activeObject((void*)playerObject,"Player"));
+			allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
+			allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
+			
+			physics::GameObject* gameObject1;
+			physics::GameObject* gameObject2;
 
-			for (activeObject gameObject : _gameObjects)
+			for (activeObject gameObject : allObjects)
 			{
-				((physics::GameObject*)gameObject._object)->move();
+				gameObject1 = (physics::GameObject*)gameObject._object;
+				gameObject1->savePreviousForce();
 			}
+			
+
+			
+			for (activeObject gameObject : allObjects)
+			{
+				gameObject1 = (physics::GameObject*)gameObject._object;
+				for (activeObject gameObjectOther : allObjects)
+				{
+					gameObject2 = (physics::GameObject*)gameObjectOther._object;
+					if (gameObject1 != gameObject2)
+					{
+						if (gameObject1->isHit(gameObject2->getHitbox()))
+							{
+							gameObject1->collide(*gameObject2);
+							}
+					}
+				}
+			}
+
+			for (activeObject gameObject : allObjects)
+			{
+				gameObject1 = (physics::GameObject*)gameObject._object;
+				gameObject1->move();
+			}
+			
 			_timer->reset();
 		}
 	}

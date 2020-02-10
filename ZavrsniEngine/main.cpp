@@ -31,7 +31,7 @@ int main()
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 
 	//lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), 100), "Player");
-	lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 200), "Planet");
+	lam::LevelAssetManager::add(new GameObject(Sprite(5.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 20), "Planet");
 
 	lam::LevelAssetManager::addToLayer(layer);
 	Timer* timer = new Timer();
@@ -49,10 +49,12 @@ int main()
 		if (timerTick->elapsed() >= 1.0f / 60.0f)
 		{
 
-			if (lam::LevelAssetManager::getGameObject("Planet")->isHit(math::Vector2(x, y)))
+			
+			if (lam::LevelAssetManager::getGameObject("Planet")->isHit(lam::LevelAssetManager::getPlayer()->getHitbox()))
 				lam::LevelAssetManager::getGameObject("Planet")->_sprite.swapTexture(TextureManager::get("!!"));
 			else
 				lam::LevelAssetManager::getGameObject("Planet")->_sprite.swapTexture(TextureManager::get("Planet"));
+			
 			//Camera::getInstance()->move(Vector2(-0.01f, 0.0f));
 			timerTick->reset();
 		}
@@ -61,11 +63,6 @@ int main()
 		{
 			std::cout << fps << std::endl;
 
-
-			//lam::LevelAssetManager::getPlayer()->calculateColission(math::Vector3(1, 1, 500));
-			//lam::LevelAssetManager::getSprite("Player")->move(math::Vector2(0.1f,0.1f));
-			//lam::LevelAssetManager::getSprite("Player")->rotate(15);
-			//lam::LevelAssetManager::getGameObject("Planet")->calculateColission(math::Vector3(1.0f, 1.0f, 200));
 			timer->reset();
 			fps = 0;
 		}

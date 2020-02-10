@@ -117,7 +117,6 @@ namespace physics {
 			processInput(window);
 			processState();
 			animate();
-			move();
 	}
 
 

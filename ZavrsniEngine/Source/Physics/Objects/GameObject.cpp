@@ -66,6 +66,16 @@ namespace physics {
 		}
 	}
 
+
+	void GameObject::collide(GameObject& other)
+	{
+		if (other._currentForce.z == 0)
+		{
+			calculateColission(math::Vector3(-_previousForce.x, -_previousForce.y, _weight * FRICTION / PROCESSING_INTERVAL));
+		}
+		else calculateColission(math::Vector3(-other._previousForce.x, -other._previousForce.y, other._previousForce.z / PROCESSING_INTERVAL));
+	}
+
 	void GameObject::move()
 	{
 		if (_currentForce.z >= 1.0f)
@@ -81,5 +91,12 @@ namespace physics {
 			_currentForce.x = 0.0f;
 			_currentForce.y = 0.0f;
 		}
+	}
+
+	void GameObject::savePreviousForce()
+	{
+		_previousForce.x = _currentForce.x;
+		_previousForce.y = _currentForce.y;
+		_previousForce.z = _currentForce.z;
 	}
 }
