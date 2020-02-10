@@ -87,7 +87,7 @@ namespace physics {
 
 		goalRotation = math::toDegrees(goalRotation);
 
-		float spriteRotation = _sprite.getRotation();
+		float spriteRotation = _boundSprite->getRotation();
 		float rotationTop = goalRotation - spriteRotation;
 		float rotationBottom = spriteRotation - goalRotation;
 		rotationBottom = rotationBottom < 0 ? rotationBottom + 360 : rotationBottom;
@@ -97,17 +97,17 @@ namespace physics {
 		if (rotationBottom <= rotationTop)
 		{
 			if (rotationAngle >= 5.0f)
-				_sprite.rotate(-5.0f);
+				_boundSprite->rotate(-5.0f);
 			else
-				_sprite.rotate(-rotationAngle);
+				_boundSprite->rotate(-rotationAngle);
 			
 		}
 		else
 		{
 			if (rotationAngle >= 5.0f)
-				_sprite.rotate(5.0f);
+				_boundSprite->rotate(5.0f);
 			else
-				_sprite.rotate(rotationAngle);
+				_boundSprite->rotate(rotationAngle);
 		}
 
 	}
@@ -126,6 +126,6 @@ namespace physics {
 		float y;
 		window.getMousePosition(x, y);
 
-		return math::Vector2(x - _sprite.getPosition().x , y - _sprite.getPosition().y);
+		return math::Vector2(x - _boundSprite->getPosition().x , y - _boundSprite->getPosition().y);
 	}
 }

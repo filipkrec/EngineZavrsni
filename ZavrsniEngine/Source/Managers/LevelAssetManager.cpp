@@ -46,7 +46,7 @@ namespace lam {
 					gameObject2 = (physics::GameObject*)gameObjectOther._object;
 					if (gameObject1 != gameObject2)
 					{
-						if (gameObject1->isHit(gameObject2->getHitbox()))
+						if (gameObject1->isHit(*(physics::Hitbox*)gameObject2))
 							{
 							gameObject1->collide(*gameObject2);
 							}
@@ -178,13 +178,13 @@ namespace lam {
 		}
 		for (activeObject gameObject : _gameObjects)
 		{
-			graphics::Sprite* temp = &(((physics::GameObject*)gameObject._object)->_sprite);
+			graphics::Sprite* temp = (((physics::GameObject*)gameObject._object)->getSprite());
 			layer->add(temp);
 		}
 
 		for (activeObject npc : _NPCs)
 		{
-			layer->add(&(((physics::NPC*)npc._object)->_sprite));
+			layer->add((((physics::NPC*)npc._object)->getSprite()));
 		}
 
 		for (activeObject label : _labels)
@@ -193,7 +193,7 @@ namespace lam {
 		}
 
 		if (_player != nullptr)
-			layer->add(&(_player->_sprite));
+			layer->add((_player->getSprite()));
 	}
 
 

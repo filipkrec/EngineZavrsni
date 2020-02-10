@@ -6,8 +6,7 @@
 #define PROCESSING_INTERVAL 60
 
 namespace physics{
-	class GameObject {
-		Hitbox const _hitbox;
+	class GameObject : public Hitbox {
 	protected:
 		unsigned int _weight;
 		math::Vector3 _currentForce;
@@ -15,20 +14,15 @@ namespace physics{
 	public:
 		GameObject();
 		~GameObject();
-		GameObject(const GameObject& other);
-		GameObject(const graphics::Sprite& sprite, unsigned int weight);
-		GameObject(const graphics::Sprite& sprite, unsigned int weight, const Hitbox& hitbox);
+		GameObject(graphics::Sprite* sprite, unsigned int weight);
+		GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height = 0);
 
 		inline const math::Vector3& getPreviousForce() const { return _previousForce; }
-		inline const Hitbox& getHitbox() const { return _hitbox; }
 		void savePreviousForce();
 
-		bool isHit(const Hitbox& other);
-		bool isHit(const math::Vector2& point);
 		void calculateColission(const math::Vector3& force);
 		void collide(GameObject& other);
 		void move();
 
-		graphics::Sprite _sprite;
 	};
 }

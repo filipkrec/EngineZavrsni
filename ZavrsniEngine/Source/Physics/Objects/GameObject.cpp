@@ -10,31 +10,15 @@ namespace physics {
 	{
 	}
 
-	GameObject::GameObject(const GameObject& other)
-		:_hitbox(other._hitbox),_sprite(other._sprite),_weight(other._weight),_currentForce(other._currentForce)
+	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight)
+		: Hitbox(sprite), _weight(weight)
 	{
 	}
 
-	GameObject::GameObject(const graphics::Sprite& sprite, unsigned int weight, const Hitbox& hitbox)
-		:_sprite(sprite), _weight(weight), _hitbox(hitbox)
+	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height)
+		:Hitbox(sprite,shape,width,height),_weight(weight)
 	{
-	}
 
-	GameObject::GameObject(const graphics::Sprite& sprite, unsigned int weight)
-	:_sprite(sprite), _weight(weight), _hitbox(Hitbox(sprite, Shape::SQUARE, sprite.getSize().x, sprite.getSize().y))
-	{
-	}
-
-
-
-	bool GameObject::isHit(const Hitbox& other)
-	{
-		return _hitbox.isHit(other);
-	}
-
-	bool GameObject::isHit(const math::Vector2& point)
-	{
-		return _hitbox.isHit(point);
 	}
 
 
@@ -71,9 +55,9 @@ namespace physics {
 	{
 		if (other._currentForce.z == 0)
 		{
-			calculateColission(math::Vector3(-_previousForce.x, -_previousForce.y, _weight * FRICTION / PROCESSING_INTERVAL));
+			calculateColission(math::Vector3(_previousForce.x, _previousForce.y, _weight/ PROCESSING_INTERVAL));
 		}
-		else calculateColission(math::Vector3(-other._previousForce.x, -other._previousForce.y, other._previousForce.z / PROCESSING_INTERVAL));
+		else calculateColission(math::Vector3(other._previousForce.x, other._previousForce.y, other._previousForce.z / PROCESSING_INTERVAL));
 	}
 
 	void GameObject::move()
@@ -83,7 +67,7 @@ namespace physics {
 			//podjeljeno sa N jer se procesira N puta u sekundi
 			float speed = (_currentForce.z / _weight) / PROCESSING_INTERVAL;
 			_currentForce.z -= (_currentForce.z * FRICTION) / PROCESSING_INTERVAL;
-			_sprite.move(math::Vector2(speed * _currentForce.x, speed * _currentForce.y));
+			_boundSprite->move(math::Vector2(speed * _currentForce.x, speed * _currentForce.y));
 		}
 		else 
 		{

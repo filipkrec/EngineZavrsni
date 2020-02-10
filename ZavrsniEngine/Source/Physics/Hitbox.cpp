@@ -5,11 +5,19 @@ namespace physics {
 	{
 	}
 
+
 	Hitbox::~Hitbox()
 	{
 	}
 
-	Hitbox::Hitbox(const graphics::Sprite& sprite, Shape shape, const float width, const float height) :
+	Hitbox::Hitbox(graphics::Sprite* sprite)
+		:_boundSprite(sprite),_shape(Shape::SQUARE)
+	{
+		math::Vector2 center = math::Vector2(0.0f, 0.0f);
+		_collisionRange = math::Vector2(center.x + sprite->getSize().x/2, center.y + sprite->getSize().y / 2);
+	}
+
+	Hitbox::Hitbox(graphics::Sprite* sprite, Shape shape, const float width, const float height) :
 		_boundSprite(sprite), _shape(shape)
 	{
 		math::Vector2 center = math::Vector2(0.0f, 0.0f);
@@ -29,11 +37,18 @@ namespace physics {
 		}
 	}
 
+
+	Hitbox::Hitbox(graphics::Sprite* sprite, Shape shape, math::Vector2 collisionRange)
+		:_boundSprite(sprite),_shape(shape), _collisionRange(collisionRange)
+	{
+
+	}
+
 	bool Hitbox::isHit(const math::Vector2& point) const
 	{
 		math::Vector2 collisionRangeFinal[2];
-		collisionRangeFinal[0] = _boundSprite.getPosition() - _collisionRange;
-		collisionRangeFinal[1] = _boundSprite.getPosition() + _collisionRange;
+		collisionRangeFinal[0] = _boundSprite->getPosition() - _collisionRange;
+		collisionRangeFinal[1] = _boundSprite->getPosition() + _collisionRange;
 		switch (_shape) {
 		case(SQUARE):
 			if (
@@ -50,8 +65,8 @@ namespace physics {
 	bool Hitbox::isHit(const Hitbox& other) const
 	{
 		math::Vector2 collisionRangeFinal[2];
-		collisionRangeFinal[0] = _boundSprite.getPosition() - _collisionRange;
-		collisionRangeFinal[1] = _boundSprite.getPosition() + _collisionRange;
+		collisionRangeFinal[0] = _boundSprite->getPosition() - _collisionRange;
+		collisionRangeFinal[1] = _boundSprite->getPosition() + _collisionRange;
 
 		math::Vector2 otherCollisionRangeFinal[2];
 		otherCollisionRangeFinal[0] = other.getSpritePosition() - other.getCollisionRange();

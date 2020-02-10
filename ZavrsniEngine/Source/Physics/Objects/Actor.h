@@ -22,8 +22,8 @@ namespace physics {
 		State _state;
 	protected:
 		Actor() {};
-		Actor(const GameObject& gameObject, unsigned int health, float movementSpeedMax,const State& state) 
-			: GameObject(gameObject), _health(health),_movementSpeedMax(movementSpeedMax),_state(state) {}
+		Actor(GameObject& gameObject, unsigned int health, float movementSpeedMax,const State& state) 
+			: GameObject(gameObject), _health(health),_movementSpeed(0),_movementSpeedMax(movementSpeedMax),_state(state) {}
 		void addTexture(const graphics::Texture& texture) { _textureIds.push_back(texture.getId()); }
 		virtual void animate() {};
 		virtual void processState() {};
