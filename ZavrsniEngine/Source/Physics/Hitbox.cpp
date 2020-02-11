@@ -85,4 +85,28 @@ namespace physics {
 		}
 		return false;
 	}
+
+	bool Hitbox::willBeHit(const Hitbox& other, const math::Vector2 nextMove) const
+	{
+		math::Vector2 collisionRangeFinal[2];
+		collisionRangeFinal[0] = _boundSprite->getPosition() + nextMove - _collisionRange;
+		collisionRangeFinal[1] = _boundSprite->getPosition() + nextMove + _collisionRange;
+
+		math::Vector2 otherCollisionRangeFinal[2];
+		otherCollisionRangeFinal[0] = other.getSpritePosition() - other.getCollisionRange();
+		otherCollisionRangeFinal[1] = other.getSpritePosition() + other.getCollisionRange();
+		switch (_shape) {
+		case(SQUARE):
+			if (
+				(otherCollisionRangeFinal[0].x >= collisionRangeFinal[0].x && otherCollisionRangeFinal[0].x <= collisionRangeFinal[1].x ||
+					otherCollisionRangeFinal[1].x >= collisionRangeFinal[0].x && otherCollisionRangeFinal[1].x <= collisionRangeFinal[1].x) &&
+					(otherCollisionRangeFinal[0].y >= collisionRangeFinal[0].y && otherCollisionRangeFinal[0].y <= collisionRangeFinal[1].y ||
+						otherCollisionRangeFinal[1].y >= collisionRangeFinal[0].y && otherCollisionRangeFinal[1].y <= collisionRangeFinal[1].y)
+				)
+				return true;
+			break;
+		default: break;
+		}
+		return false;
+	}
 }

@@ -117,11 +117,15 @@ namespace math {
 
 	Vector2 Vector2::calculateUnitVector(float x, float y)
 	{
+
 		float length = sqrtf((x * x) + (y * y));
 		float retX = x;
 		float retY = y;
 
-		return math::Vector2(retX / length, retY / length);
+		if(length > 0)
+			return math::Vector2(retX / length, retY / length);
+		else 
+			return math::Vector2(0, 0);
 	}
 
 

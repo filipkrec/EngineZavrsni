@@ -22,6 +22,7 @@ namespace lam {
 				((physics::NPC*)npc._object)->process();
 			}
 			
+			//colission
 			std::vector<activeObject> allObjects;
 			allObjects.push_back(activeObject((void*)playerObject,"Player"));
 			allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
@@ -44,9 +45,10 @@ namespace lam {
 				for (activeObject gameObjectOther : allObjects)
 				{
 					gameObject2 = (physics::GameObject*)gameObjectOther._object;
+					physics::Hitbox* hitbox1 = (physics::Hitbox*)gameObject1;
 					if (gameObject1 != gameObject2)
 					{
-						if (gameObject1->isHit(*(physics::Hitbox*)gameObject2))
+						if (gameObject2->isHit(*hitbox1))
 							{
 							gameObject1->collide(*gameObject2);
 							}
@@ -54,10 +56,29 @@ namespace lam {
 				}
 			}
 
+			//movement
 			for (activeObject gameObject : allObjects)
 			{
 				gameObject1 = (physics::GameObject*)gameObject._object;
 				gameObject1->move();
+			}
+
+
+			for (activeObject gameObject : allObjects)
+			{
+				gameObject1 = (physics::GameObject*)gameObject._object;
+				for (activeObject gameObjectOther : allObjects)
+				{
+					gameObject2 = (physics::GameObject*)gameObjectOther._object;
+					physics::Hitbox* hitbox1 = (physics::Hitbox*)gameObject1;
+					if (gameObject1 != gameObject2)
+					{
+						while (gameObject2->isHit(*hitbox1))
+						{
+							gameObject1->unclip(*gameObject2);
+						}
+					}
+				}
 			}
 			
 			_timer->reset();

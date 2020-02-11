@@ -26,12 +26,12 @@ int main()
 	TextureManager::add(new Texture("Assets/test.png"), "!!");
 	TextureManager::add(new Texture("Assets/playertest.png"), "Player");
 
-	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 2), 100), 100, 100));
+	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"), 2), 100), 100, 300));
 	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, TextureManager::get("Space"),0), "Space");
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 
 	//lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), 100), "Player");
-	lam::LevelAssetManager::add(new GameObject(&Sprite(5.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 20), "Planet");
+	lam::LevelAssetManager::add(new GameObject(&Sprite(5.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 100,Shape::SQUARE,1.5f), "Planet");
 
 	lam::LevelAssetManager::addToLayer(layer);
 	Timer* timer = new Timer();
@@ -51,11 +51,13 @@ int main()
 			Player* player = lam::LevelAssetManager::getPlayer();
 			Hitbox* hitbox = lam::LevelAssetManager::getPlayer();
 			GameObject* planet = lam::LevelAssetManager::getGameObject("Planet");
+			
+			/*
 			if (planet->isHit(*hitbox))
 				planet->getSprite()->swapTexture(TextureManager::get("!!"));
 			else
 				planet->getSprite()->swapTexture(TextureManager::get("Planet"));
-			
+			*/
 			//Camera::getInstance()->move(Vector2(-0.01f, 0.0f));
 			timerTick->reset();
 		}

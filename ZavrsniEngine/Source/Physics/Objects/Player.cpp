@@ -30,7 +30,7 @@ namespace physics {
 		int mouse_i = 0;
 		int key_i = 0;
 
-		float force = 500;
+		float force = 1500;
 
 		//movement
 		if (window.getKeyPressed(GLFW_KEY_W))
@@ -71,7 +71,7 @@ namespace physics {
 			if (_state != State::STATE_DEAD && _state != State::STATE_STILL)
 			{
 				_state = State::STATE_STILL;
-				calculateColission(math::Vector3(-_currentForce.x, -_currentForce.y, force)); //STOP
+				//calculateColission(math::Vector3(-_currentForce.x, -_currentForce.y, force)); //STOP
 			}
 		}
 

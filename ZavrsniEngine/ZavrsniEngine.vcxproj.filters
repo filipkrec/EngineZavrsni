@@ -189,31 +189,31 @@
     <ClCompile Include="External\freetype\src\winfonts\winfnt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Physics\Objects\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\Objects\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Physics\Objects\NPC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Physics\Objects\Player.cpp">
+    <ClCompile Include="Source\Audio\Audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\TextureManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\AudioManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\LevelAssetManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Managers\TextureManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Audio\Audio.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -317,37 +317,37 @@
     <ClInclude Include="Source\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Physics\Physics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Physics\Objects\Actor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Physics\Objects\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Physics\Objects\NPC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Physics\Objects\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Physics\Physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\AudioManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\LevelAssetManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\TextureManager.h">
+    <ClInclude Include="Source\Physics\Objects\NPC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Audio\Audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\TextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\MathUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\AudioManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\LevelAssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

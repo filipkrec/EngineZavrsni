@@ -28,6 +28,7 @@ namespace physics {
 
 		bool isHit(const Hitbox& other) const;
 		bool isHit(const math::Vector2& point) const;
+		bool willBeHit(const Hitbox& other, const math::Vector2 nextMove) const;
 	protected:
 		friend class GameObject;
 	};
