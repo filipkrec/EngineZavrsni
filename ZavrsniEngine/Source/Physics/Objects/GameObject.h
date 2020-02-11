@@ -12,9 +12,10 @@ namespace physics{
 		math::Vector3 _currentForce;
 
 		math::Vector3 _previousForce; //za racunanje kolizije
-		math::Vector2 _nextMove; //za racunanje kolizije
-		float _currentSpeed;
+		float _currentSpeed; 
 	public:
+		math::Vector2 _nextMove; //za racunanje kolizije
+
 		GameObject();
 		~GameObject();
 		GameObject(graphics::Sprite* sprite, unsigned int weight);
@@ -26,7 +27,6 @@ namespace physics{
 		void calculateColission(const math::Vector3& force);
 		void collide(GameObject& other);
 		void calculateNextMove();
-		void unclip(const GameObject& other);
 		void move();
 
 	};

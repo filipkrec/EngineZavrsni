@@ -35,6 +35,7 @@ namespace lam {
 			{
 				gameObject1 = (physics::GameObject*)gameObject._object;
 				gameObject1->savePreviousForce();
+				gameObject1->calculateNextMove();
 			}
 			
 
@@ -48,7 +49,7 @@ namespace lam {
 					physics::Hitbox* hitbox1 = (physics::Hitbox*)gameObject1;
 					if (gameObject1 != gameObject2)
 					{
-						if (gameObject2->isHit(*hitbox1))
+						if (gameObject2->willBeHit(*hitbox1,gameObject2->_nextMove))
 							{
 							gameObject1->collide(*gameObject2);
 							}
@@ -61,24 +62,6 @@ namespace lam {
 			{
 				gameObject1 = (physics::GameObject*)gameObject._object;
 				gameObject1->move();
-			}
-
-
-			for (activeObject gameObject : allObjects)
-			{
-				gameObject1 = (physics::GameObject*)gameObject._object;
-				for (activeObject gameObjectOther : allObjects)
-				{
-					gameObject2 = (physics::GameObject*)gameObjectOther._object;
-					physics::Hitbox* hitbox1 = (physics::Hitbox*)gameObject1;
-					if (gameObject1 != gameObject2)
-					{
-						while (gameObject2->isHit(*hitbox1))
-						{
-							gameObject1->unclip(*gameObject2);
-						}
-					}
-				}
 			}
 			
 			_timer->reset();
