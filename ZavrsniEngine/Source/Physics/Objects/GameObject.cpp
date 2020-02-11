@@ -83,17 +83,18 @@ namespace physics {
 		if (_currentForce.z > 0)
 			_boundSprite->move(math::Vector2(_currentSpeed * _currentForce.x, _currentSpeed * _currentForce.y));
 		else
+		{
 			_currentForce.z = 0;
+			_currentForce.x = 0;
+			_currentForce.y = 0;
+		}
 	}
 
 	void GameObject::savePreviousForce()
 	{
-		if (_currentForce.z >= 1.0f)
-		{
 			_previousForce.x = _currentForce.x;
 			_previousForce.y = _currentForce.y;
 			_previousForce.z = _currentForce.z;
-		}
 	}
 
 	void GameObject::calculateNextMove()
