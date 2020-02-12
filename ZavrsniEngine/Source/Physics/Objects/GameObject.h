@@ -30,7 +30,7 @@ namespace physics{
 		void calculateColission(const math::Vector3& force);
 		void collide(GameObject& other);
 		void calculateNextMove();
-		void move();
+		virtual void move();
 
 	};
 }
