@@ -13,11 +13,14 @@ namespace physics{
 
 		math::Vector3 _previousForce; //za racunanje kolizije
 		float _currentSpeed; 
+
+		bool _colissionOn;
 	public:
 		math::Vector2 _nextMove; //za racunanje kolizije
 
 		GameObject();
 		~GameObject();
+		GameObject(graphics::Sprite* sprite, bool colission);
 		GameObject(graphics::Sprite* sprite, unsigned int weight);
 		GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height = 0);
 
