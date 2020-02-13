@@ -46,7 +46,7 @@ namespace objects {
 
 			Weapon* clone();
 
-			void onDestroy();
+			void destroy();
 			void onPickup(Actor& actor);
 			void reload(bool infinite = false);
 			void shoot();

@@ -8,9 +8,9 @@ namespace objects
 		bool _friendly;
 	public:
 		NPC();
-		void animate();
-		void processState();
-		void processAI();
+		virtual void animate();
+		virtual void processState();
+		virtual void processAI();
 		void process();
 	};
 }

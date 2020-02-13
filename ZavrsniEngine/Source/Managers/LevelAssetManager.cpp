@@ -7,7 +7,7 @@ namespace lam {
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_gameObjects;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_NPCs;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_labels;
-	physics::Player* LevelAssetManager::_player = nullptr;
+	objects::Player* LevelAssetManager::_player = nullptr;
 
 	void LevelAssetManager::process(const engine::Window& window)
 	{
@@ -16,10 +16,10 @@ namespace lam {
 			if (_player != nullptr)
 				_player->process(window);
 
-			physics::GameObject* playerObject = (physics::GameObject*)_player;
+			objects::GameObject* playerObject = (objects::GameObject*)_player;
 			for (activeObject npc: _NPCs)
 			{
-				((physics::NPC*)npc._object)->process();
+				((objects::NPC*)npc._object)->process();
 			}
 			
 			//colission
@@ -28,12 +28,12 @@ namespace lam {
 			allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
 			allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
 			
-			physics::GameObject* gameObject1;
-			physics::GameObject* gameObject2;
+			objects::GameObject* gameObject1;
+			objects::GameObject* gameObject2;
 
 			for (activeObject gameObject : allObjects)
 			{
-				gameObject1 = (physics::GameObject*)gameObject._object;
+				gameObject1 = (objects::GameObject*)gameObject._object;
 				gameObject1->savePreviousForce();
 				gameObject1->calculateNextMove();
 			}
@@ -42,11 +42,11 @@ namespace lam {
 			
 			for (activeObject gameObject : allObjects)
 			{
-				gameObject1 = (physics::GameObject*)gameObject._object;
+				gameObject1 = (objects::GameObject*)gameObject._object;
 				for (activeObject gameObjectOther : allObjects)
 				{
-					gameObject2 = (physics::GameObject*)gameObjectOther._object;
-					physics::Hitbox* hitbox1 = (physics::Hitbox*)gameObject1;
+					gameObject2 = (objects::GameObject*)gameObjectOther._object;
+					objects::Hitbox* hitbox1 = (objects::Hitbox*)gameObject1;
 					if (gameObject1 != gameObject2)
 					{
 						if (gameObject2->willBeHit(*hitbox1,gameObject2->_nextMove))
@@ -60,7 +60,7 @@ namespace lam {
 			//movement
 			for (activeObject gameObject : allObjects)
 			{
-				gameObject1 = (physics::GameObject*)gameObject._object;
+				gameObject1 = (objects::GameObject*)gameObject._object;
 				gameObject1->move();
 			}
 			
@@ -68,10 +68,10 @@ namespace lam {
 		}
 	}
 
-	void LevelAssetManager::init(physics::Player* player)
+	void LevelAssetManager::init(objects::Player* player)
 	{
 		if (player == nullptr)
-			_player = new physics::Player();
+			_player = new objects::Player();
 		else
 			_player = player;
 	}
@@ -122,7 +122,7 @@ namespace lam {
 		return nullptr;
 	}
 
-	void LevelAssetManager::add(physics::GameObject* gameObject, const std::string& name)
+	void LevelAssetManager::add(objects::GameObject* gameObject, const std::string& name)
 	{
 		_gameObjects.push_back(activeObject((void*)gameObject, name));
 	}
@@ -130,22 +130,22 @@ namespace lam {
 	void LevelAssetManager::cleanGameObjects()
 	{
 		for (activeObject gameObject : _gameObjects)
-			delete (physics::GameObject*)gameObject._object;
+			delete (objects::GameObject*)gameObject._object;
 
 		_sprites.clear();
 	}
 
-	physics::GameObject* LevelAssetManager::getGameObject(const std::string& name)
+	objects::GameObject* LevelAssetManager::getGameObject(const std::string& name)
 	{
 		for (activeObject gameObject : _gameObjects)
 		{
 			if (gameObject._name == name)
-				return (physics::GameObject*)gameObject._object;
+				return (objects::GameObject*)gameObject._object;
 		}
 		return nullptr;
 	}
 
-	void LevelAssetManager::add(physics::NPC* NPC, const std::string& name)
+	void LevelAssetManager::add(objects::NPC* NPC, const std::string& name)
 	{
 		_NPCs.push_back(activeObject((void*)NPC, name));
 	}
@@ -153,22 +153,22 @@ namespace lam {
 	void LevelAssetManager::cleanNPCs()
 	{
 		for (activeObject NPC : _NPCs)
-			delete (physics::NPC*)NPC._object;
+			delete (objects::NPC*)NPC._object;
 
 		_sprites.clear();
 	}
 
-	physics::NPC* LevelAssetManager::getNPC(const std::string& name)
+	objects::NPC* LevelAssetManager::getNPC(const std::string& name)
 	{
 		for (activeObject npc : _gameObjects)
 		{
 			if (npc._name == name)
-				return (physics::NPC*)npc._object;
+				return (objects::NPC*)npc._object;
 		}
 		return nullptr;
 	}
 
-	physics::Player* LevelAssetManager::getPlayer()
+	objects::Player* LevelAssetManager::getPlayer()
 	{
 		return _player;
 	}
@@ -182,13 +182,13 @@ namespace lam {
 		}
 		for (activeObject gameObject : _gameObjects)
 		{
-			graphics::Sprite* temp = (((physics::GameObject*)gameObject._object)->getSprite());
+			graphics::Sprite* temp = (((objects::GameObject*)gameObject._object)->getSprite());
 			layer->add(temp);
 		}
 
 		for (activeObject npc : _NPCs)
 		{
-			layer->add((((physics::NPC*)npc._object)->getSprite()));
+			layer->add((((objects::NPC*)npc._object)->getSprite()));
 		}
 
 		for (activeObject label : _labels)

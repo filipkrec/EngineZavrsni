@@ -4,12 +4,12 @@
 namespace objects {
 
 	Player::Player()
-		:Actor()
+		:Actor(), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D),_movementForce(500)
 	{
 	}
 
 	Player::Player(GameObject gameObject, unsigned int health, float movementSpeedMax)
-		:Actor(gameObject,health,movementSpeedMax,Actor::State::STATE_STILL)
+		:Actor(gameObject,health,movementSpeedMax,Actor::State::STATE_STILL), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D), _movementForce(500)
 	{
 	}
 
@@ -25,43 +25,39 @@ namespace objects {
 
 	void Player::processInput(const engine::Window& window)
 	{
-		int pressedKeys[10];
-		int pressedMouseButtons[3];
-		int mouse_i = 0;
-		int key_i = 0;
 
-		float force = 1500;
+		float force = _movementForce;
 
 		//movement
-		if (window.getKeyPressed(GLFW_KEY_W))
+		if (window.getKeyPressed(_keyUp))
 		{
-			if (window.getKeyPressed(GLFW_KEY_A) != window.getKeyPressed(GLFW_KEY_D))
+			if (window.getKeyPressed(_keyLeft) != window.getKeyPressed(_keyRight))
 			{
 				force = force / 1.6;
 			}
 			calculateColission(math::Vector3(0.0f, 1.0f, force));
 		}
 
-		if (window.getKeyPressed(GLFW_KEY_S))
+		if (window.getKeyPressed(_keyDown))
 		{
-			if (window.getKeyPressed(GLFW_KEY_A) != window.getKeyPressed(GLFW_KEY_D))
+			if (window.getKeyPressed(_keyLeft) != window.getKeyPressed(_keyRight))
 			{
 				force = force / 1.6;
 			}
 			calculateColission(math::Vector3(0.0f, -1.0f, force));
 		}
 
-		if (window.getKeyPressed(GLFW_KEY_A))
+		if (window.getKeyPressed(_keyLeft))
 		{
 			calculateColission(math::Vector3(-1.0f, 0.0f, force));
 		}
 		
-		if (window.getKeyPressed(GLFW_KEY_D))
+		if (window.getKeyPressed(_keyRight))
 		{
 			calculateColission(math::Vector3(1.0f, 0.0f, force));
 		}
 
-		if (window.getKeyPressed(GLFW_KEY_W) || window.getKeyPressed(GLFW_KEY_S) || window.getKeyPressed(GLFW_KEY_A) || window.getKeyPressed(GLFW_KEY_D))
+		if (window.getKeyPressed(_keyUp) || window.getKeyPressed(_keyDown) || window.getKeyPressed(_keyLeft) || window.getKeyPressed(_keyRight))
 		{
 			if(_state != State::STATE_DEAD && _state != State::STATE_MOVING)
 				_state = State::STATE_MOVING;
@@ -127,5 +123,19 @@ namespace objects {
 		window.getMousePosition(x, y);
 
 		return math::Vector2(x - _boundSprite->getPosition().x , y - _boundSprite->getPosition().y);
+	}
+
+
+	void Player::setKeys(int keyUp, int keyDown, int keyRight, int keyLeft)
+	{
+		_keyUp = keyUp;
+		_keyDown = keyDown;
+		_keyRight = keyRight;
+		_keyLeft = keyLeft;
+	}
+
+	void Player::setForce(float movementForce)
+	{
+		_movementForce = movementForce;
 	}
 }

@@ -9,6 +9,7 @@
 #include "Source/Managers/TextureManager.h"
 #include "Source/Managers/LevelAssetManager.h"
 #include "Source/Graphics/Camera.h"
+#include "Source/Physics/Objects/Player.h"
 #include <iostream>
 #define AT_JOB 0
 
@@ -16,7 +17,7 @@ int main()
 {
 	using namespace engine;
 	using namespace graphics;
-	using namespace physics;
+	using namespace objects;
 	using namespace math;
 	using namespace audio;
 	Window* display = new Window("Display", 800, 600);

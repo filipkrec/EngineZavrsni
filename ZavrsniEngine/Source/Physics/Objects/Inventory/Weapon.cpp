@@ -42,4 +42,7 @@ namespace objects
 				_firedShots.push_back(destinationPoint + _boundSprite->getPosition());
 			}
 		}
+
+		void Weapon::destroy() {};
+		void Weapon::onPickup(Actor& actor) {};
 }

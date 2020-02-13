@@ -1,5 +1,6 @@
 #pragma once
-#include "Pickup.h"
+#include "../Source/Engine.h"
+
 namespace objects {
 		class Ammo : public Pickup
 		{

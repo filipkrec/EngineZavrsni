@@ -2,6 +2,8 @@
 #include <vector>
 #include "../Graphics/Label.h"
 #include "../Graphics/Layer.h"
+#include "../Physics/Objects/Player.h"
+#include "../Physics/Objects/NPC.h"
 
 namespace lam {
 	class LevelAssetManager
@@ -30,9 +32,9 @@ namespace lam {
 		static std::vector<activeObject> _gameObjects;
 		static std::vector<activeObject> _NPCs;
 		static std::vector<activeObject> _labels;
-		static physics::Player* _player;
+		static objects::Player* _player;
 	public:
-		static void init(physics::Player* player = nullptr);
+		static void init(objects::Player* player = nullptr);
 		static void process(const engine::Window& window);
 
 		static void add(graphics::Sprite* sprite, const std::string& name);
@@ -44,17 +46,17 @@ namespace lam {
 		static void cleanLabels();
 		static graphics::Label* getLabel(const std::string& name);
 
-		static void add(physics::GameObject* gameeObject, const std::string& name);
+		static void add(objects::GameObject* gameeObject, const std::string& name);
 		static void cleanGameObjects();
-		static physics::GameObject* getGameObject(const std::string& name);
+		static objects::GameObject* getGameObject(const std::string& name);
 
-		static void add(physics::NPC* NPC, const std::string& name);
+		static void add(objects::NPC* NPC, const std::string& name);
 		static void cleanNPCs();
-		static physics::NPC* getNPC(const std::string& name);
+		static objects::NPC* getNPC(const std::string& name);
 
 		static void addToLayer(graphics::Layer* layer);
 		static void clean();
 
-		static physics::Player* getPlayer();
+		static objects::Player* getPlayer();
 	};
 }
