@@ -26,7 +26,7 @@ int main()
 	TextureManager::add(new Texture("Assets/test.png"), "!!");
 	TextureManager::add(new Texture("Assets/playertest.png"), "Player");
 
-	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"), 2), 100), 100, 300));
+	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"),2), 100), 100, 300));
 	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, TextureManager::get("Space"),0), "Space");
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 

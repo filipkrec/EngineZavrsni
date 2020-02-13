@@ -1,24 +1,23 @@
 #pragma once
 #include "Ammo.h"
-namespace inventory
-{
-	Ammo::Ammo()
-	{
-	}
+namespace objects {
+		Ammo::Ammo()
+		{
+		}
 
-	Ammo::Ammo(graphics::Sprite* sprite, float duration, unsigned int quantity)
-		:Pickup(sprite, duration),_quantity(quantity)
-	{
-	}
+		Ammo::Ammo(graphics::Sprite* sprite, float duration, unsigned int quantity)
+			:Pickup(sprite, duration), _quantity(quantity)
+		{
+		}
 
-	void Ammo::onPickup()
-	{
-	}
+		void Ammo::onPickup(Actor& actor)
+		{
+			actor._weapon
+		}
 
-	void Ammo::destroy()
-	{
-		delete this->getSprite();
-		delete this;
-	}
-	
+		void Ammo::destroy()
+		{
+			delete this->getSprite();
+			delete this;
+		}
 }

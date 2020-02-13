@@ -1,6 +1,6 @@
 #include "NPC.h"
 
-namespace physics {
+namespace objects {
 	void NPC::process()
 	{
 		

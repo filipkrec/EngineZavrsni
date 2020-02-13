@@ -1,5 +1,5 @@
 #include "GameObject.h"
-namespace physics {
+namespace objects {
 
 	GameObject::GameObject()
 	{
@@ -10,8 +10,8 @@ namespace physics {
 	{
 	}
 
-	GameObject::GameObject(graphics::Sprite* sprite, bool colission)
-		: Hitbox(sprite), _colissionOn(colission)
+	GameObject::GameObject(graphics::Sprite* sprite)
+		: Hitbox(sprite), _colissionOn(false)
 	{
 	}
 
@@ -112,6 +112,12 @@ namespace physics {
 			_nextMove = math::Vector2(_currentSpeed * _currentForce.x, _currentSpeed * _currentForce.y);
 		else
 			_currentForce.z = 0;
+	}
+
+
+	void GameObject::toggleCollision()
+	{
+		_colissionOn = _colissionOn ? false : true;
 	}
 
 }

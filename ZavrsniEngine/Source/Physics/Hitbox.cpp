@@ -1,6 +1,6 @@
 #include "Hitbox.h"
 
-namespace physics {
+namespace objects {
 	Hitbox::Hitbox()
 	{
 	}

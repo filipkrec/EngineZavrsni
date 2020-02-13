@@ -59,8 +59,6 @@ namespace graphics {
 		float textureSlot;
 		const math::Matrix4& modelMatrix = sprite->getModelMatrix();
 
-		if(sprite->getOffset)
-
 		if (texture != nullptr)
 		{
 			textureSlot = getTextureSlot(texture->getId()); //ukoliko je tekstura vec ucitana, uzima se postojeci texture slot, inace uzima sljedeci

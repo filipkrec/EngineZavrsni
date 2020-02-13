@@ -323,9 +323,6 @@
     <ClInclude Include="Source\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Physics\Physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Physics\Objects\Actor.h">
       <Filter>Header Files</Filter>
     </ClInclude>

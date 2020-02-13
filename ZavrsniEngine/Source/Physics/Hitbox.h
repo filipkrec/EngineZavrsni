@@ -2,7 +2,7 @@
 #include "../Math/Math.h"
 #include "../Graphics/Sprite.h"
 
-namespace physics {
+namespace objects {
 	enum Shape {
 		SQUARE = 1,
 		CIRCLE = 2,

@@ -1,39 +1,54 @@
 #pragma once
-#include "../GameObject.h"
-namespace inventory
-{
-	enum WeaponState
-	{
-		CARRIED,
-		DROPED
-	};
+#include "Pickup.h"
+namespace objects {
+		enum WeaponState
+		{
+			CARRIED,
+			DROPED
+		};
 
 
-	class Weapon:public physics::GameObject
-	{
-		unsigned int _dmgMin; //random min dmg
-		unsigned int _dmgMax; //random max dmg
-		float _force; //max force output of shot, reduced over distance %range = %force
-		float _range; //max range 
-		unsigned int _spread; // angle offset * 2
-		unsigned int _ammoMax; //holding max ammo
-		unsigned int _ammoCurrent; //holding current ammo
-		unsigned int _clipMax; //clip max ammo
-		unsigned int _clipCurrent; //clip current ammo
+		class Weapon :public Pickup
+		{
+			unsigned int _dmgMin; //random min dmg
+			unsigned int _dmgMax; //random max dmg
+			float _force; //max force output of shot, reduced over distance %range = %force
+			float _range; //max range 
+			unsigned int _spread; // angle offset * 2
+			unsigned int _ammoMax; //holding max ammo
+			unsigned int _ammoCurrent; //holding current ammo
+			unsigned int _clipMax; //clip max ammo
+			unsigned int _clipCurrent; //clip current ammo
 
-		std::vector<math::Vector2> _firedShots; // destination points 
-		math::Vector2 _shotOriginOffset; // offset from center of carrying sprite
-	public:
-		WeaponState _weaponState;
+			std::vector<math::Vector2> _firedShots; // destination points 
+			math::Vector2 _shotOriginOffset; // offset from center of carrying sprite
+		public:
+			WeaponState _weaponState;
 
-		Weapon();
-		Weapon(const Weapon& other);
-		Weapon(graphics::Sprite* sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax,math::Vector2 shotOriginOffset);
-		void move() override;
+			Weapon();
+			Weapon(const Weapon& other);
+			Weapon(graphics::Sprite* sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset);
 
-		Weapon* clone();
+			inline const unsigned int getAmmoMax() const { return _ammoMax; }
+			inline const unsigned int getAmmoCurrent() const { return _ammoCurrent; }
+			inline const unsigned int getDmgMax() const { return _dmgMax; }
+			inline const unsigned int getDmgMin() const { return _dmgMin; }
+			inline const unsigned int getClipMax() const { return _clipMax; }
+			inline const unsigned int getClipCurrent() const { return _clipCurrent; }
 
-		void reload(bool infinite = false);
-		void shoot();
-	};
+
+			inline void setAmmoMax(unsigned int value) {  _ammoMax = value; }
+			inline void setAmmoCurrent(unsigned int value) {  _ammoCurrent = value; }
+			inline void setDmgMax(unsigned int value) {  _dmgMax = value; }
+			inline void setDmgMin(unsigned int value) {  _dmgMin = value; }
+			inline void setClipMax(unsigned int value) {  _clipMax = value; }
+			inline void setClipCurrent(unsigned int value) {  _clipCurrent = value; }
+
+			Weapon* clone();
+
+			void onDestroy();
+			void onPickup(Actor& actor);
+			void reload(bool infinite = false);
+			void shoot();
+		};
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include "../Graphics/Label.h"
-#include "../Physics/Physics.h"
 #include "../Graphics/Layer.h"
 
 namespace lam {
