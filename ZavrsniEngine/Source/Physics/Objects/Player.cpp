@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "../../Math/MathUtil.h"
 
-namespace physics {
+namespace objects {
 
 	Player::Player()
 		:Actor()

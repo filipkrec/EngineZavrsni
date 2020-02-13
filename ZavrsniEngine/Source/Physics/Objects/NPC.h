@@ -1,7 +1,7 @@
 #pragma once
 #include "Actor.h"
 
-namespace physics
+namespace objects
 {
 	class NPC :public Actor
 	{

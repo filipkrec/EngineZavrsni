@@ -2,7 +2,7 @@
 #include "Actor.h"
 #include "../../Window.h"
 
-namespace physics {
+namespace objects {
 	class Player :public Actor
 	{
 	public:

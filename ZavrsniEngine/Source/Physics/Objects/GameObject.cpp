@@ -1,5 +1,5 @@
 #include "GameObject.h"
-namespace physics {
+namespace objects {
 
 	GameObject::GameObject()
 	{
@@ -10,15 +10,19 @@ namespace physics {
 	{
 	}
 
+	GameObject::GameObject(graphics::Sprite* sprite)
+		: Hitbox(sprite), _colissionOn(false)
+	{
+	}
+
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight)
-		: Hitbox(sprite), _weight(weight)
+		: Hitbox(sprite), _weight(weight),_colissionOn(true)
 	{
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height)
-		: Hitbox(sprite, shape, width, height), _weight(weight)
+		: Hitbox(sprite, shape, width, height), _weight(weight), _colissionOn(true)
 	{
-
 	}
 
 
@@ -53,26 +57,29 @@ namespace physics {
 
 	void GameObject::collide(GameObject& other)
 	{
-		if (other._previousForce.z > 0)
+		if (_colissionOn)
 		{
-			other.calculateColission(math::Vector3(-other._previousForce.x, -other._previousForce.y, other._previousForce.z));
-			calculateColission(math::Vector3(other._previousForce.x, other._previousForce.y, other._previousForce.z));
+			if (other._previousForce.z > 0)
+			{
+				other.calculateColission(math::Vector3(-other._previousForce.x, -other._previousForce.y, other._previousForce.z));
+				calculateColission(math::Vector3(other._previousForce.x, other._previousForce.y, other._previousForce.z));
+			}
+
+			if (_previousForce.z > 0)
+			{
+				other.calculateColission(math::Vector3(_previousForce.x, _previousForce.y, _previousForce.z));
+				calculateColission(math::Vector3(-_previousForce.x, -_previousForce.y, _previousForce.z));
+			}
+
+			_previousForce.x = 0;
+			_previousForce.y = 0;
+			_previousForce.z = 0;
+
+
+			other._previousForce.x = 0;
+			other._previousForce.y = 0;
+			other._previousForce.z = 0;
 		}
-
-		if (_previousForce.z > 0)
-		{
-			other.calculateColission(math::Vector3(_previousForce.x, _previousForce.y, _previousForce.z));
-			calculateColission(math::Vector3(-_previousForce.x, -_previousForce.y, _previousForce.z));
-		}
-
-		_previousForce.x = 0;
-		_previousForce.y = 0;
-		_previousForce.z = 0;
-
-
-		other._previousForce.x = 0;
-		other._previousForce.y = 0;
-		other._previousForce.z = 0;
 	}
 
 	void GameObject::move()
@@ -105,6 +112,12 @@ namespace physics {
 			_nextMove = math::Vector2(_currentSpeed * _currentForce.x, _currentSpeed * _currentForce.y);
 		else
 			_currentForce.z = 0;
+	}
+
+
+	void GameObject::toggleCollision()
+	{
+		_colissionOn = _colissionOn ? false : true;
 	}
 
 }
