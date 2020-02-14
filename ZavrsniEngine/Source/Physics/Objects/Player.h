@@ -10,6 +10,7 @@ namespace objects {
 		int _keyDown;
 		int _keyRight;
 		int _keyLeft;
+		int _keyPickup;
 		float _movementForce;
 	public:
 		Player();
@@ -22,7 +23,7 @@ namespace objects {
 		virtual void processInput(const engine::Window&  window); //process movement, process rotation (following cursor)
 		virtual void process(const engine::Window& window); 
 
-		void setKeys(int keyUp = GLFW_KEY_W, int keyDown = GLFW_KEY_S, int keyRight = GLFW_KEY_D, int keyLeft = GLFW_KEY_A);
+		void setKeys(int keyPickup = 0,int keyUp = GLFW_KEY_W, int keyDown = GLFW_KEY_S, int keyRight = GLFW_KEY_D, int keyLeft = GLFW_KEY_A);
 		void setForce(float movementForce = 500.0f);
 
 		friend class LevelAssetManager;

@@ -52,4 +52,15 @@ namespace objects {
 		{ 
 			_state = state; 
 		}
+
+
+		void Actor::addPickupable(Pickup* pickupable)
+		{
+			_pickUpable.push_back(pickupable);
+		}
+
+		void Actor::clearPickupable()
+		{
+			_pickUpable.clear();
+		}
 }

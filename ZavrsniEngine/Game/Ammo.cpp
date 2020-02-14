@@ -12,31 +12,34 @@ namespace objects {
 
 		void Ammo::onPickup(Actor& actor)
 		{
-			Weapon* weapon = actor.getWeapon();
-			unsigned int clipDifference =  weapon->getClipMax() - weapon->getClipCurrent();
-			if (_quantity >= clipDifference)
+			if (actor.getWeapon() != nullptr)
 			{
-				_quantity -= clipDifference;
-				weapon->setClipCurrent(weapon->getClipMax());
-			}
-			else
-			{
-				weapon->setClipCurrent(weapon->getClipCurrent() + clipDifference);
-				destroy();
-			}
-
-			if (_quantity > 0)
-			{
-				unsigned int ammoDifference = weapon->getAmmoMax() - weapon->getAmmoCurrent();
-				if (_quantity >= ammoDifference)
+				Weapon* weapon = actor.getWeapon();
+				unsigned int clipDifference = weapon->getClipMax() - weapon->getClipCurrent();
+				if (_quantity >= clipDifference)
 				{
-					_quantity -= ammoDifference;
-					weapon->setAmmoCurrent(weapon->getAmmoMax());
+					_quantity -= clipDifference;
+					weapon->setClipCurrent(weapon->getClipMax());
 				}
 				else
 				{
-					weapon->setAmmoCurrent(weapon->getAmmoCurrent() + ammoDifference);
+					weapon->setClipCurrent(weapon->getClipCurrent() + clipDifference);
 					destroy();
+				}
+
+				if (_quantity > 0)
+				{
+					unsigned int ammoDifference = weapon->getAmmoMax() - weapon->getAmmoCurrent();
+					if (_quantity >= ammoDifference)
+					{
+						_quantity -= ammoDifference;
+						weapon->setAmmoCurrent(weapon->getAmmoMax());
+					}
+					else
+					{
+						weapon->setAmmoCurrent(weapon->getAmmoCurrent() + ammoDifference);
+						destroy();
+					}
 				}
 			}
 		}

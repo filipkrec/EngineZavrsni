@@ -4,12 +4,12 @@
 namespace objects {
 
 	Player::Player()
-		:Actor(), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D),_movementForce(500)
+		:Actor(), _keyPickup(0),_keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D),_movementForce(500)
 	{
 	}
 
 	Player::Player(GameObject gameObject, unsigned int health, float movementSpeedMax)
-		:Actor(gameObject,health,movementSpeedMax,Actor::State::STATE_STILL), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D), _movementForce(500)
+		:Actor(gameObject,health,movementSpeedMax,Actor::State::STATE_STILL), _keyPickup(0), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D), _movementForce(500)
 	{
 	}
 
@@ -106,6 +106,15 @@ namespace objects {
 				_boundSprite->rotate(rotationAngle);
 		}
 
+		//pickup
+		if (_keyPickup == 0 || window.getKey(_keyPickup))
+		{
+			if (!_pickUpable.empty())
+			{
+				pickup(*_pickUpable[0]);
+			}
+		}
+
 	}
 
 	void Player::process(const engine::Window& window)
@@ -126,8 +135,9 @@ namespace objects {
 	}
 
 
-	void Player::setKeys(int keyUp, int keyDown, int keyRight, int keyLeft)
+	void Player::setKeys(int keyPickup,int keyUp, int keyDown, int keyRight, int keyLeft)
 	{
+		_keyPickup = keyPickup;
 		_keyUp = keyUp;
 		_keyDown = keyDown;
 		_keyRight = keyRight;

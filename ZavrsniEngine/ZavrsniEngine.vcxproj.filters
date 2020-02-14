@@ -189,6 +189,9 @@
     <ClCompile Include="External\freetype\src\winfonts\winfnt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Physics\Objects\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -213,9 +216,6 @@
     <ClCompile Include="Source\Managers\LevelAssetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Physics\Objects\Inventory\Weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -223,6 +223,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Game\Ammo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -356,10 +359,10 @@
     <ClInclude Include="Source\Managers\LevelAssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Physics\Objects\Inventory\Pickup.h">
+    <ClInclude Include="Source\Physics\Objects\Inventory\Weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Physics\Objects\Inventory\Weapon.h">
+    <ClInclude Include="Source\Physics\Objects\Inventory\Pickup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\Ammo.h">

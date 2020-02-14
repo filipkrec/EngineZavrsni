@@ -7,15 +7,27 @@ namespace lam {
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_gameObjects;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_NPCs;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_labels;
+	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_pickups;
 	objects::Player* LevelAssetManager::_player = nullptr;
 
 	void LevelAssetManager::process(const engine::Window& window)
 	{
 		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
 		{
-			if (_player != nullptr)
-				_player->process(window);
 
+			if (_player != nullptr)
+			{
+				for (activeObject pickup : _pickups)
+				{
+					objects::Pickup* temp = (objects::Pickup*)pickup._object;
+					if (temp->isHit(*(objects::Hitbox*)_player))
+					{
+						_player->addPickupable(temp);
+					}
+				}
+				_player->process(window);
+				_player->clearPickupable();
+			}
 			objects::GameObject* playerObject = (objects::GameObject*)_player;
 			for (activeObject npc: _NPCs)
 			{
@@ -109,7 +121,7 @@ namespace lam {
 		for (activeObject label : _labels)
 			delete (graphics::Label*)label._object;
 
-		_sprites.clear();
+		_labels.clear();
 	}
 
 	graphics::Label* LevelAssetManager::getLabel(const std::string& name)
@@ -132,7 +144,7 @@ namespace lam {
 		for (activeObject gameObject : _gameObjects)
 			delete (objects::GameObject*)gameObject._object;
 
-		_sprites.clear();
+		_gameObjects.clear();
 	}
 
 	objects::GameObject* LevelAssetManager::getGameObject(const std::string& name)
@@ -155,15 +167,38 @@ namespace lam {
 		for (activeObject NPC : _NPCs)
 			delete (objects::NPC*)NPC._object;
 
-		_sprites.clear();
+		_NPCs.clear();
 	}
 
 	objects::NPC* LevelAssetManager::getNPC(const std::string& name)
 	{
-		for (activeObject npc : _gameObjects)
+		for (activeObject npc : _NPCs)
 		{
 			if (npc._name == name)
 				return (objects::NPC*)npc._object;
+		}
+		return nullptr;
+	}
+
+	void LevelAssetManager::add(objects::Pickup* pickup, const std::string& name)
+	{
+		_pickups.push_back(activeObject((void*)pickup, name));
+	}
+
+	void LevelAssetManager::cleanPickups()
+	{
+		for (activeObject pickup : _pickups)
+			delete (objects::Pickup*)pickup._object;
+
+		_pickups.clear();
+	}
+
+	objects::Pickup* LevelAssetManager::getPickup(const std::string& name)
+	{
+		for (activeObject pickup : _pickups)
+		{
+			if (pickup._name == name)
+				return (objects::Pickup*)pickup._object;
 		}
 		return nullptr;
 	}
@@ -182,8 +217,7 @@ namespace lam {
 		}
 		for (activeObject gameObject : _gameObjects)
 		{
-			graphics::Sprite* temp = (((objects::GameObject*)gameObject._object)->getSprite());
-			layer->add(temp);
+			layer->add(((objects::GameObject*)gameObject._object)->getSprite());
 		}
 
 		for (activeObject npc : _NPCs)
@@ -194,6 +228,11 @@ namespace lam {
 		for (activeObject label : _labels)
 		{
 			layer->add((graphics::Label*)label._object);
+		}
+
+		for (activeObject pickup : _pickups)
+		{
+			layer->add(((objects::Pickup*)pickup._object)->getSprite());
 		}
 
 		if (_player != nullptr)

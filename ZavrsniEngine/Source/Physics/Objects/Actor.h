@@ -20,6 +20,7 @@ namespace objects {
 		float _movementSpeed;
 		float _movementSpeedMax;
 		std::vector<unsigned int> _textureIds;
+		std::vector<Pickup*> _pickUpable;
 
 		State _state;
 		Weapon* _weapon;
@@ -29,12 +30,11 @@ namespace objects {
 		void addTexture(const graphics::Texture& texture);
 		void moveWeapon();
 
-		void move() override;
-		void pickup(Pickup& pickup);
+		virtual void move() override;
+		virtual void pickup(Pickup& pickup);
 		virtual void animate() {};
 		virtual void processState() {};
 		virtual void process(const engine::Window& window) = 0;
-
 	public:
 		inline const unsigned int& getHealth() const { return _health; }
 		inline const float& getMovementSpeed() const { return _movementSpeed; }
@@ -46,5 +46,8 @@ namespace objects {
 		void setMovementSpeed(float value);
 		void setMovementSpeedMax(float value);
 		void setState(const State& state);
+
+		void addPickupable(Pickup* pickupable);
+		void clearPickupable();
 	};
 }
