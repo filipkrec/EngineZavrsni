@@ -8,6 +8,7 @@ namespace objects {
 
 	GameObject::~GameObject()
 	{
+		_boundSprite->DestroySprite();
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite)

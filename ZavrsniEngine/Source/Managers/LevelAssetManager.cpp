@@ -1,4 +1,5 @@
 #include "LevelAssetManager.h"
+#include <algorithm>
 
 namespace lam {
 	engine::Timer* LevelAssetManager::_timer = new engine::Timer();
@@ -14,7 +15,6 @@ namespace lam {
 	{
 		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
 		{
-
 			if (_player != nullptr)
 			{
 				for (activeObject pickup : _pickups)
@@ -28,6 +28,7 @@ namespace lam {
 				_player->process(window);
 				_player->clearPickupable();
 			}
+
 			objects::GameObject* playerObject = (objects::GameObject*)_player;
 			for (activeObject npc: _NPCs)
 			{
@@ -75,7 +76,28 @@ namespace lam {
 				gameObject1 = (objects::GameObject*)gameObject._object;
 				gameObject1->move();
 			}
+
+			//cleanup
 			
+			for (activeObject pickup : _pickups)
+			{
+				objects::Pickup* temp = (objects::Pickup*)pickup._object;
+				temp->processTime();
+			}
+
+			_pickups.erase(
+				std::remove_if(_pickups.begin(), _pickups.end(),
+					[](activeObject x) {
+						objects::Pickup* temp = (objects::Pickup*)x._object;
+						bool destroy = temp->toDestroy();
+						if (destroy)
+						{
+							delete temp;
+						}
+						return destroy;
+					}),
+				_pickups.end());
+
 			_timer->reset();
 		}
 	}

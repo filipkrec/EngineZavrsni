@@ -10,6 +10,7 @@
 #include "Source/Managers/LevelAssetManager.h"
 #include "Source/Graphics/Camera.h"
 #include "Source/Physics/Objects/Player.h"
+#include "Game/Ammo.h"
 #include <iostream>
 #define AT_JOB 0
 
@@ -26,8 +27,10 @@ int main()
 	TextureManager::add(new Texture("Assets/test3.png"), "Space");
 	TextureManager::add(new Texture("Assets/test.png"), "!!");
 	TextureManager::add(new Texture("Assets/playertest.png"), "Player");
+	TextureManager::add(new Texture("Assets/ammo.png"), "Ammo");
 
 	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"),2), 100), 100, 300));
+	lam::LevelAssetManager::add((Pickup*)(new Ammo(new Sprite(-4.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), 5, 20)),"Ammo");
 	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, TextureManager::get("Space"),0), "Space");
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 

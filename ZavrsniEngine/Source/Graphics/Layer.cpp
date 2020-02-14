@@ -113,6 +113,17 @@ namespace graphics {
 			}
 		}
 		//spriteove labelova i ostali spriteovi se stavlaju u isti vektor, sortiraju i renderaju
+		_sprites.erase(
+			std::remove_if(_sprites.begin(), _sprites.end(),
+				[](Sprite* x) {
+					bool temp = x->toDestroySprite();
+					if (temp)
+					{
+						delete x;
+					}
+					return temp;
+				}),
+			_sprites.end());
 		_renderingSprites.insert(_renderingSprites.end(), _sprites.begin(), _sprites.end());
 		_renderingSprites.insert(_renderingSprites.end(), _labelSprites.begin(), _labelSprites.end());
 		std::sort(_renderingSprites.begin(), _renderingSprites.end(), sortSprite);

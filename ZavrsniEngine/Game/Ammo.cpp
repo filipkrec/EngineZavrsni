@@ -46,7 +46,6 @@ namespace objects {
 
 		void Ammo::destroy()
 		{
-			delete this->getSprite();
-			delete this;
+			Pickup::destroy();
 		}
 }

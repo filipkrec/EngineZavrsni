@@ -20,6 +20,8 @@ namespace graphics {
 		const Texture* _texture;
 		math::Vector2 _textureCoordinates[4];
 
+		bool _destroySprite;
+
 		friend class Group;
 	private:
 	public:
@@ -54,5 +56,8 @@ namespace graphics {
 		inline const unsigned int& getZindex() const { return _zindex; }
 		inline const Texture* getTexture() const { return _texture; }
 		inline const math::Vector2* getTextureCoordinates() const { return _textureCoordinates; }
+
+		void DestroySprite();
+		bool toDestroySprite();
 	};
 }
