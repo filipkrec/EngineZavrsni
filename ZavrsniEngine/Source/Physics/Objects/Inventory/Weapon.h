@@ -1,5 +1,5 @@
 #pragma once
-#include "Pickup.h"
+#include "../../../Graphics/Sprite.h"
 namespace objects {
 		enum WeaponState
 		{
@@ -8,7 +8,7 @@ namespace objects {
 		};
 
 
-		class Weapon :public Pickup
+		class Weapon :public graphics::Sprite
 		{
 			unsigned int _dmgMin; //random min dmg
 			unsigned int _dmgMax; //random max dmg
@@ -20,14 +20,14 @@ namespace objects {
 			unsigned int _clipMax; //clip max ammo
 			unsigned int _clipCurrent; //clip current ammo
 
-			std::vector<math::Vector2> _firedShots; // destination points 
 			math::Vector2 _shotOriginOffset; // offset from center of carrying sprite
 		public:
 			WeaponState _weaponState;
+			std::vector<math::Vector2> _firedShots; // destination points 
 
 			Weapon();
 			Weapon(const Weapon& other);
-			Weapon(graphics::Sprite* sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset);
+			Weapon(graphics::Sprite& sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset);
 
 			inline const unsigned int getAmmoMax() const { return _ammoMax; }
 			inline const unsigned int getAmmoCurrent() const { return _ammoCurrent; }
@@ -35,6 +35,7 @@ namespace objects {
 			inline const unsigned int getDmgMin() const { return _dmgMin; }
 			inline const unsigned int getClipMax() const { return _clipMax; }
 			inline const unsigned int getClipCurrent() const { return _clipCurrent; }
+			inline const float getForce() const { return _force; }
 
 
 			inline void setAmmoMax(unsigned int value) {  _ammoMax = value; }
@@ -46,9 +47,8 @@ namespace objects {
 
 			Weapon* clone();
 
-			void destroy();
-			void onPickup(Actor& actor);
 			void reload(bool infinite = false);
 			void shoot();
+			void clearShots();
 		};
 }

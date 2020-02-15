@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "../../Window.h"
 #include "../../Util/Timer.h"
+#include "Inventory/Pickup.h"
 #include "Inventory/Weapon.h"
 
 namespace objects {
@@ -46,6 +47,7 @@ namespace objects {
 		void setMovementSpeed(float value);
 		void setMovementSpeedMax(float value);
 		void setState(const State& state);
+		void setWeapon(Weapon* weapon);
 
 		void addPickupable(Pickup* pickupable);
 		void clearPickupable();

@@ -131,4 +131,10 @@ namespace graphics {
 	{
 		return _destroySprite;
 	}
+
+
+	void Sprite::DoNotDestroySprite()
+	{
+		_destroySprite = false;
+	}
 }

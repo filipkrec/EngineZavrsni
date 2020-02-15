@@ -189,9 +189,6 @@
     <ClCompile Include="External\freetype\src\winfonts\winfnt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Physics\Objects\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -222,10 +219,13 @@
     <ClCompile Include="Source\Physics\Objects\Actor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Ammo.cpp">
+    <ClCompile Include="Game\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Game.cpp">
+    <ClCompile Include="Game\Pickups\Ammo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Weapons\Rifle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -365,7 +365,13 @@
     <ClInclude Include="Source\Physics\Objects\Inventory\Pickup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Ammo.h">
+    <ClInclude Include="Game\Pickups\Ammo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Weapons\Rifle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics\Objects\Inventory\WeaponObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -115,13 +115,24 @@ namespace objects {
 			}
 		}
 
+		//shoot 
+		if (window.getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
+		{
+			if(_weapon != nullptr)
+			_weapon->shoot();
+		}
+
 	}
 
 	void Player::process(const engine::Window& window)
 	{
-			processInput(window);
-			processState();
-			animate();
+		if (_weapon != nullptr)
+		{
+			_weapon->clearShots();
+		}
+		processInput(window);
+		processState();
+		animate();
 	}
 
 

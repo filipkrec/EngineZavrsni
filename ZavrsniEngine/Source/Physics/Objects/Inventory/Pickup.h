@@ -3,7 +3,6 @@
 #include "../../../Util/Timer.h"
 namespace objects {
 	class Actor;
-
 		class Pickup : public GameObject
 		{
 			engine::Timer _timer;

@@ -17,6 +17,8 @@ namespace objects {
 	public:
 		Hitbox();
 		~Hitbox();
+
+		Hitbox(const Hitbox& other);
 		Hitbox(graphics::Sprite* sprite);
 		Hitbox(graphics::Sprite* sprite, Shape shape, float width, float height = 0);
 		Hitbox(graphics::Sprite* sprite, Shape shape, math::Vector2 collisionRange);
@@ -28,6 +30,8 @@ namespace objects {
 
 		bool isHit(const Hitbox& other) const;
 		bool isHit(const math::Vector2& point) const;
+		bool isHit(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const;
+		float distanceMinimum(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const;
 		bool willBeHit(const Hitbox& other, const math::Vector2 nextMove) const;
 	protected:
 		friend class GameObject;

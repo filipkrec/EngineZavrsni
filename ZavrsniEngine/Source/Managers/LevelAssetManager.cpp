@@ -49,6 +49,18 @@ namespace lam {
 				gameObject1 = (objects::GameObject*)gameObject._object;
 				gameObject1->savePreviousForce();
 				gameObject1->calculateNextMove();
+				if (_player->getWeapon() != nullptr)
+				{
+					for (math::Vector2 firedShot : _player->getWeapon()->_firedShots)
+					{
+						if (gameObject1->isHit(_player->getWeapon()->getPosition(), firedShot))
+						{
+							math::Vector2 unitVector = _player->getWeapon()->getPosition() - firedShot;
+							unitVector = unitVector.calculateUnitVector(unitVector.x, unitVector.y);
+							gameObject1->calculateColission(math::Vector3(unitVector.x, unitVector.y, _player->getWeapon()->getForce()));
+						}
+					}
+				}
 			}
 			
 
@@ -107,7 +119,10 @@ namespace lam {
 		if (player == nullptr)
 			_player = new objects::Player();
 		else
+		{
 			_player = player;
+			_player->getSprite()->DoNotDestroySprite();
+		}
 	}
 
 	void LevelAssetManager::add(graphics::Sprite* sprite, const std::string& name)

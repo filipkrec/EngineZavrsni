@@ -10,7 +10,7 @@
 #include "Source/Managers/LevelAssetManager.h"
 #include "Source/Graphics/Camera.h"
 #include "Source/Physics/Objects/Player.h"
-#include "Game/Ammo.h"
+#include "Game/Pickups/Ammo.h"
 #include <iostream>
 #define AT_JOB 0
 

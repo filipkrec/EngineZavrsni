@@ -57,6 +57,7 @@ namespace graphics {
 		inline const Texture* getTexture() const { return _texture; }
 		inline const math::Vector2* getTextureCoordinates() const { return _textureCoordinates; }
 
+		void DoNotDestroySprite();
 		void DestroySprite();
 		bool toDestroySprite();
 	};

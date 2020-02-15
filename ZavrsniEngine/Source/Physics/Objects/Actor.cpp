@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "Inventory/Weapon.h"
 
 namespace objects {
 		Actor::Actor() {}
@@ -11,9 +12,9 @@ namespace objects {
 		{
 			if (_weapon != nullptr)
 			{
-				_weapon->getSprite()->setPosition(_boundSprite->getPosition());
-				_weapon->getSprite()->setScale(_boundSprite->getScale());
-				_weapon->getSprite()->rotate(_boundSprite->getRotation());
+				_weapon->setPosition(_boundSprite->getPosition());
+				_weapon->setScale(_boundSprite->getScale());
+				_weapon->rotate(_boundSprite->getRotation());
 			}
 		}
 
@@ -53,6 +54,10 @@ namespace objects {
 			_state = state; 
 		}
 
+		void Actor::setWeapon(Weapon* weapon)
+		{
+			_weapon = weapon;
+		}
 
 		void Actor::addPickupable(Pickup* pickupable)
 		{
