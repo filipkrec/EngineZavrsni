@@ -11,6 +11,12 @@ namespace objects {
 		{
 			actor.setWeapon(_weapon);
 			_weapon = nullptr;
+			destroy();
+		}
+	public:
+		WeaponObject(graphics::Sprite* sprite, Weapon* weapon)
+			:Pickup(sprite,0),_weapon(weapon)
+		{
 		}
 	};
 }

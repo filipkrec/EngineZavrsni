@@ -79,6 +79,12 @@ namespace graphics {
 		applyTransformations();
 	}
 
+	void Sprite::setRotation(float degrees)
+	{
+		_rotation = fmod(degrees, 360);
+		applyTransformations();
+	}
+
 	void Sprite::setScale(const math::Vector2& scale)
 	{
 		_scale = scale;

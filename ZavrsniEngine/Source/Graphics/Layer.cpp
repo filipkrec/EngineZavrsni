@@ -51,9 +51,9 @@ namespace graphics {
 
 	void Layer::labelToSprite(Label* label)
 	{
-		const math::Vector2* position = new math::Vector2();
-		float posy = position->y;
-		float posx = position->x;
+		const math::Vector2 position = label->getPosition();
+		float posy = position.y;
+		float posx = position.x;
 
 		Font* currentFont = label->getFont();
 		const math::Vector2& scale = currentFont->getScale();
@@ -77,6 +77,8 @@ namespace graphics {
 				float x1 = x0 + glyph->width / scale.x;
 				float y1 = y0 - glyph->height / scale.y;
 
+				math::Vector2 symbolPos = math::Vector2((x0 + x1) / 2, (y0 + y1) / 2);
+
 				float u0 = glyph->s0;
 				float v0 = glyph->t0;
 				float u1 = glyph->s1;
@@ -85,14 +87,11 @@ namespace graphics {
 				Sprite* spriteTemp = (Sprite*)label;
 				Sprite* sprite = new Sprite();
 				memcpy(sprite, spriteTemp, sizeof(Sprite));
-				sprite->setPosition(math::Vector2(x0, y0));
-				sprite->setPosition(math::Vector2(x0, y1));
-				sprite->setPosition(math::Vector2(x1, y1));
-				sprite->setPosition(math::Vector2(x1, y0));
-				sprite->setTextureCoordinates(math::Vector2(u0, v0), 0);
-				sprite->setTextureCoordinates(math::Vector2(u0, v1), 1);
-				sprite->setTextureCoordinates(math::Vector2(u1, v1), 2);
-				sprite->setTextureCoordinates(math::Vector2(u1, v0), 3);
+				sprite->setPosition(math::Vector2(symbolPos.x, symbolPos.y));
+				sprite->setTextureCoordinates(math::Vector2(u0, v1), 0);
+				sprite->setTextureCoordinates(math::Vector2(u0, v0), 1);
+				sprite->setTextureCoordinates(math::Vector2(u1, v0), 2);
+				sprite->setTextureCoordinates(math::Vector2(u1, v1), 3);
 
 				_labelSprites.push_back(sprite);
 

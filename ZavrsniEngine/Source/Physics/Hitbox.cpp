@@ -1,4 +1,5 @@
 #include "Hitbox.h"
+#include <algorithm>
 
 namespace objects {
 	Hitbox::Hitbox()
@@ -95,6 +96,7 @@ namespace objects {
 
 	bool Hitbox::isHit(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const
 	{
+		//cohen sutherland
 		math::Vector2 collisionRangeFinal[2];
 		collisionRangeFinal[0] = _boundSprite->getPosition() - _collisionRange;//bot left 
 		collisionRangeFinal[1] = _boundSprite->getPosition() + _collisionRange; //top right
@@ -110,8 +112,13 @@ namespace objects {
 		if ((vectorOrigin.y >= collisionRangeFinal[0].y && vectorOrigin.y <= collisionRangeFinal[1].y) && (vectorEndpoint.y >= collisionRangeFinal[0].y && vectorEndpoint.y <= collisionRangeFinal[1].x))
 			return true;
 
-		if (distanceMinimum(vectorOrigin, vectorEndpoint) >= 0)
-			return true;
+		if ((vectorOrigin.x < collisionRangeFinal[0].x && vectorEndpoint.x < collisionRangeFinal[0].x) || (vectorOrigin.x > collisionRangeFinal[1].x && vectorEndpoint.x > collisionRangeFinal[1].x))
+			return false;
+
+		if ((vectorOrigin.y < collisionRangeFinal[0].y && vectorEndpoint.y < collisionRangeFinal[0].y) || (vectorOrigin.y > collisionRangeFinal[1].y && vectorEndpoint.y > collisionRangeFinal[1].y))
+			return false;
+
+		return distanceMinimum(vectorOrigin, vectorEndpoint) >= 0;
 	}
 
 	float Hitbox::distanceMinimum(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const
@@ -120,38 +127,84 @@ namespace objects {
 		collisionRangeFinal[0] = _boundSprite->getPosition() - _collisionRange;//bot left 
 		collisionRangeFinal[1] = _boundSprite->getPosition() + _collisionRange; //top right
 
-		if (isHit(vectorOrigin))
-			return 0;
-		float y;
+		math::Vector2 origin = vectorOrigin;
+		math::Vector2 endpoint = vectorEndpoint;
+
+
+		//swaping formula to positives
+		float lowesty = std::min(std::min(collisionRangeFinal[0].y, vectorOrigin.y), vectorEndpoint.y);
+		float lowestx = std::min(std::min(collisionRangeFinal[0].x, vectorOrigin.x), vectorEndpoint.x);
+
+		if (lowestx < 0)
+		{
+			origin.x -= lowestx;
+			endpoint.x -= lowestx;
+			collisionRangeFinal[0].x -= lowestx;
+			collisionRangeFinal[1].x -= lowestx;
+		}
+
+		if (lowesty < 0)
+		{
+			origin.y -= lowesty;
+			endpoint.y -= lowesty;
+			collisionRangeFinal[0].y -= lowesty;
+			collisionRangeFinal[1].y -= lowesty;
+		}
+
+		//swaping end
+
+		float closey;
+		float closex;
+		float m = (endpoint.y - origin.y) / (endpoint.x - origin.x);
 		float x;
-		float m = (vectorEndpoint.y - vectorOrigin.y) / (vectorEndpoint.x - vectorOrigin.x);
+		float y;
 
-		if (vectorOrigin.y < collisionRangeFinal[0].y)
-			y = collisionRangeFinal[0].y;
-		else if (vectorOrigin.y > collisionRangeFinal[1].y)
-			y = collisionRangeFinal[1].y;
-		else y = 0;
+		if (origin.y < collisionRangeFinal[0].y)
+			closey = collisionRangeFinal[0].y;
+		else if (origin.y > collisionRangeFinal[1].y)
+			closey = collisionRangeFinal[1].y;
+		else
+			closey = 0;
+			
+			
 
-		if (vectorOrigin.x > collisionRangeFinal[0].x)
-			x = collisionRangeFinal[0].x;
-		else if (vectorOrigin.x > collisionRangeFinal[1].x)
-			x = collisionRangeFinal[1].x;
-		else x = 0;
+		if (origin.x < collisionRangeFinal[0].x)
+			closex = collisionRangeFinal[0].x;
+		else if (origin.x > collisionRangeFinal[1].x)
+			closex = collisionRangeFinal[1].x;
+		else
+			closex = 0;
 
-		if (y == 0)
+		if (closex == 0)
 		{
-			y = vectorOrigin.y + m*(x - vectorOrigin.x);
+			x = origin.x + (1.0f / m) * (closey - origin.y);
+			y = closey;
+		}
+		else
+		{
+			y = origin.y + m * (closex - origin.x);
+			x = closex;
+
+			if (!(y >= collisionRangeFinal[0].y && y <= collisionRangeFinal[1].y))
+				return -1;
+		}
+		
+		//vracanje u prvobitan predznak
+		if (lowesty < 0)
+		{
+			y += lowesty;
 		}
 
-		if (x == 0)
+		if (lowestx < 0)
 		{
-			x = vectorOrigin.x + m*(y - vectorOrigin.y);
+			x += lowestx;
 		}
+		//
 
 		if (!isHit(math::Vector2(x, y)))
 			return -1;
 		else
-			return sqrtf(powf((vectorOrigin.x - x), 2) + powf((vectorOrigin.y - y), 2));
+			return sqrtf(powf((origin.x - x), 2) + powf((origin.y - y), 2));
 
 	}
 

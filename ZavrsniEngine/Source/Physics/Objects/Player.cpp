@@ -122,6 +122,13 @@ namespace objects {
 			_weapon->shoot();
 		}
 
+		//reload 
+		if (window.getKeyPressed(GLFW_KEY_R))
+		{
+			if (_weapon != nullptr)
+				_weapon->reload();
+		}
+
 	}
 
 	void Player::process(const engine::Window& window)
@@ -129,6 +136,7 @@ namespace objects {
 		if (_weapon != nullptr)
 		{
 			_weapon->clearShots();
+			moveWeapon();
 		}
 		processInput(window);
 		processState();

@@ -14,7 +14,7 @@ namespace objects {
 			{
 				_weapon->setPosition(_boundSprite->getPosition());
 				_weapon->setScale(_boundSprite->getScale());
-				_weapon->rotate(_boundSprite->getRotation());
+				_weapon->setRotation(_boundSprite->getRotation());
 			}
 		}
 

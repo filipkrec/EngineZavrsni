@@ -36,7 +36,7 @@ namespace lam {
 		static objects::Player* _player;
 	public:
 		static void init(objects::Player* player = nullptr);
-		static void process(const engine::Window& window);
+		static void process(engine::Window& window);
 
 		static void add(graphics::Sprite* sprite, const std::string& name);
 		static void cleanSprites();

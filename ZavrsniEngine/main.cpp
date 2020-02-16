@@ -11,6 +11,7 @@
 #include "Source/Graphics/Camera.h"
 #include "Source/Physics/Objects/Player.h"
 #include "Game/Pickups/Ammo.h"
+#include "Source/Physics/Objects/Inventory/WeaponObject.h"
 #include <iostream>
 #define AT_JOB 0
 
@@ -28,9 +29,17 @@ int main()
 	TextureManager::add(new Texture("Assets/test.png"), "!!");
 	TextureManager::add(new Texture("Assets/playertest.png"), "Player");
 	TextureManager::add(new Texture("Assets/ammo.png"), "Ammo");
+	TextureManager::add(new Texture("Assets/rifle.png"), "Rifle");
+	TextureManager::add(new Texture("Assets/riflePickup.png"), "RiflePickup");
+
+	Font* font = new Font("Assets/arial.ttf", 20);
+	font->setScale(16, 9);
 
 	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"),2), 100), 100, 300));
+	lam::LevelAssetManager::add(new Label("100/100", -10.0f, 6.0f, 0xff00ff00, font, 16), "AmmoLabel");
+	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 1.0f, 0.5f, TextureManager::get("Rifle"), 2), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
 	lam::LevelAssetManager::add((Pickup*)(new Ammo(new Sprite(-4.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), 5, 20)),"Ammo");
+	lam::LevelAssetManager::add((Pickup*)(new WeaponObject(new Sprite(0.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("RiflePickup"), 1), weapon)),"WeaponObject");
 	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, TextureManager::get("Space"),0), "Space");
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 
@@ -55,7 +64,13 @@ int main()
 			Player* player = lam::LevelAssetManager::getPlayer();
 			Hitbox* hitbox = lam::LevelAssetManager::getPlayer();
 			GameObject* planet = lam::LevelAssetManager::getGameObject("Planet");
-			
+			Label* label = lam::LevelAssetManager::getLabel("AmmoLabel");
+			if (player->getWeapon() != nullptr)
+			{
+				unsigned int maxclip = player->getWeapon()->getClipMax();
+				unsigned int clip = player->getWeapon()->getClipCurrent();
+				label->setText(std::to_string(clip) + " / " + std::to_string(maxclip));
+			}
 			/*
 			if (planet->isHit(*hitbox))
 				planet->getSprite()->swapTexture(TextureManager::get("!!"));

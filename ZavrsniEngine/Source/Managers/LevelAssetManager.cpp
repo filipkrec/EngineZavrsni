@@ -11,7 +11,7 @@ namespace lam {
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_pickups;
 	objects::Player* LevelAssetManager::_player = nullptr;
 
-	void LevelAssetManager::process(const engine::Window& window)
+	void LevelAssetManager::process(engine::Window& window)
 	{
 		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
 		{
@@ -53,9 +53,9 @@ namespace lam {
 				{
 					for (math::Vector2 firedShot : _player->getWeapon()->_firedShots)
 					{
-						if (gameObject1->isHit(_player->getWeapon()->getPosition(), firedShot))
+						if (gameObject1->isHit(_player->getWeapon()->getPosition(), _player->getWeapon()->getPosition() + firedShot))
 						{
-							math::Vector2 unitVector = _player->getWeapon()->getPosition() - firedShot;
+							math::Vector2 unitVector = firedShot - _player->getWeapon()->getPosition();
 							unitVector = unitVector.calculateUnitVector(unitVector.x, unitVector.y);
 							gameObject1->calculateColission(math::Vector3(unitVector.x, unitVector.y, _player->getWeapon()->getForce()));
 						}
@@ -109,7 +109,8 @@ namespace lam {
 						return destroy;
 					}),
 				_pickups.end());
-
+			
+			window.clearInput();
 			_timer->reset();
 		}
 	}

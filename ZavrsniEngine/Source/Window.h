@@ -32,6 +32,7 @@ namespace engine {
 		void close();
 		bool closed() const;
 		void update();
+		void clearInput();
 		void clear();
 		bool toggleVsync();
 		bool toggleCursor();

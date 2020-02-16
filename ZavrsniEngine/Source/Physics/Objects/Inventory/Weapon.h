@@ -27,7 +27,7 @@ namespace objects {
 
 			Weapon();
 			Weapon(const Weapon& other);
-			Weapon(graphics::Sprite& sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset);
+			Weapon(const graphics::Sprite& sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset);
 
 			inline const unsigned int getAmmoMax() const { return _ammoMax; }
 			inline const unsigned int getAmmoCurrent() const { return _ammoCurrent; }

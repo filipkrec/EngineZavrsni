@@ -19,14 +19,18 @@ namespace engine {
 
 	void Window::update()
 	{
+		glfwPollEvents();
+		glfwGetFramebufferSize(_window, &_width, &_height);
+		glfwSwapBuffers(_window);
+	}
+
+	void Window::clearInput()
+	{
 		if (_requireInputReset == true)
 		{
 			_requireInputReset = false;
 			resetInputPress();
 		}
-		glfwPollEvents();
-		glfwGetFramebufferSize(_window, &_width, &_height);
-		glfwSwapBuffers(_window);
 	}
 
 	bool Window::closed() const
