@@ -9,6 +9,7 @@ namespace lam {
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_NPCs;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_labels;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_pickups;
+	std::vector<graphics::Sprite*> LevelAssetManager::_shots;
 	objects::Player* LevelAssetManager::_player = nullptr;
 
 	void LevelAssetManager::process(engine::Window& window)
@@ -53,6 +54,8 @@ namespace lam {
 				{
 					for (math::Vector2 firedShot : _player->getWeapon()->_firedShots)
 					{
+						graphics::Sprite* lineSprite = new graphics::Sprite(math::Vector2(_player->getWeapon()->getPosition()), math::Vector2(_player->getWeapon()->getPosition() + firedShot));
+						_shots.push_back(lineSprite);
 						if (gameObject1->isHit(_player->getWeapon()->getPosition(), _player->getWeapon()->getPosition() + firedShot))
 						{
 							math::Vector2 unitVector = firedShot - _player->getWeapon()->getPosition();
@@ -275,6 +278,15 @@ namespace lam {
 
 		if (_player != nullptr)
 			layer->add((_player->getSprite()));
+	}
+
+	void LevelAssetManager::refreshShots(graphics::Layer* layer)
+	{
+		for (graphics::Sprite* shot : _shots)
+		{
+			layer->add(shot);
+		}
+		_shots.clear();
 	}
 
 

@@ -33,6 +33,7 @@ namespace lam {
 		static std::vector<activeObject> _NPCs;
 		static std::vector<activeObject> _labels;
 		static std::vector<activeObject> _pickups;
+		static std::vector<graphics::Sprite*> _shots;
 		static objects::Player* _player;
 	public:
 		static void init(objects::Player* player = nullptr);
@@ -60,6 +61,7 @@ namespace lam {
 		static objects::Pickup* getPickup(const std::string& name);
 
 		static void addToLayer(graphics::Layer* layer);
+		static void refreshShots(graphics::Layer* layer);
 		static void clean();
 
 		static objects::Player* getPlayer();

@@ -58,6 +58,7 @@ int main()
 		fps++;
 
 		lam::LevelAssetManager::process(*display);
+		lam::LevelAssetManager::refreshShots(layer);
 		display->getMousePosition(x, y);
 		if (timerTick->elapsed() >= 1.0f / 60.0f)
 		{

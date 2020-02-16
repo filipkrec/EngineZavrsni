@@ -48,8 +48,55 @@ namespace graphics {
 		_indices = (unsigned int*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY); //mapiranje indices kao tocke unosa index buffer podataka;
 	}
 
+	void Renderer::submit(const math::Vector2 lineBegin, const math::Vector2 lineEnd)
+	{
+		VertexData temp;
+
+		temp.Color = 0xffffff00;
+		temp.TextureSlot = -1;
+		math::Vector2 offset(0.01f, 0.01f);
+
+		temp.Position = _camera->getViewMatrix() * lineBegin;
+		temp.TextureCoordinate = math::Vector2(0.0f,0.0f);
+		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
+
+		temp.Position = _camera->getViewMatrix() * (lineBegin + offset);
+		temp.TextureCoordinate = math::Vector2(0.0f, 1.0f);
+		const unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
+
+		temp.Position = _camera->getViewMatrix() * lineEnd;
+		temp.TextureCoordinate = math::Vector2(1.0f, 1.0f);
+		const unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
+
+		temp.Position = _camera->getViewMatrix() * (lineEnd + offset);
+		temp.TextureCoordinate = math::Vector2(1.0f, 0.0f);
+		const unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
+
+		//Rasporedivanje odgovarajucih indexa u 2 polovice(trokuta) za crtanje
+		*_indices = indexA;
+		_indices++;
+		*_indices = indexB;
+		_indices++;
+		*_indices = indexC;
+		_indices++;
+		*_indices = indexA;
+		_indices++;
+		*_indices = indexC;
+		_indices++;
+		*_indices = indexD;
+		_indices++;
+
+		_indexCount += 6;
+	}
+
 	void Renderer::submit(const Sprite* sprite)
 	{
+		if (sprite->_isLine)
+		{
+			submit(sprite->getPosition(), sprite->getSize());
+			return;
+		}
+
 		const math::Vector2& position = sprite->getPosition();
 		const math::Vector2& offset = sprite->getOffset();
 		const math::Vector2& size = sprite->getSize();
@@ -75,7 +122,7 @@ namespace graphics {
 		temp.Color = color;
 		temp.TextureSlot = textureSlot;
 
-		temp.Position = _camera->getViewMatrix() *  modelMatrix * (math::Vector2(-size.x/2, -size.y / 2) + offset);
+		temp.Position = _camera->getViewMatrix() * modelMatrix * (math::Vector2(-size.x / 2, -size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[0];
 		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
 

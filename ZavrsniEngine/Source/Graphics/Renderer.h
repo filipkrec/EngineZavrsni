@@ -53,6 +53,7 @@ namespace graphics {
 
 		void begin();
 		void submit(const Sprite* renderable);
+		void submit(const math::Vector2 lineBegin, const math::Vector2 lineEnd);
 		void end();
 		void flush();
 	private:
