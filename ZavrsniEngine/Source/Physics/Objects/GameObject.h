@@ -2,8 +2,6 @@
 
 #include "../../Graphics/Sprite.h"
 #include "../Hitbox.h"
-#define FRICTION 1.0f
-#define PROCESSING_INTERVAL 60
 
 namespace objects {
 	class GameObject : public Hitbox {

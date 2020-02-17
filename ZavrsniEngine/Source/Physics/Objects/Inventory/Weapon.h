@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../Graphics/Sprite.h"
+#include "../../../Graphics/Camera.h"
 namespace objects {
 		enum WeaponState
 		{

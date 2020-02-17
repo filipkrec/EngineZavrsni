@@ -2,6 +2,8 @@
 #include <vector>
 #include "../Math/Math.h"
 #include "Texture.h"
+#define PROCESSING_INTERVAL 60
+#define FRICTION 1.0f
 
 namespace graphics {
 	class Sprite
@@ -25,12 +27,11 @@ namespace graphics {
 		friend class Group;
 	private:
 	public:
-		bool _isLine;
 
 		Sprite();
 		~Sprite();
 		Sprite(const Sprite& sprite);
-		Sprite(const math::Vector2 lineBegin, const math::Vector2 lineEnd);
+		Sprite(unsigned int color, unsigned int zindex);
 		Sprite(float x, float y, float width, float height,  const unsigned int color, float zindex = 0.0f);
 		Sprite(float x, float y, float width, float height, const Texture* texture, float zindex = 0.0f, const math::Vector2& offset = math::Vector2(0.0f,0.0f));
 		Sprite(float x, float y, float width, float height, unsigned int color, const Texture* texture, float zindex);
@@ -61,8 +62,11 @@ namespace graphics {
 		inline const Texture* getTexture() const { return _texture; }
 		inline const math::Vector2* getTextureCoordinates() const { return _textureCoordinates; }
 
+		virtual math::Vector4 getLineElements() const;
+
 		void DoNotDestroySprite();
 		void DestroySprite();
 		bool toDestroySprite();
+		virtual void virtualDestructor();
 	};
 }

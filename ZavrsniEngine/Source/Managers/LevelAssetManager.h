@@ -4,6 +4,7 @@
 #include "../Graphics/Layer.h"
 #include "../Physics/Objects/Player.h"
 #include "../Physics/Objects/NPC.h"
+#include "../Graphics/Line.h"
 
 namespace lam {
 	class LevelAssetManager
@@ -33,7 +34,7 @@ namespace lam {
 		static std::vector<activeObject> _NPCs;
 		static std::vector<activeObject> _labels;
 		static std::vector<activeObject> _pickups;
-		static std::vector<graphics::Sprite*> _shots;
+		static std::vector<graphics::Line*> _shots;
 		static objects::Player* _player;
 	public:
 		static void init(objects::Player* player = nullptr);

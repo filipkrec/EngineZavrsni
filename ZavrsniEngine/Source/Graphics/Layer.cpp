@@ -128,12 +128,6 @@ namespace graphics {
 		std::sort(_renderingSprites.begin(), _renderingSprites.end(), sortSprite);
 		for (Sprite* sprite : _renderingSprites) {
 			_renderer->submit(sprite);
-			if (sprite->_isLine)
-			{
-				sprite->rotate(-1);
-				if(sprite->getRotation() == 0)
-					sprite->DestroySprite();
-			}
 		}
 		_renderer->end();
 		_renderer->flush();

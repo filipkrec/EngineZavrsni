@@ -39,7 +39,7 @@ namespace objects
 				_clipCurrent -= 1;
 				float rotation = getRotation() + (_spread != 0 ? fmod((float)rand(), _spread) - _spread / 2 : 0);
 				math::Vector2 destinationPoint = math::Vector2(math::Matrix4::rotation(rotation, math::Vector3(0, 0, 1)) * math::Vector2(_range, 0)); //vektor razlike od origina pucnjave do maksimalnog kraja
-				_firedShots.push_back(destinationPoint + getPosition());
+				_firedShots.push_back(getPosition() + destinationPoint);
 			}
 		}
 

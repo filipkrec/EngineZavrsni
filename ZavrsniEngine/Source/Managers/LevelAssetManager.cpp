@@ -9,7 +9,7 @@ namespace lam {
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_NPCs;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_labels;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_pickups;
-	std::vector<graphics::Sprite*> LevelAssetManager::_shots;
+	std::vector<graphics::Line*> LevelAssetManager::_shots;
 	objects::Player* LevelAssetManager::_player = nullptr;
 
 	void LevelAssetManager::process(engine::Window& window)
@@ -54,13 +54,10 @@ namespace lam {
 				{
 					for (math::Vector2 firedShot : _player->getWeapon()->_firedShots)
 					{
-						graphics::Sprite* lineSprite = new graphics::Sprite(math::Vector2(_player->getWeapon()->getPosition()), math::Vector2(_player->getWeapon()->getPosition() + firedShot));
+						graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getPosition()), math::Vector2(firedShot));
 						_shots.push_back(lineSprite);
-						if (gameObject1->getLineIntersection(_player->getWeapon()->getPosition(), _player->getWeapon()->getPosition() + firedShot) != math::Vector4(0,0,0,0))
+						if (gameObject1->getLineIntersection(_player->getWeapon()->getPosition(),  firedShot) != math::Vector4(0,0,0,0))
 						{
-							math::Vector4 testHit = gameObject1->getLineIntersection(_player->getWeapon()->getPosition(), _player->getWeapon()->getPosition() + firedShot);
-							std::cout << testHit << std::endl;
-
 							math::Vector2 unitVector = firedShot - _player->getWeapon()->getPosition();
 							unitVector = unitVector.calculateUnitVector(unitVector.x, unitVector.y);
 							gameObject1->calculateColission(math::Vector3(unitVector.x, unitVector.y, _player->getWeapon()->getForce()));
@@ -102,6 +99,18 @@ namespace lam {
 				objects::Pickup* temp = (objects::Pickup*)pickup._object;
 				temp->processTime();
 			}
+
+			for (graphics::Line* line : _shots)
+			{
+				line->tick();
+			}
+
+			_shots.erase(
+				std::remove_if(_shots.begin(), _shots.end(),
+					[](graphics::Line* x) {
+						return x->getDuration() == 0;
+					}),
+				_shots.end());
 
 			_pickups.erase(
 				std::remove_if(_pickups.begin(), _pickups.end(),
@@ -285,11 +294,11 @@ namespace lam {
 
 	void LevelAssetManager::refreshShots(graphics::Layer* layer)
 	{
-		for (graphics::Sprite* shot : _shots)
+		for (graphics::Line* shot : _shots)
 		{
-			layer->add(shot);
+			if(shot->isNew())
+			layer->add((graphics::Sprite*)shot);
 		}
-		_shots.clear();
 	}
 
 

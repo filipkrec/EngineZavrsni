@@ -13,7 +13,8 @@
 #include "Game/Pickups/Ammo.h"
 #include "Source/Physics/Objects/Inventory/WeaponObject.h"
 #include <iostream>
-#define AT_JOB 0
+#define FRICTION 1.0f
+#define PROCESSING_INTERVAL 60
 
 int main()
 {
@@ -44,7 +45,7 @@ int main()
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 
 	//lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), 100), "Player");
-	lam::LevelAssetManager::add(new GameObject(&Sprite(5.0f, 5.0f, 2.0f, 2.0f, 0xffff0000, 2), 100), "Planet");
+	lam::LevelAssetManager::add(new GameObject(&Sprite(5.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 100), "Planet");
 
 	lam::LevelAssetManager::addToLayer(layer);
 	Timer* timer = new Timer();

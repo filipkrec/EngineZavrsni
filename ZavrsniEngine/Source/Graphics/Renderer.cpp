@@ -48,11 +48,11 @@ namespace graphics {
 		_indices = (unsigned int*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY); //mapiranje indices kao tocke unosa index buffer podataka;
 	}
 
-	void Renderer::submit(const math::Vector2 lineBegin, const math::Vector2 lineEnd)
+	void Renderer::submit(const math::Vector2 lineBegin, const math::Vector2 lineEnd, unsigned int color)
 	{
 		VertexData temp;
 
-		temp.Color = 0xffffff00;
+		temp.Color = color;
 		temp.TextureSlot = -1;
 		math::Vector2 offset(0.01f, 0.01f);
 
@@ -91,9 +91,10 @@ namespace graphics {
 
 	void Renderer::submit(const Sprite* sprite)
 	{
-		if (sprite->_isLine)
+		math::Vector4 lineElements = sprite->getLineElements();
+		if (lineElements != math::Vector4(0,0,0,0))
 		{
-			submit(sprite->getPosition(), sprite->getSize());
+			submit(math::Vector2(lineElements.x,lineElements.y), math::Vector2(lineElements.z, lineElements.w), sprite->getColor());
 			return;
 		}
 
