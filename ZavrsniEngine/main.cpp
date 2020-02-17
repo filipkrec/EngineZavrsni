@@ -44,7 +44,7 @@ int main()
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 
 	//lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), 100), "Player");
-	lam::LevelAssetManager::add(new GameObject(&Sprite(5.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 100,Shape::SQUARE,1.5f), "Planet");
+	lam::LevelAssetManager::add(new GameObject(&Sprite(5.0f, 5.0f, 2.0f, 2.0f, 0xffff0000, 2), 100), "Planet");
 
 	lam::LevelAssetManager::addToLayer(layer);
 	Timer* timer = new Timer();
@@ -84,7 +84,7 @@ int main()
 
 		if (timer->elapsed() >= 1.0f)
 		{
-			std::cout << fps << std::endl;
+			//std::cout << fps << std::endl;
 
 			timer->reset();
 			fps = 0;

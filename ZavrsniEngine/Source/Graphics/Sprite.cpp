@@ -22,6 +22,7 @@ namespace graphics {
 		_isLine = true;
 		_position = lineBegin;
 		_size = lineEnd;
+		_rotation = 500;
 	}
 
 	Sprite::Sprite(const Sprite& sprite)

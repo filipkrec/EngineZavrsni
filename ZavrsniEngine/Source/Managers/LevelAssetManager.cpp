@@ -45,7 +45,7 @@ namespace lam {
 			objects::GameObject* gameObject1;
 			objects::GameObject* gameObject2;
 
-			for (activeObject gameObject : allObjects)
+			for (activeObject gameObject : _gameObjects)
 			{
 				gameObject1 = (objects::GameObject*)gameObject._object;
 				gameObject1->savePreviousForce();
@@ -56,8 +56,11 @@ namespace lam {
 					{
 						graphics::Sprite* lineSprite = new graphics::Sprite(math::Vector2(_player->getWeapon()->getPosition()), math::Vector2(_player->getWeapon()->getPosition() + firedShot));
 						_shots.push_back(lineSprite);
-						if (gameObject1->isHit(_player->getWeapon()->getPosition(), _player->getWeapon()->getPosition() + firedShot))
+						if (gameObject1->getLineIntersection(_player->getWeapon()->getPosition(), _player->getWeapon()->getPosition() + firedShot) != math::Vector4(0,0,0,0))
 						{
+							math::Vector4 testHit = gameObject1->getLineIntersection(_player->getWeapon()->getPosition(), _player->getWeapon()->getPosition() + firedShot);
+							std::cout << testHit << std::endl;
+
 							math::Vector2 unitVector = firedShot - _player->getWeapon()->getPosition();
 							unitVector = unitVector.calculateUnitVector(unitVector.x, unitVector.y);
 							gameObject1->calculateColission(math::Vector3(unitVector.x, unitVector.y, _player->getWeapon()->getForce()));

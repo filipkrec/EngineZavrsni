@@ -126,8 +126,14 @@ namespace graphics {
 		_renderingSprites.insert(_renderingSprites.end(), _sprites.begin(), _sprites.end());
 		_renderingSprites.insert(_renderingSprites.end(), _labelSprites.begin(), _labelSprites.end());
 		std::sort(_renderingSprites.begin(), _renderingSprites.end(), sortSprite);
-		for (const Sprite* sprite : _renderingSprites) {
+		for (Sprite* sprite : _renderingSprites) {
 			_renderer->submit(sprite);
+			if (sprite->_isLine)
+			{
+				sprite->rotate(-1);
+				if(sprite->getRotation() == 0)
+					sprite->DestroySprite();
+			}
 		}
 		_renderer->end();
 		_renderer->flush();

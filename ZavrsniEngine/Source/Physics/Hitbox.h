@@ -1,6 +1,12 @@
 #pragma once
 #include "../Math/Math.h"
 #include "../Graphics/Sprite.h"
+#define INSIDE = 0
+#define	LEFT = 1
+#define RIGHT = 2
+#define BOTTOM = 4
+#define TOP = 8
+
 
 namespace objects {
 	enum Shape {
@@ -33,6 +39,9 @@ namespace objects {
 		bool isHit(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const;
 		float distanceMinimum(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const;
 		bool willBeHit(const Hitbox& other, const math::Vector2 nextMove) const;
+
+		math::Vector4 getLineIntersection(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint);
+		int computeCode(const math::Vector2& vectorOrigin);
 	protected:
 		friend class GameObject;
 	};
