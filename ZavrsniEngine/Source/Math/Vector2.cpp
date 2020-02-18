@@ -13,6 +13,11 @@ namespace math {
 		this->y = y;
 	}
 
+	float Vector2::distanceFrom(const Vector2& other) const
+	{
+		return sqrtf(powf((x - other.x), 2) + powf((y - other.y), 2));
+	}
+
 	Vector2& Vector2::add(const Vector2& other)
 	{
 		y += other.y;

@@ -4,12 +4,13 @@
 namespace objects {
 
 	Player::Player()
-		:Actor(), _keyPickup(0),_keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D),_movementForce(500)
+		:Actor(), _keyPickup(0),_keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D)
 	{
+		_movementSpeed = 100;
 	}
 
-	Player::Player(GameObject gameObject, unsigned int health, float movementSpeedMax)
-		:Actor(gameObject,health,movementSpeedMax,Actor::State::STATE_STILL), _keyPickup(0), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D), _movementForce(500)
+	Player::Player(GameObject gameObject, unsigned int health, float movementSpeed)
+		:Actor(gameObject,health, movementSpeed,Actor::State::STATE_STILL), _keyPickup(0), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D)
 	{
 	}
 
@@ -26,7 +27,7 @@ namespace objects {
 	void Player::processInput(const engine::Window& window)
 	{
 
-		float force = _movementForce;
+		float force = (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight;
 
 		//movement
 		if (window.getKeyPressed(_keyUp))
@@ -161,10 +162,5 @@ namespace objects {
 		_keyDown = keyDown;
 		_keyRight = keyRight;
 		_keyLeft = keyLeft;
-	}
-
-	void Player::setForce(float movementForce)
-	{
-		_movementForce = movementForce;
 	}
 }

@@ -9,6 +9,8 @@ namespace math {
 		Vector2();
 		Vector2(const float &x, const float &y);
 
+		float distanceFrom(const Vector2& other) const;
+
 		Vector2& add(const Vector2& other);
 		Vector2& subtract(const Vector2& other);
 		Vector2& multiply(const Vector2& other);

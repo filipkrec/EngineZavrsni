@@ -5,6 +5,7 @@
 #include "../../Util/Timer.h"
 #include "Inventory/Pickup.h"
 #include "Inventory/Weapon.h"
+#define MOVEMENT_SPEED_COEFFICIENT 0.05
 
 namespace objects {
 	class Actor : public GameObject
@@ -19,7 +20,6 @@ namespace objects {
 
 		unsigned int _health;
 		float _movementSpeed;
-		float _movementSpeedMax;
 		std::vector<unsigned int> _textureIds;
 		std::vector<Pickup*> _pickUpable;
 
@@ -27,7 +27,7 @@ namespace objects {
 		Weapon* _weapon;
 	protected:
 		Actor();
-		Actor(GameObject& gameObject, unsigned int health, float movementSpeedMax, const State& state);
+		Actor(GameObject& gameObject, unsigned int health, float _movementSpeed, const State& state);
 		void addTexture(const graphics::Texture& texture);
 		void moveWeapon();
 
@@ -39,13 +39,11 @@ namespace objects {
 	public:
 		inline const unsigned int& getHealth() const { return _health; }
 		inline const float& getMovementSpeed() const { return _movementSpeed; }
-		inline const float& getMovementSpeedMax() const { return _movementSpeedMax; }
 		inline const State& getState() const { return _state; }
 		Weapon* getWeapon();
 
 		void setHealth(unsigned int value);
 		void setMovementSpeed(float value);
-		void setMovementSpeedMax(float value);
 		void setState(const State& state);
 		void setWeapon(Weapon* weapon);
 
