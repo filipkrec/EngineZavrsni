@@ -112,7 +112,7 @@ namespace objects {
 		{
 			if (!_pickUpable.empty())
 			{
-				pickup(*_pickUpable[0]);
+				pickup(*_pickUpable.back());
 			}
 		}
 

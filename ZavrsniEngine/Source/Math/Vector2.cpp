@@ -84,6 +84,16 @@ namespace math {
 		return left.divide(scalar);
 	}
 
+	bool operator>=(Vector2 left, const Vector2& right)
+	{
+		return left.x >= right.x && left.y >= right.y;
+	}
+
+	bool operator<=(Vector2 left, const Vector2& right)
+	{
+		return left.x <= right.x && left.y <= right.y;
+	}
+
 	Vector2& Vector2::operator+=(const Vector2& right)
 	{
 		return add(right);

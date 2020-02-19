@@ -28,6 +28,7 @@ namespace math {
 		static Matrix4 translation(const Vector2& translation);
 		static Matrix4 rotation(float angle, const Vector3& axis);
 		static Matrix4 scale(const Vector2& scale);
+		static Vector2 rotate2d(const Vector2& vector, float degrees);
 
 		friend Matrix4 operator*(Matrix4 left, const Matrix4& right);
 		friend Vector2 operator*(const Matrix4& left, const Vector2& right);

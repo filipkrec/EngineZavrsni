@@ -174,6 +174,10 @@ namespace math {
 		return result;
 	}
 
+	Vector2 Matrix4::rotate2d(const Vector2& vector, float degrees)
+	{
+		return rotation(degrees, math::Vector3(0, 0, 1)) * vector;
+	}
 
 	Matrix4 Matrix4::rotation(float angle, const Vector3& axis)
 	{
