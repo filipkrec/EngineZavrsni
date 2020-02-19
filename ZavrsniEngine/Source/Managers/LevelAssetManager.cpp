@@ -65,10 +65,15 @@ namespace lam {
 						{
 							gameObject1->collide(*gameObject2);
 						}
+						else if (gameObject2->isHit(*hitbox1))
+						{
+							gameObject1->collide(*gameObject2);
+						}
 					}
 				}
 			}
 
+		
 			//shot detection
 			if (_player->getWeapon() != nullptr)
 			{
@@ -78,7 +83,7 @@ namespace lam {
 					for (activeObject gameObject : _gameObjects)
 					{
 						objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
-						if (gameObject1->getLineIntersection(_player->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
+						if (gameObject1 != _player && gameObject1->getLineIntersection(_player->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
 						{
 							math::Vector4 clipPoints = gameObject1->getLineIntersection(_player->getWeapon()->getShotPosition(), firedShot);
 							shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.x, clipPoints.y)));
@@ -92,6 +97,7 @@ namespace lam {
 							{return s1.second.distanceFrom(firedShot) > s2.second.distanceFrom(firedShot); });
 						math::Vector2 hitPoint = closestShot.second;
 						graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), math::Vector2(hitPoint));
+						_shots.push_back(lineSprite);
 						math::Vector2 unitVector = hitPoint - _player->getWeapon()->getShotPosition();
 						unitVector = unitVector.calculateUnitVector(unitVector.x, unitVector.y);
 						closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, _player->getWeapon()->getForce()));

@@ -64,13 +64,29 @@ namespace objects {
 			{
 				other.calculateColission(math::Vector3(-other._previousForce.x, -other._previousForce.y, other._previousForce.z));
 				calculateColission(math::Vector3(other._previousForce.x, other._previousForce.y, other._previousForce.z));
+				calculateNextMove();
+				other.calculateNextMove();
 			}
 
 			if (_previousForce.z > 0)
 			{
 				other.calculateColission(math::Vector3(_previousForce.x, _previousForce.y, _previousForce.z));
 				calculateColission(math::Vector3(-_previousForce.x, -_previousForce.y, _previousForce.z));
+				calculateNextMove();
+				other.calculateNextMove();
 			}
+
+			if (_previousForce.z == 0 && other._previousForce.z == 0)
+			{
+				math::Vector2 vector = getSpritePosition() - other.getSpritePosition();
+				float multiplier = getSpritePosition().distanceFrom(_collisionRange) / getSpritePosition().distanceFrom(other.getSpritePosition());
+				vector = vector.calculateUnitVector(vector.x, vector.y);
+				other.calculateColission(math::Vector3(-vector.x, -vector.y, _weight * FRICTION * multiplier));
+				calculateColission(math::Vector3(vector.x, vector.y, _weight * FRICTION * multiplier));
+				calculateNextMove();
+				other.calculateNextMove();
+			}
+
 
 			_previousForce.x = 0;
 			_previousForce.y = 0;
