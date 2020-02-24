@@ -27,6 +27,7 @@ namespace lam {
 			}
 		};
 	private:
+		static graphics::Layer* _layer;
 		static engine::Timer* _timer;
 
 		static std::vector<activeObject> _sprites;
@@ -37,8 +38,9 @@ namespace lam {
 		static std::vector<graphics::Line*> _shots;
 		static objects::Player* _player;
 	public:
-		static void init(objects::Player* player = nullptr);
-		static void process(engine::Window& window);
+		static void init(objects::Player* player, graphics::Layer* layer);
+		static void processBegin(engine::Window& window);
+		static void processEnd(engine::Window& window);
 
 		static void add(graphics::Sprite* sprite, const std::string& name);
 		static void cleanSprites();
@@ -62,7 +64,6 @@ namespace lam {
 		static objects::Pickup* getPickup(const std::string& name);
 
 		static void addToLayer(graphics::Layer* layer);
-		static void refreshShots(graphics::Layer* layer);
 		static void clean();
 
 		static objects::Player* getPlayer();

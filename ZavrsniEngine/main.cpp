@@ -36,7 +36,7 @@ int main()
 	Font* font = new Font("Assets/arial.ttf", 20);
 	font->setScale(16, 9);
 
-	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"),2), 100), 100, 150));
+	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"),2), 100), 100, 150), layer);
 	lam::LevelAssetManager::add(new Label("100/100", -10.0f, 6.0f, 0xff00ff00, font, 16), "AmmoLabel");
 	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 1.0f, 0.5f, TextureManager::get("Rifle"), 2), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
 	lam::LevelAssetManager::add((Pickup*)(new Ammo(new Sprite(-4.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), 5, 20)),"Ammo");
@@ -48,6 +48,13 @@ int main()
 	lam::LevelAssetManager::add(new GameObject(&Sprite(5.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 100), "Planet");
 	lam::LevelAssetManager::add(new GameObject(&Sprite(-3.0f, -3.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 100), "Planet2");
 
+	lam::LevelAssetManager::getPlayer()->setSight(45.0f,10.0f);
+	lam::LevelAssetManager::getPlayer()->setOnSightFunction([](GameObject* x)
+		{
+			std::cout << x->getSpritePosition().x << std::endl;
+		}
+	);
+
 	lam::LevelAssetManager::addToLayer(layer);
 	Timer* timer = new Timer();
 	Timer* timerTick = new Timer();
@@ -57,10 +64,8 @@ int main()
 	while (!display->closed())
 	{
 		display->clear();
+		lam::LevelAssetManager::processBegin(*display);
 		fps++;
-
-		lam::LevelAssetManager::process(*display);
-		lam::LevelAssetManager::refreshShots(layer);
 		display->getMousePosition(x, y);
 		if (timerTick->elapsed() >= 1.0f / 60.0f)
 		{
@@ -84,6 +89,7 @@ int main()
 			timerTick->reset();
 		}
 
+
 		if (timer->elapsed() >= 1.0f)
 		{
 			//std::cout << fps << std::endl;
@@ -92,6 +98,7 @@ int main()
 			fps = 0;
 		}
 
+		lam::LevelAssetManager::processEnd(*display);
 		layer->render();
 		display->update();
 	}

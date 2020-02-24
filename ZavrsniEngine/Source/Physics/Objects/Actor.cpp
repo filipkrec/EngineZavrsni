@@ -44,6 +44,12 @@ namespace objects {
 			_movementSpeed = value; 
 		}
 
+		void Actor::setSight(float sightAngle, float sightRange)
+		{
+			_sightAngle = sightAngle;
+			_sightRange = sightRange;
+		}
+
 		void Actor::setState(const State& state)
 		{ 
 			_state = state; 
@@ -88,6 +94,9 @@ namespace objects {
 
 		bool Actor::objectIsInSight(const GameObject& gameObject)
 		{
+			if (_sightAngle == 0 && _sightRange == 0)
+				return true;
+
 			math::Vector2 objectPosition = gameObject.getSpritePosition();
 			float objectWidth = gameObject.getSpriteSize().x;
 			float objectHeight = gameObject.getSpriteSize().y;
@@ -102,13 +111,35 @@ namespace objects {
 			math::Vector2 spritePosition = _boundSprite->getPosition();
 			for (int i = 0; i < 4; ++i)
 			{
-				if (spritePosition.distanceFrom(objectPoints[i]) <= _sightRange)
+				if (spritePosition.distanceFrom(objectPoints[i]) <= _sightRange || _sightRange == 0)
 				{
 					float angle = math::Vector2::getAngleBetween(_boundSprite->getRotation(), objectPoints[i] - _boundSprite->getPosition());
-						if (_sightAngle / 2 >= abs(angle))
+						if (_sightAngle / 2 >= abs(angle) || _sightAngle == 0)
 							return true;
 				}
 			}
 			return false;
+		}
+
+		void Actor::addSighted(GameObject* sighted)
+		{
+			_sighted.push_back(sighted);
+		}
+
+		void Actor::processSight()
+		{
+			if (_onSight != nullptr)
+				for (GameObject* sightedObject : _sighted)
+				{
+					_onSight(sightedObject);
+				}
+
+			_sighted.clear();
+		}
+
+
+		void Actor::setOnSightFunction(void (*foo)(GameObject*))
+		{
+			_onSight = foo;
 		}
 }

@@ -25,6 +25,9 @@ namespace objects {
 		float _sightRange;
 		std::vector<unsigned int> _textureIds;
 		std::vector<Pickup*> _pickUpable;
+		std::vector<GameObject*> _sighted;
+
+		void (*_onSight)(GameObject*);
 
 		State _state;
 		Weapon* _weapon;
@@ -39,6 +42,7 @@ namespace objects {
 		virtual void pickup(Pickup& pickup);
 		virtual void animate() {};
 		virtual void processState() {};
+		void processSight();
 		virtual void process(const engine::Window& window) = 0;
 	public:
 		inline const unsigned int& getHealth() const { return _health; }
@@ -48,9 +52,12 @@ namespace objects {
 
 		void setHealth(unsigned int value);
 		void setMovementSpeed(float value);
+		void setSight(float sightAngle, float sightRange);
 		void setState(const State& state);
 		void setWeapon(Weapon* weapon);
+		virtual void setOnSightFunction(void (*foo)(GameObject*));
 
+		void addSighted(GameObject* sighted);
 		void addPickupable(Pickup* pickupable);
 		void clearPickupable();
 

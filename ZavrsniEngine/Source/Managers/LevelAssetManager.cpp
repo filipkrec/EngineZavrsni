@@ -2,6 +2,7 @@
 #include <algorithm>
 
 namespace lam {
+	graphics::Layer* LevelAssetManager::_layer;
 	engine::Timer* LevelAssetManager::_timer = new engine::Timer();
 
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_sprites;
@@ -12,7 +13,7 @@ namespace lam {
 	std::vector<graphics::Line*> LevelAssetManager::_shots;
 	objects::Player* LevelAssetManager::_player = nullptr;
 
-	void LevelAssetManager::process(engine::Window& window)
+	void LevelAssetManager::processBegin(engine::Window& window)
 	{
 		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
 		{
@@ -29,16 +30,28 @@ namespace lam {
 			for (activeObject NPC : _NPCs)
 			{
 				objects::NPC* npc = (objects::NPC*)NPC._object;
-				std::vector<activeObject> sightedObjects;
 				for (activeObject gameObject : allObjects)
 				{
 					gameObject1 = (objects::GameObject*)gameObject._object;
 					if (npc != NPC._object)
 					{
 						if (npc->objectIsInSight(*gameObject1))
-							sightedObjects.push_back(gameObject);
+							npc->addSighted(gameObject1);
 					}
 				}
+			}
+
+			if (_player != nullptr)
+			{
+					for (activeObject gameObject : allObjects)
+					{
+						gameObject1 = (objects::GameObject*)gameObject._object;
+							if (_player != gameObject1)
+							{
+								if (_player->objectIsInSight(*gameObject1))
+									_player->addSighted(gameObject1);
+							}
+					}
 			}
 
 			if (_player != nullptr)
@@ -89,7 +102,7 @@ namespace lam {
 					}
 				}
 			}
-		
+
 			//shot detection
 			if (_player->getWeapon() != nullptr)
 			{
@@ -133,9 +146,21 @@ namespace lam {
 				gameObject1 = (objects::GameObject*)gameObject._object;
 				gameObject1->move();
 			}
+		}
+	}
+
+	void LevelAssetManager::processEnd(engine::Window& window)
+	{
+		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
+		{
+			for (graphics::Line* shot : _shots)
+			{
+				if (shot->isNew())
+					_layer->add((graphics::Sprite*)shot);
+			}
 
 			//cleanup
-			
+
 			for (activeObject pickup : _pickups)
 			{
 				objects::Pickup* temp = (objects::Pickup*)pickup._object;
@@ -166,21 +191,17 @@ namespace lam {
 						return destroy;
 					}),
 				_pickups.end());
-			
+
 			window.clearInput();
 			_timer->reset();
 		}
 	}
 
-	void LevelAssetManager::init(objects::Player* player)
+	void LevelAssetManager::init(objects::Player* player, graphics::Layer* layer)
 	{
-		if (player == nullptr)
-			_player = new objects::Player();
-		else
-		{
 			_player = player;
 			_player->getSprite()->DoNotDestroySprite();
-		}
+			_layer = layer;
 	}
 
 	void LevelAssetManager::add(graphics::Sprite* sprite, const std::string& name)
@@ -332,15 +353,6 @@ namespace lam {
 
 		if (_player != nullptr)
 			layer->add((_player->getSprite()));
-	}
-
-	void LevelAssetManager::refreshShots(graphics::Layer* layer)
-	{
-		for (graphics::Line* shot : _shots)
-		{
-			if(shot->isNew())
-			layer->add((graphics::Sprite*)shot);
-		}
 	}
 
 

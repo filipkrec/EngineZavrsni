@@ -108,6 +108,7 @@ namespace objects {
 			moveWeapon();
 		}
 		processInput(window);
+		processSight();
 		processState();
 		animate();
 	}
