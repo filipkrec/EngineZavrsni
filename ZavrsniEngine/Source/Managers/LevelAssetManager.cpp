@@ -16,6 +16,31 @@ namespace lam {
 	{
 		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
 		{
+			//fill secondary objects for processing
+			objects::GameObject* playerObject = (objects::GameObject*)_player;
+			std::vector<activeObject> allObjects;
+			allObjects.push_back(activeObject((void*)playerObject, "Player"));
+			allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
+			allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
+
+			objects::GameObject* gameObject1;
+			objects::GameObject* gameObject2;
+
+			for (activeObject NPC : _NPCs)
+			{
+				objects::NPC* npc = (objects::NPC*)NPC._object;
+				std::vector<activeObject> sightedObjects;
+				for (activeObject gameObject : allObjects)
+				{
+					gameObject1 = (objects::GameObject*)gameObject._object;
+					if (npc != NPC._object)
+					{
+						if (npc->objectIsInSight(*gameObject1))
+							sightedObjects.push_back(gameObject);
+					}
+				}
+			}
+
 			if (_player != nullptr)
 			{
 				for (activeObject pickup : _pickups)
@@ -29,21 +54,13 @@ namespace lam {
 				_player->process(window);
 				_player->clearPickupable();
 			}
-
-			objects::GameObject* playerObject = (objects::GameObject*)_player;
+			
 			for (activeObject npc: _NPCs)
 			{
 				((objects::NPC*)npc._object)->process();
 			}
 			
 			//colission
-			std::vector<activeObject> allObjects;
-			allObjects.push_back(activeObject((void*)playerObject,"Player"));
-			allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
-			allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
-			
-			objects::GameObject* gameObject1;
-			objects::GameObject* gameObject2;
 
 			for (activeObject gameObject : allObjects)
 			{
@@ -72,7 +89,6 @@ namespace lam {
 					}
 				}
 			}
-
 		
 			//shot detection
 			if (_player->getWeapon() != nullptr)
@@ -102,6 +118,11 @@ namespace lam {
 						unitVector = unitVector.calculateUnitVector(unitVector.x, unitVector.y);
 						closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, _player->getWeapon()->getForce()));
 						shotObjects.clear();
+					}
+					else
+					{
+						graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), firedShot);
+						_shots.push_back(lineSprite);
 					}
 				}
 			}

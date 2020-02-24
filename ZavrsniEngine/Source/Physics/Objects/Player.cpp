@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "../../Math/MathUtil.h"
 
 namespace objects {
 
@@ -73,39 +72,8 @@ namespace objects {
 		}
 
 		//rotation
-		float goalRotation;
 		math::Vector2 mouseVector = getVectorToMouse(window);
-		
-		float mouseVectorMagnitude = sqrtf((mouseVector.x * mouseVector.x) + (mouseVector.y * mouseVector.y));
-		goalRotation = acosf(mouseVector.x / mouseVectorMagnitude);
-
-		if (mouseVector.y < 0)
-			goalRotation = -goalRotation;
-
-		goalRotation = math::toDegrees(goalRotation);
-
-		float spriteRotation = _boundSprite->getRotation();
-		float rotationTop = goalRotation - spriteRotation;
-		float rotationBottom = spriteRotation - goalRotation;
-		rotationBottom = rotationBottom < 0 ? rotationBottom + 360 : rotationBottom;
-		rotationTop = rotationTop < 0 ? rotationTop + 360 : rotationTop;
-		float rotationAngle = rotationBottom < rotationTop ? rotationBottom : rotationTop;
-
-		if (rotationBottom <= rotationTop)
-		{
-			if (rotationAngle >= 5.0f)
-				_boundSprite->rotate(-5.0f);
-			else
-				_boundSprite->rotate(-rotationAngle);
-			
-		}
-		else
-		{
-			if (rotationAngle >= 5.0f)
-				_boundSprite->rotate(5.0f);
-			else
-				_boundSprite->rotate(rotationAngle);
-		}
+		rotateToPoint(mouseVector);
 
 		//pickup
 		if (_keyPickup == 0 || window.getKey(_keyPickup))

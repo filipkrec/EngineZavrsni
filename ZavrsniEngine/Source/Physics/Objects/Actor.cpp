@@ -63,4 +63,52 @@ namespace objects {
 		{
 			_pickUpable.clear();
 		}
+
+		void Actor::rotateToPoint(math::Vector2 point)
+		{
+			float rotation = math::Vector2::getAngleBetween(_boundSprite->getRotation(), point);
+
+			if (rotation < 0)
+			{
+				if (rotation <= -5.0f)
+					_boundSprite->rotate(-5.0f);
+				else
+					_boundSprite->rotate(rotation);
+
+			}
+			else if (rotation > 0)
+			{
+				if (rotation >= 5.0f)
+					_boundSprite->rotate(5.0f);
+				else
+					_boundSprite->rotate(rotation);
+			}
+		}
+
+
+		bool Actor::objectIsInSight(const GameObject& gameObject)
+		{
+			math::Vector2 objectPosition = gameObject.getSpritePosition();
+			float objectWidth = gameObject.getSpriteSize().x;
+			float objectHeight = gameObject.getSpriteSize().y;
+			math::Vector2 objectPoints[4] =
+			{
+				math::Vector2(objectPosition.x - objectWidth,objectPosition.y - objectHeight),
+				math::Vector2(objectPosition.x + objectWidth,objectPosition.y - objectHeight),
+				math::Vector2(objectPosition.x + objectWidth,objectPosition.y + objectHeight),
+				math::Vector2(objectPosition.x - objectWidth,objectPosition.y + objectHeight)
+			};
+
+			math::Vector2 spritePosition = _boundSprite->getPosition();
+			for (int i = 0; i < 4; ++i)
+			{
+				if (spritePosition.distanceFrom(objectPoints[i]) <= _sightRange)
+				{
+					float angle = math::Vector2::getAngleBetween(_boundSprite->getRotation(), objectPoints[i] - _boundSprite->getPosition());
+						if (_sightAngle / 2 >= abs(angle))
+							return true;
+				}
+			}
+			return false;
+		}
 }

@@ -5,6 +5,7 @@
 #include "../../Util/Timer.h"
 #include "Inventory/Pickup.h"
 #include "Inventory/Weapon.h"
+#include "../../Math/MathUtil.h"
 #define MOVEMENT_SPEED_COEFFICIENT 0.05
 
 namespace objects {
@@ -20,6 +21,8 @@ namespace objects {
 
 		unsigned int _health;
 		float _movementSpeed;
+		float _sightAngle;
+		float _sightRange;
 		std::vector<unsigned int> _textureIds;
 		std::vector<Pickup*> _pickUpable;
 
@@ -30,6 +33,7 @@ namespace objects {
 		Actor(GameObject& gameObject, unsigned int health, float _movementSpeed, const State& state);
 		void addTexture(const graphics::Texture& texture);
 		void moveWeapon();
+		void rotateToPoint(math::Vector2);
 
 		virtual void move() override;
 		virtual void pickup(Pickup& pickup);
@@ -49,5 +53,7 @@ namespace objects {
 
 		void addPickupable(Pickup* pickupable);
 		void clearPickupable();
+
+		bool objectIsInSight(const GameObject& gameObject);
 	};
 }

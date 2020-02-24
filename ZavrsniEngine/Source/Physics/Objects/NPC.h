@@ -11,6 +11,8 @@ namespace objects
 		virtual void animate();
 		virtual void processState();
 		virtual void processAI();
+		void moveInDirection(const math::Vector2 direction);
+		void lookAt(const graphics::Sprite* sprite);
 		void process();
 	};
 }

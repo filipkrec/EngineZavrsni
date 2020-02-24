@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "MathUtil.h"
 
 namespace math {
 	struct Vector2
@@ -18,6 +19,7 @@ namespace math {
 
 		Vector2& divide(const float& scalar);
 		Vector2  calculateUnitVector(float x, float y);
+		static float getAngleBetween(float currentRotation, const math::Vector2& vectorDistanceToOther);
 
 		friend Vector2 operator+(Vector2 left, const Vector2& right);
 		friend Vector2 operator-(Vector2 left, const Vector2& right);
