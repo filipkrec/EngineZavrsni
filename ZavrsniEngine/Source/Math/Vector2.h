@@ -38,8 +38,8 @@ namespace math {
 		Vector2& operator/=(const Vector2& right);
 
 
-		bool operator==(const Vector2& right);
-		bool operator!=(const Vector2& right);
+		bool operator==(const Vector2& right) const;
+		bool operator!=(const Vector2& right) const;
 
 		friend std::ostream& operator<<(std::ostream& stream, const Vector2& vector2);
 	};

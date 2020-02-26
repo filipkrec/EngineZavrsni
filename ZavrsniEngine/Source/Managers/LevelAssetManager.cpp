@@ -39,7 +39,21 @@ namespace lam {
 							npc->addSighted(gameObject1);
 					}
 				}
+
+				//pathfinding
+				if (npc->getMoveToPoint() != npc->getSpritePosition())
+				{
+					for (activeObject gameObject : allObjects)
+					{
+						gameObject1 = (objects::GameObject*)gameObject._object;
+						if (npc != NPC._object)
+						{
+							const math::Vector2 nextStep = _calculatePath(math::Vector2(0,0),npc->getMoveToPoint(),0);
+						}
+					}
+				}
 			}
+
 
 			if (_player != nullptr)
 			{

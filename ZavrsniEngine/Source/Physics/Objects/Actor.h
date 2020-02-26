@@ -27,6 +27,9 @@ namespace objects {
 		std::vector<Pickup*> _pickUpable;
 		std::vector<GameObject*> _sighted;
 
+		math::Vector2 _moveToPoint;
+		math::Vector2 _moveToCheckPoint;
+
 		void (*_onSight)(GameObject*);
 
 		State _state;
@@ -62,5 +65,11 @@ namespace objects {
 		void clearPickupable();
 
 		bool objectIsInSight(const GameObject& gameObject);
+
+		inline const math::Vector2& getMoveToPoint() const { return _moveToPoint; }
+		virtual void setMoveToPoint(const math::Vector2& point);
+
+		inline const math::Vector2& getMoveToCheckPoint() const { return _moveToCheckPoint; }
+		virtual void setMoveToCheckPoint(const math::Vector2& point);
 	};
 }

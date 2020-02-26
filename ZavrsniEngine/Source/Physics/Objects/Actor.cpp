@@ -142,4 +142,15 @@ namespace objects {
 		{
 			_onSight = foo;
 		}
+
+		void Actor::setMoveToPoint(const math::Vector2& point)
+		{
+			_moveToPoint = point;
+		}
+
+
+		void Actor::setMoveToCheckPoint(const math::Vector2& point)
+		{
+			_moveToCheckPoint = point;
+		}
 }

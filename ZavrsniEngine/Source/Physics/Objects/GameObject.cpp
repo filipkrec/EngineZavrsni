@@ -12,17 +12,17 @@ namespace objects {
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite)
-		: Hitbox(sprite), _colissionOn(false)
+		: Hitbox(sprite), _colissionOn(false),_moveToPoint(getSpritePosition())
 	{
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight)
-		: Hitbox(sprite), _weight(weight),_colissionOn(true)
+		: Hitbox(sprite), _weight(weight),_colissionOn(true), _moveToPoint(getSpritePosition())
 	{
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height)
-		: Hitbox(sprite, shape, width, height), _weight(weight), _colissionOn(true)
+		: Hitbox(sprite, shape, width, height), _weight(weight), _colissionOn(true), _moveToPoint(getSpritePosition())
 	{
 	}
 
@@ -136,5 +136,4 @@ namespace objects {
 	{
 		_colissionOn = _colissionOn ? false : true;
 	}
-
 }

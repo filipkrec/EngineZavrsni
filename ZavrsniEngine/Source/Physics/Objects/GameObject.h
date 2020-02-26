@@ -13,6 +13,7 @@ namespace objects {
 		float _currentSpeed; 
 
 		bool _colissionOn;
+
 	public:
 		math::Vector2 _nextMove; //za racunanje kolizije
 
@@ -26,6 +27,7 @@ namespace objects {
 		void savePreviousForce();
 
 		void toggleCollision();
+		void toggleAvoidObstacles();
 		void calculateColission(const math::Vector3& force);
 		void collide(GameObject& other);
 		void calculateNextMove();

@@ -114,12 +114,12 @@ namespace math {
 		return divide(right);
 	}
 
-	bool Vector2::operator==(const Vector2& right)
+	bool Vector2::operator==(const Vector2& right) const
 	{
 		return (right.x == x && right.y == y);
 	}
 
-	bool Vector2::operator!=(const Vector2& right)
+	bool Vector2::operator!=(const Vector2& right) const
 	{
 		return (right.x != x && right.y != y);
 	}

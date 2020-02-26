@@ -37,6 +37,8 @@ namespace lam {
 		static std::vector<activeObject> _pickups;
 		static std::vector<graphics::Line*> _shots;
 		static objects::Player* _player;
+
+		static math::Vector2 _calculatePath(const math::Vector2& nextStep, const math::Vector2& goal, unsigned int step);
 	public:
 		static void init(objects::Player* player, graphics::Layer* layer);
 		static void processBegin(engine::Window& window);
