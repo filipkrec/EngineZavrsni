@@ -18,7 +18,8 @@ namespace math {
 		Vector2& divide(const Vector2& other);
 
 		Vector2& divide(const float& scalar);
-		Vector2  calculateUnitVector(float x, float y);
+		Vector2& multiply(const float& scalar);
+		static Vector2 calculateUnitVector(math::Vector2 vec);
 		static float getAngleBetween(float currentRotation, const math::Vector2& vectorDistanceToOther);
 
 		friend Vector2 operator+(Vector2 left, const Vector2& right);
@@ -27,6 +28,7 @@ namespace math {
 		friend Vector2 operator/(Vector2 left, const Vector2& right);
 
 		friend Vector2 operator/(Vector2 left, const float& scalar);
+		friend Vector2 operator*(Vector2 left, const float& scalar);
 
 		friend bool operator>=(Vector2 left, const Vector2& right);
 		friend bool operator<=(Vector2 left, const Vector2& right);

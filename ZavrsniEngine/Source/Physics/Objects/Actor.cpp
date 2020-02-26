@@ -6,7 +6,7 @@ namespace objects {
 		Actor::Actor() {}
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const State& state)
-			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr) {}
+			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()) {}
 		void Actor::addTexture(const graphics::Texture& texture) { _textureIds.push_back(texture.getId()); }
 		void Actor::moveWeapon()
 		{
@@ -152,5 +152,10 @@ namespace objects {
 		void Actor::setMoveToCheckPoint(const math::Vector2& point)
 		{
 			_moveToCheckPoint = point;
+		}
+
+		void Actor::resetActorTimer()
+		{
+			_actorTimer.reset();
 		}
 }

@@ -6,13 +6,26 @@ namespace objects
 	class NPC :public Actor
 	{
 		bool _friendly;
+		math::Vector2 _moveDirection;
+		graphics::Sprite* _lookingAt;
 	public:
+		static std::vector<math::Vector2> directionsAll;
+
 		NPC();
-		virtual void animate();
-		virtual void processState();
-		virtual void processAI();
-		void moveInDirection(const math::Vector2 direction);
-		void lookAt(const graphics::Sprite* sprite);
+		NPC(GameObject gameObject, unsigned int health, float movementSpeed);
+		virtual void animate() {};
+		virtual void processState() {};
+		virtual void processAI() {};
+		virtual void init();
+		void moveInDirection();
+		void lookAt();
 		void process();
+
+
+		inline const math::Vector2& getMoveDirection() const { return _moveDirection; }
+		void setMoveDirection(const math::Vector2& direction);
+
+		inline const graphics::Sprite* getLookingAt() const { return _lookingAt; }
+		void setLookingAt(graphics::Sprite* sprite);
 	};
 }

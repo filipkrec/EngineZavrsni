@@ -1,21 +1,72 @@
 #include "NPC.h"
 
 namespace objects {
+	std::vector<math::Vector2> NPC::directionsAll;
+
+	NPC::NPC()
+	{
+		init();
+	}
+
+	NPC::NPC(GameObject gameObject, unsigned int health, float movementSpeed)
+		:Actor(gameObject, health, movementSpeed, Actor::State::STATE_STILL)
+	{
+		init();
+	}
+
 	void NPC::process()
 	{
 		
 	}
 
 
-	void NPC::moveInDirection(const math::Vector2 direction)
+	void NPC::moveInDirection()
 	{
-		calculateColission(math::Vector3(direction.x, direction.y, (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight));
+		if (_moveDirection != math::Vector2(0.0f, 0.0f))
+		{
+			calculateColission(math::Vector3(_moveDirection.x, _moveDirection.y, (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight));
+		}
 	}
 
-	void NPC::lookAt(const graphics::Sprite* sprite)
+	void NPC::lookAt()
 	{
-		rotateToPoint(sprite->getPosition() - _boundSprite->getPosition()); //vektor udaljenosti
+		if(_lookingAt != nullptr && !_lookingAt->toDestroySprite())
+		rotateToPoint(_lookingAt->getPosition() - _boundSprite->getPosition()); //vektor udaljenosti
 	}
+	 
+	void NPC::init()
+	{
+		if (directionsAll.empty())
+		{
+			math::Vector2 right = math::Vector2::calculateUnitVector(math::Vector2(0, 1));
+			directionsAll.push_back(right);
+			math::Vector2 botRight = math::Vector2::calculateUnitVector(math::Vector2(1, -1));
+			directionsAll.push_back(botRight);
+			math::Vector2 topRight = math::Vector2::calculateUnitVector(math::Vector2(1, 1));
+			directionsAll.push_back(topRight);
+			math::Vector2 up = math::Vector2::calculateUnitVector(math::Vector2(1, 0));
+			directionsAll.push_back(up);
+			math::Vector2 down = math::Vector2::calculateUnitVector(math::Vector2(-1, 0));
+			directionsAll.push_back(down);
+			math::Vector2 left = math::Vector2::calculateUnitVector(math::Vector2(0, -1));
+			directionsAll.push_back(left);
+			math::Vector2 botLeft = math::Vector2::calculateUnitVector(math::Vector2(-1, 1));
+			directionsAll.push_back(botLeft);
+			math::Vector2 topleft = math::Vector2::calculateUnitVector(math::Vector2(-1, 1));
+			directionsAll.push_back(topleft);
+		}
+	}
+
+	void NPC::setMoveDirection(const math::Vector2& direction)
+	{
+		_moveDirection = direction;
+	}
+
+	void NPC::setLookingAt(graphics::Sprite* sprite)
+	{
+		_lookingAt = sprite;
+	}
+
 }
 
 /*

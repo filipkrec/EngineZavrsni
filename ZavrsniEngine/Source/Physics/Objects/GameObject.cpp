@@ -12,17 +12,17 @@ namespace objects {
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite)
-		: Hitbox(sprite), _colissionOn(false),_moveToPoint(getSpritePosition())
+		: Hitbox(sprite), _colissionOn(false)
 	{
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight)
-		: Hitbox(sprite), _weight(weight),_colissionOn(true), _moveToPoint(getSpritePosition())
+		: Hitbox(sprite), _weight(weight),_colissionOn(true)
 	{
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height)
-		: Hitbox(sprite, shape, width, height), _weight(weight), _colissionOn(true), _moveToPoint(getSpritePosition())
+		: Hitbox(sprite, shape, width, height), _weight(weight), _colissionOn(true)
 	{
 	}
 
@@ -49,7 +49,7 @@ namespace objects {
 			_currentForce.y += tempForce.y;
 			_currentForce.z = (abs(_currentForce.x) + abs(_currentForce.y)) / 2;
 
-			math::Vector2 unitVector = unitVector.calculateUnitVector(_currentForce.x, _currentForce.y);
+			math::Vector2 unitVector = math::Vector2::calculateUnitVector(math::Vector2(_currentForce.x,_currentForce.y));
 			_currentForce.x = unitVector.x;
 			_currentForce.y = unitVector.y;
 		}
@@ -80,9 +80,12 @@ namespace objects {
 			{
 				math::Vector2 vector = getSpritePosition() - other.getSpritePosition();
 				float multiplier = getSpritePosition().distanceFrom(_collisionRange) / getSpritePosition().distanceFrom(other.getSpritePosition());
-				vector = vector.calculateUnitVector(vector.x, vector.y);
-				other.calculateColission(math::Vector3(-vector.x, -vector.y, _weight * FRICTION * multiplier));
-				calculateColission(math::Vector3(vector.x, vector.y, _weight * FRICTION * multiplier));
+				vector = math::Vector2::calculateUnitVector(vector);
+				if (_weight / other._weight <= 2)
+				{
+					other.calculateColission(math::Vector3(-vector.x, -vector.y, _weight * FRICTION * multiplier));
+					calculateColission(math::Vector3(vector.x, vector.y, _weight * FRICTION * multiplier));
+				}
 				calculateNextMove();
 				other.calculateNextMove();
 			}
@@ -101,7 +104,6 @@ namespace objects {
 
 	void GameObject::move()
 	{
-
 		_currentSpeed = (_currentForce.z / _weight) / PROCESSING_INTERVAL;
 		_currentForce.z -= (_weight * 10 * FRICTION) / PROCESSING_INTERVAL;
 		if (_currentForce.z > 0)

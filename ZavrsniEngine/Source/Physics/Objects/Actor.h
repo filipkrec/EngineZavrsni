@@ -19,6 +19,8 @@ namespace objects {
 		STATE_STILL
 		};
 
+		engine::Timer _actorTimer;
+
 		unsigned int _health;
 		float _movementSpeed;
 		float _sightAngle;
@@ -67,9 +69,12 @@ namespace objects {
 		bool objectIsInSight(const GameObject& gameObject);
 
 		inline const math::Vector2& getMoveToPoint() const { return _moveToPoint; }
-		virtual void setMoveToPoint(const math::Vector2& point);
+		void setMoveToPoint(const math::Vector2& point);
 
 		inline const math::Vector2& getMoveToCheckPoint() const { return _moveToCheckPoint; }
-		virtual void setMoveToCheckPoint(const math::Vector2& point);
+		void setMoveToCheckPoint(const math::Vector2& point);
+
+		inline const float getActorTimer() { return _actorTimer.elapsed(); }
+		void resetActorTimer();
 	};
 }

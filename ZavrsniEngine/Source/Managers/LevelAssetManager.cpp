@@ -1,5 +1,8 @@
 #include "LevelAssetManager.h"
 #include <algorithm>
+#define STEPFIDELITY 5
+#define STEPDISTANCE 0.5f
+
 
 namespace lam {
 	graphics::Layer* LevelAssetManager::_layer;
@@ -43,15 +46,26 @@ namespace lam {
 				//pathfinding
 				if (npc->getMoveToPoint() != npc->getSpritePosition())
 				{
-					for (activeObject gameObject : allObjects)
+					math::Vector2 checkPoint = npc->getMoveToCheckPoint();
+					if (!npc->isHit(checkPoint) || npc->getActorTimer() >= 1.0f)
 					{
-						gameObject1 = (objects::GameObject*)gameObject._object;
-						if (npc != NPC._object)
+						std::vector<math::Vector3> passed;
+						math::Vector2 checkPoint;
+						const math::Vector4 nextStep = calculatePath(passed, checkPoint, math::Vector2(0, 0), npc->getMoveToPoint(), 0, 0, *npc);
+						if (nextStep.x == 0.0f && nextStep.y == 0.0f && nextStep.w == 0.0f)
 						{
-							const math::Vector2 nextStep = _calculatePath(math::Vector2(0,0),npc->getMoveToPoint(),0);
+							npc->setMoveDirection(math::Vector2::calculateUnitVector(npc->getSpritePosition() - npc->getMoveToPoint()));
 						}
+						else
+						{
+							npc->setMoveDirection(math::Vector2(nextStep.x, nextStep.y));
+							npc->setMoveToCheckPoint(checkPoint);
+						}
+						passed.clear();
 					}
+					npc->moveInDirection();
 				}
+				else npc->setMoveDirection(math::Vector2(0.0f, 0.0f));
 			}
 
 
@@ -142,7 +156,7 @@ namespace lam {
 						graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), math::Vector2(hitPoint));
 						_shots.push_back(lineSprite);
 						math::Vector2 unitVector = hitPoint - _player->getWeapon()->getShotPosition();
-						unitVector = unitVector.calculateUnitVector(unitVector.x, unitVector.y);
+						unitVector = math::Vector2::calculateUnitVector(unitVector);
 						closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, _player->getWeapon()->getForce()));
 						shotObjects.clear();
 					}
@@ -185,6 +199,16 @@ namespace lam {
 			{
 				line->tick();
 			}
+
+			for (activeObject npc : _NPCs)
+			{
+				objects::NPC* temp = (objects::NPC*)npc._object;
+				if (temp->getActorTimer() >= 1.0f)
+					temp->resetActorTimer();
+			}
+
+			if (_player->getActorTimer() >= 1.0f)
+				_player->resetActorTimer();
 
 			_shots.erase(
 				std::remove_if(_shots.begin(), _shots.end(),
@@ -376,5 +400,97 @@ namespace lam {
 		cleanNPCs();
 		cleanSprites();
 		cleanLabels();
+	}
+
+
+	math::Vector4 LevelAssetManager::calculatePath(std::vector<math::Vector3>& passed, math::Vector2& checkPoint, const math::Vector2& currentPosition, const math::Vector2& goal, unsigned int step, unsigned int cumulativeSteps, const objects::NPC& npc)
+	{
+		std::vector<math::Vector2> directions;
+		std::vector<math::Vector2>& directionsAll = objects::NPC::directionsAll;
+
+		for (math::Vector2 direction : directionsAll)
+		{
+			math::Vector2 nextPosition = currentPosition + direction * STEPDISTANCE;
+			if (!std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x) 
+				{return x.x == nextPosition.x && x.y == nextPosition.y && x.z < cumulativeSteps; }))
+			{
+				passed.push_back(math::Vector3(nextPosition.x,nextPosition.y,++cumulativeSteps));
+				directions.push_back(direction);
+			}
+		}
+
+		math::Vector2 directionReturn = math::Vector2(0.0f,0.0f);
+		float smallestDistance = currentPosition.distanceFrom(currentPosition);
+		float distance;
+
+		if (step == STEPFIDELITY)
+		{
+			for (math::Vector2& direction : directions)
+			{
+				if (!pathBlocked(direction,npc))
+				{
+					distance = (currentPosition + direction * STEPDISTANCE).distanceFrom(npc.getMoveToPoint());
+					if (distance < smallestDistance)
+					{
+						smallestDistance = distance;
+						directionReturn = direction;
+					}
+				}
+			}
+			return math::Vector4(directionReturn.x, directionReturn.y, smallestDistance,cumulativeSteps);
+		}
+
+		math::Vector4 currentPath;
+		unsigned int leastSteps = cumulativeSteps + 6;
+
+		for (math::Vector2& direction : directions)
+		{
+			if (!pathBlocked(direction,npc))
+			{
+				currentPath = calculatePath(passed,checkPoint,currentPosition + direction * STEPDISTANCE, goal, step + 1,cumulativeSteps + 1,npc);
+				if (currentPath.z < smallestDistance)
+				{
+					leastSteps = currentPath.w;
+					smallestDistance = currentPath.z;
+					directionReturn = math::Vector2(currentPath.x, currentPath.y);
+				}
+				else if (currentPath.z = smallestDistance)
+				{
+					if (currentPath.w < leastSteps)
+					{
+						leastSteps = currentPath.w;
+						smallestDistance = currentPath.z;
+						directionReturn = math::Vector2(currentPath.x, currentPath.y);
+					}
+				}
+			}
+		}
+
+		if (smallestDistance < STEPDISTANCE)
+		{
+			return math::Vector4(currentPath.x, currentPath.y, smallestDistance, leastSteps);
+		}
+		else if (directions.empty())
+		{
+			return math::Vector4(0, 0, smallestDistance, cumulativeSteps);
+		}
+		else
+		{
+			math::Vector4 path = calculatePath(passed, checkPoint, currentPosition + directionReturn * STEPDISTANCE, goal, 0, cumulativeSteps + 1, npc);
+			if (path.x != currentPath.x && path.y != currentPath.y && path.w)
+				checkPoint = currentPosition;
+			return path;
+		}
+	}
+
+	bool LevelAssetManager::pathBlocked(const math::Vector2& unitVector, const objects::NPC& npc)
+	{
+		for (activeObject gameObject : _gameObjects)
+		{
+			const objects::GameObject& gameObject1 = *(objects::GameObject*) gameObject._object;
+			if (gameObject1.willBeHit((objects::Hitbox)npc, npc.getSpritePosition()))
+				return true;
+		}
+		return false;
 	}
 }

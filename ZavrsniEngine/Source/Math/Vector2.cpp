@@ -58,6 +58,14 @@ namespace math {
 		return *this;
 	}
 
+	Vector2& Vector2::multiply(const float& scalar)
+	{
+		y *= scalar;
+		x *= scalar;
+
+		return *this;
+	}
+
 
 	Vector2 operator+(Vector2 left, const Vector2& right)
 	{
@@ -82,6 +90,11 @@ namespace math {
 	Vector2 operator/(Vector2 left, const float& scalar)
 	{
 		return left.divide(scalar);
+	}
+
+	Vector2 operator*(Vector2 left, const float& scalar)
+	{
+		return left.multiply(scalar);
 	}
 
 	bool operator>=(Vector2 left, const Vector2& right)
@@ -130,12 +143,12 @@ namespace math {
 	}
 
 
-	Vector2 Vector2::calculateUnitVector(float x, float y)
+	Vector2 Vector2::calculateUnitVector(math::Vector2 vec)
 	{
 
-		float length = sqrtf((x * x) + (y * y));
-		float retX = x;
-		float retY = y;
+		float length = sqrtf((vec.x * vec.x) + (vec.y * vec.y));
+		float retX = vec.x;
+		float retY = vec.y;
 
 		if(length > 0)
 			return math::Vector2(retX / length, retY / length);
