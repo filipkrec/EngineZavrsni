@@ -5,13 +5,11 @@ namespace objects {
 
 	NPC::NPC()
 	{
-		init();
 	}
 
 	NPC::NPC(GameObject gameObject, unsigned int health, float movementSpeed)
 		:Actor(gameObject, health, movementSpeed, Actor::State::STATE_STILL)
 	{
-		init();
 	}
 
 	void NPC::process(const engine::Window& window)
@@ -35,6 +33,7 @@ namespace objects {
 	 
 	void NPC::init()
 	{
+		Actor::init();
 		if (directionsAll.empty())
 		{
 			math::Vector2 right = math::Vector2::calculateUnitVector(math::Vector2(1, 0));

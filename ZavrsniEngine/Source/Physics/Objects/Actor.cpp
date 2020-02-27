@@ -6,8 +6,18 @@ namespace objects {
 		Actor::Actor() {}
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const State& state)
-			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()) {}
+			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
+		_pointReached(false), _checkpointReached(false), _patrol(false), _patroling(false) 
+		{
+		}
+
+		void Actor::init()
+		{
+			_boundSprite->DoNotDestroySprite();
+		}
+		
 		void Actor::addTexture(const graphics::Texture& texture) { _textureIds.push_back(texture.getId()); }
+		
 		void Actor::moveWeapon()
 		{
 			if (_weapon != nullptr)
@@ -146,6 +156,7 @@ namespace objects {
 		void Actor::setMoveToPoint(const math::Vector2& point)
 		{
 			_moveToPoint = point;
+			toggleCheckpointReached();
 		}
 
 
@@ -154,8 +165,35 @@ namespace objects {
 			_moveToCheckPoint = point;
 		}
 
+		void Actor::setPatrolOriginPoint(const math::Vector2& point)
+		{
+			_patrolOriginPoint = point;
+		}
+
+		void Actor::setPatrolEndPoint(const math::Vector2& point)
+		{
+			_patrolEndPoint = point;
+		}
+
 		void Actor::resetActorTimer()
 		{
 			_actorTimer.reset();
+		}
+
+		void Actor::toggleCheckpointReached()
+		{
+			_checkpointReached = !_checkpointReached;
+		}
+		void Actor::togglePointReached()
+		{
+			_pointReached = !_pointReached;
+		}
+		void Actor::togglePatrol()
+		{
+			_patrol = !_patrol;
+		}
+		void Actor::togglePatroling()
+		{
+			_patroling = !_patroling;
 		}
 }

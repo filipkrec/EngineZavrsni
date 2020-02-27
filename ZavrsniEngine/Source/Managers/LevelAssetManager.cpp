@@ -1,6 +1,6 @@
 #include "LevelAssetManager.h"
 #include <algorithm>
-#define STEPFIDELITY 1
+#define STEPFIDELITY 2
 #define STEPDISTANCE 1.0f
 
 
@@ -43,15 +43,44 @@ namespace lam {
 					}
 				}
 
+				if (!npc->isPatroling() && npc->isPatrol())
+				{
+					npc->togglePatroling();
+					npc->setMoveToPoint(npc->getPatrolEndPoint());
+					npc->setPatrolOriginPoint(npc->getSpritePosition());
+				}
+				if (npc->isPatroling() && !npc->isPatrol())
+				{
+					npc->togglePatroling();
+				}
+
+				if (npc->getSpritePosition().distanceFrom(npc->getMoveToPoint()) <= STEPDISTANCE)
+				{
+					if (!npc->isPointReached())
+						npc->togglePointReached();
+				}
+
 				//pathfinding
-				if (npc->getMoveToPoint() != npc->getSpritePosition())
+				if (!npc->isPointReached())
 				{
 					math::Vector2 checkPoint = npc->getMoveToCheckPoint();
-					if (!npc->isHit(checkPoint) || npc->getActorTimer() >= 1.0f)
+					if (npc->getSpritePosition().distanceFrom(checkPoint) <= STEPDISTANCE)
 					{
+						if(!npc->isCheckpointReached())
+						npc->toggleCheckpointReached();
+					}
+
+					//calculate path vrijednosti : X = X smjera, Y = Y smjera, Z = udaljenost od odredišta, W = broj koraka do odredišta
+					if (npc->isCheckpointReached() || npc->isColided())
+					{
+						if (npc->isCheckpointReached())
+						npc->toggleCheckpointReached();
+
 						std::vector<math::Vector3> passed;
 						math::Vector2 checkPoint;
-						const math::Vector4 nextStep = calculatePath(passed, checkPoint, npc->getSpritePosition(), npc->getMoveToPoint(), 0, 0, *npc);
+						bool checkPointChecked = false; 
+						const math::Vector4 nextStep = calculatePath(passed, checkPoint, checkPointChecked, npc->getSpritePosition(), npc->getMoveToPoint(), 0, 0, *npc);
+						if(nextStep.z < STEPDISTANCE)
 						if (nextStep.x == 0.0f && nextStep.y == 0.0f && nextStep.w == 0.0f)
 						{
 							npc->setMoveDirection(math::Vector2::calculateUnitVector(npc->getSpritePosition() - npc->getMoveToPoint()));
@@ -59,13 +88,23 @@ namespace lam {
 						else
 						{
 							npc->setMoveDirection(math::Vector2(nextStep.x, nextStep.y));
-							npc->setMoveToCheckPoint(checkPoint);
+							if (checkPointChecked)
+								npc->setMoveToCheckPoint(checkPoint);
+							else
+								npc->setMoveToCheckPoint(npc->getMoveToPoint());
 						}
 						passed.clear();
 					}
 					npc->moveInDirection();
 				}
-				else npc->setMoveDirection(math::Vector2(0.0f, 0.0f));
+				else
+				{
+					npc->setMoveDirection(math::Vector2(0.0f, 0.0f));
+					if (npc->isPatroling())
+					{
+						npc->setMoveToPoint(npc->getMoveToPoint() == npc->getPatrolEndPoint() ? npc->getPatrolOriginPoint() : npc->getPatrolEndPoint());
+					}
+				}
 			}
 
 
@@ -113,6 +152,7 @@ namespace lam {
 			for (activeObject gameObject : allObjects)
 			{
 				gameObject1 = (objects::GameObject*)gameObject._object;
+				bool collided = false;
 				for (activeObject gameObjectOther : allObjects)
 				{
 					gameObject2 = (objects::GameObject*)gameObjectOther._object;
@@ -122,12 +162,18 @@ namespace lam {
 						if (gameObject2->willBeHit(*hitbox1, gameObject2->_nextMove))
 						{
 							gameObject1->collide(*gameObject2);
+							collided = true;
 						}
 						else if (gameObject2->isHit(*hitbox1))
 						{
 							gameObject1->collide(*gameObject2);
+							collided = true;
 						}
 					}
+				}
+				if (!collided && gameObject1->isColided())
+				{
+					gameObject1->toggleColided();
 				}
 			}
 
@@ -238,7 +284,6 @@ namespace lam {
 	void LevelAssetManager::init(objects::Player* player, graphics::Layer* layer)
 	{
 			_player = player;
-			_player->getSprite()->DoNotDestroySprite();
 			_layer = layer;
 	}
 
@@ -329,7 +374,10 @@ namespace lam {
 		for (activeObject npc : _NPCs)
 		{
 			if (npc._name == name)
-				return (objects::NPC*)npc._object;
+			{
+				objects::NPC* npcreturn = (objects::NPC*)npc._object;
+				return npcreturn;
+			}
 		}
 		return nullptr;
 	}
@@ -371,12 +419,15 @@ namespace lam {
 		}
 		for (activeObject gameObject : _gameObjects)
 		{
+			((objects::GameObject*)gameObject._object)->getSprite()->DoNotDestroySprite();
 			layer->add(((objects::GameObject*)gameObject._object)->getSprite());
 		}
 
 		for (activeObject npc : _NPCs)
 		{
-			layer->add((((objects::NPC*)npc._object)->getSprite()));
+			objects::NPC* temp = (objects::NPC*)npc._object;
+			temp->init();
+			layer->add(((temp->getSprite())));
 		}
 
 		for (activeObject label : _labels)
@@ -386,10 +437,12 @@ namespace lam {
 
 		for (activeObject pickup : _pickups)
 		{
+			((objects::Pickup*)pickup._object)->getSprite()->DoNotDestroySprite();
 			layer->add(((objects::Pickup*)pickup._object)->getSprite());
 		}
 
 		if (_player != nullptr)
+			_player->init();
 			layer->add((_player->getSprite()));
 	}
 
@@ -403,7 +456,7 @@ namespace lam {
 	}
 
 
-	math::Vector4 LevelAssetManager::calculatePath(std::vector<math::Vector3>& passed, math::Vector2& checkPoint, const math::Vector2& currentPosition, const math::Vector2& goal, unsigned int step, unsigned int cumulativeSteps, const objects::NPC& npc)
+	math::Vector4 LevelAssetManager::calculatePath(std::vector<math::Vector3>& passed, math::Vector2& checkPoint, bool& checkPointChecked, const math::Vector2& currentPosition, const math::Vector2& goal, unsigned int step, unsigned int cumulativeSteps, objects::NPC& npc)
 	{
 		std::vector<math::Vector2> directions;
 		std::vector<math::Vector2>& directionsAll = objects::NPC::directionsAll;
@@ -412,15 +465,32 @@ namespace lam {
 		{
 			math::Vector2 nextPosition = currentPositionIn + direction * STEPDISTANCE;
 			if (!std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x) 
-				{return x.x == nextPosition.x && x.y == nextPosition.y && x.z < cumulativeSteps; }))
+				{return x.x == nextPosition.x && x.y == nextPosition.y; }))
 			{
+				if(step == 0)
 				passed.push_back(math::Vector3(nextPosition.x,nextPosition.y,cumulativeSteps + 1));
+
 				directions.push_back(direction);
+			}
+			else
+			{
+				std::vector<math::Vector3>::iterator it = std::find_if(passed.begin(), passed.end(), [&](const math::Vector3& x)
+					{return x.x == nextPosition.x && x.y == nextPosition.y; });
+				
+				if ((*it).z > cumulativeSteps + 1)
+				{
+					(*it).z = cumulativeSteps + 1;
+					directions.push_back(direction);
+				}
 			}
 		}
 
 		math::Vector2 directionReturn = math::Vector2(0.0f,0.0f);
 		float smallestDistance = currentPositionIn.distanceFrom(goal);
+		if (smallestDistance < STEPDISTANCE)
+		{
+			return math::Vector4(0, 0, smallestDistance, cumulativeSteps);
+		}
 		float distance;
 
 		if (step == STEPFIDELITY)
@@ -429,7 +499,7 @@ namespace lam {
 			{
 				if (!pathBlocked(direction,npc))
 				{
-					distance = (currentPositionIn + direction * STEPDISTANCE).distanceFrom(npc.getMoveToPoint());
+					distance = (currentPositionIn + direction * STEPDISTANCE).distanceFrom(goal);
 					if (distance < smallestDistance)
 					{
 						smallestDistance = distance;
@@ -447,7 +517,7 @@ namespace lam {
 		{
 			if (!pathBlocked(direction,npc))
 			{
-				currentPath = calculatePath(passed,checkPoint, currentPositionIn + direction * STEPDISTANCE, goal, step + 1,cumulativeSteps + 1,npc);
+				currentPath = calculatePath(passed,checkPoint,checkPointChecked, currentPositionIn + direction * STEPDISTANCE, goal, step + 1,cumulativeSteps + 1,npc);
 				if (currentPath.z < smallestDistance)
 				{
 					leastSteps = currentPath.w;
@@ -459,7 +529,6 @@ namespace lam {
 					if (currentPath.w < leastSteps)
 					{
 						leastSteps = currentPath.w;
-						smallestDistance = currentPath.z;
 						directionReturn = math::Vector2(direction.x, direction.y);
 					}
 				}
@@ -476,15 +545,19 @@ namespace lam {
 		}
 		else
 		{
-			math::Vector4 path = calculatePath(passed, checkPoint, currentPositionIn + directionReturn * STEPDISTANCE, goal, 0, cumulativeSteps + 1, npc);
-			if (path.x != directionReturn.x && path.y != directionReturn.y && path.w)
-				checkPoint = currentPositionIn;
+			math::Vector4 path = calculatePath(passed, checkPoint, checkPointChecked, currentPositionIn + directionReturn * STEPDISTANCE, goal, 0, cumulativeSteps + 1, npc);
+			if (path.x != directionReturn.x && path.y != directionReturn.y)
+			{
+					checkPoint = currentPositionIn;
+					checkPointChecked = true;
+			}
 			return path;
 		}
 	}
 
 	bool LevelAssetManager::pathBlocked(const math::Vector2& unitVector, const objects::NPC& npc)
 	{
+		return false;
 		for (activeObject gameObject : _gameObjects)
 		{
 			const objects::GameObject& gameObject1 = *(objects::GameObject*) gameObject._object;

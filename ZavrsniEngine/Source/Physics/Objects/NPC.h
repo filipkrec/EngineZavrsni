@@ -12,6 +12,7 @@ namespace objects
 		static std::vector<math::Vector2> directionsAll;
 
 		NPC();
+		virtual ~NPC() {};
 		NPC(GameObject gameObject, unsigned int health, float movementSpeed);
 		virtual void animate() {};
 		virtual void processState() {};

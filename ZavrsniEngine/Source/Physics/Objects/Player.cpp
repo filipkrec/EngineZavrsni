@@ -13,6 +13,11 @@ namespace objects {
 	{
 	}
 
+	void Player::init()
+	{
+		Actor::init();
+	}
+
 	void Player::animate()
 	{
 

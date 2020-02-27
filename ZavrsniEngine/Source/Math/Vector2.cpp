@@ -134,7 +134,7 @@ namespace math {
 
 	bool Vector2::operator!=(const Vector2& right) const
 	{
-		return (right.x != x && right.y != y);
+		return (right.x != x || right.y != y);
 	}
 
 	std::ostream& operator<<(std::ostream& stream, const Vector2& vector2)

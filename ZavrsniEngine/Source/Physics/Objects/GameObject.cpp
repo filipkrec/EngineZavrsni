@@ -60,6 +60,8 @@ namespace objects {
 	{
 		if (_colissionOn)
 		{
+			_colided = true;
+
 			if (other._previousForce.z > 0)
 			{
 				other.calculateColission(math::Vector3(-other._previousForce.x, -other._previousForce.y, other._previousForce.z));
@@ -139,8 +141,13 @@ namespace objects {
 	}
 
 
-	void GameObject::toggleCollision()
+	void GameObject::toggleColission()
 	{
-		_colissionOn = _colissionOn ? false : true;
+		_colissionOn = !_colissionOn;
+	}
+
+	void GameObject::toggleColided()
+	{
+		_colided = !_colided;
 	}
 }

@@ -29,8 +29,15 @@ namespace objects {
 		std::vector<Pickup*> _pickUpable;
 		std::vector<GameObject*> _sighted;
 
+		//pathfinding
 		math::Vector2 _moveToPoint;
+		math::Vector2 _patrolOriginPoint;
+		math::Vector2 _patrolEndPoint;
 		math::Vector2 _moveToCheckPoint;
+		bool _checkpointReached;
+		bool _pointReached;
+		bool _patrol;
+		bool _patroling;
 
 		void (*_onSight)(GameObject*);
 
@@ -38,11 +45,13 @@ namespace objects {
 		Weapon* _weapon;
 	protected:
 		Actor();
+		virtual ~Actor() {};
 		Actor(GameObject& gameObject, unsigned int health, float _movementSpeed, const State& state);
 		void addTexture(const graphics::Texture& texture);
 		void moveWeapon();
 		void rotateToPoint(math::Vector2);
 
+		virtual void init();
 		virtual void move() override;
 		virtual void pickup(Pickup& pickup);
 		virtual void animate() {};
@@ -74,7 +83,23 @@ namespace objects {
 		inline const math::Vector2& getMoveToCheckPoint() const { return _moveToCheckPoint; }
 		void setMoveToCheckPoint(const math::Vector2& point);
 
+		inline const math::Vector2& getPatrolOriginPoint() const { return _patrolOriginPoint; }
+		void setPatrolOriginPoint(const math::Vector2& point);
+
+		inline const math::Vector2& getPatrolEndPoint() const { return _patrolOriginPoint; }
+		void setPatrolEndPoint(const math::Vector2& point);
+
 		inline const float getActorTimer() { return _actorTimer.elapsed(); }
 		void resetActorTimer();
+
+		void toggleCheckpointReached();
+		void togglePointReached();
+		void togglePatrol();
+		void togglePatroling();
+
+		inline const bool  isPointReached() const { return _pointReached; }
+		inline const bool  isCheckpointReached() const { return _checkpointReached; }
+		inline const bool  isPatrol() const { return _patrol; }
+		inline const bool  isPatroling() const { return _patroling; }
 	};
 }
