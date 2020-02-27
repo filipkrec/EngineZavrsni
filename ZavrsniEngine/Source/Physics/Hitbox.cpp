@@ -24,6 +24,24 @@ namespace objects {
 		_collisionRange = math::Vector2(center.x + sprite->getSize().x/2, center.y + sprite->getSize().y / 2);
 	}
 
+	bool Hitbox::isHit(const math::Vector2& point) const
+	{
+		math::Vector2 collisionRangeFinal[2];
+		collisionRangeFinal[0] = _boundSprite->getPosition() - _collisionRange;
+		collisionRangeFinal[1] = _boundSprite->getPosition() + _collisionRange;
+		switch (_shape) {
+		case(SQUARE):
+			if (
+				point.x >= collisionRangeFinal[0].x && point.x <= collisionRangeFinal[1].x &&
+				point.y >= collisionRangeFinal[0].y && point.y <= collisionRangeFinal[1].y
+				)
+				return true;
+			break;
+		default: break;
+		}
+		return false;
+	}
+
 	Hitbox::Hitbox(graphics::Sprite* sprite, Shape shape, const float width, const float height) :
 		_boundSprite(sprite), _shape(shape)
 	{

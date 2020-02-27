@@ -86,6 +86,11 @@ namespace objects {
 					other.calculateColission(math::Vector3(-vector.x, -vector.y, _weight * FRICTION * multiplier));
 					calculateColission(math::Vector3(vector.x, vector.y, _weight * FRICTION * multiplier));
 				}
+				else
+				{
+					other.calculateColission(math::Vector3(-vector.x, -vector.y, 2 * other._weight * FRICTION * multiplier));
+					calculateColission(math::Vector3(vector.x, vector.y, 2 * other._weight * FRICTION * multiplier));
+				}
 				calculateNextMove();
 				other.calculateNextMove();
 			}

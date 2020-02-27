@@ -37,6 +37,7 @@ int main()
 	font->setScale(16, 9);
 
 	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"),2), 100), 100, 150), layer);
+	lam::LevelAssetManager::add(new NPC(GameObject(new Sprite(-8.0f, -8.0f, 1.0f, 1.0f, TextureManager::get("Player"), 2),100),100,150),"NPC");
 	lam::LevelAssetManager::add(new Label("100/100", -10.0f, 6.0f, 0xff00ff00, font, 16), "AmmoLabel");
 	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 1.0f, 0.5f, TextureManager::get("Rifle"), 2), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
 	lam::LevelAssetManager::add((Pickup*)(new Ammo(new Sprite(-4.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), 5, 20)),"Ammo");
@@ -56,6 +57,7 @@ int main()
 	);
 
 	lam::LevelAssetManager::addToLayer(layer);
+	lam::LevelAssetManager::getNPC("NPC")->setMoveToPoint(math::Vector2(7.0f,7.0f));
 	Timer* timer = new Timer();
 	Timer* timerTick = new Timer();
 	int fps = 0;

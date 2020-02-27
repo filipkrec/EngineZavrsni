@@ -36,7 +36,6 @@ namespace objects {
 
 		bool isHit(const Hitbox& other) const;
 		bool isHit(const math::Vector2& point) const;
-		bool isHit(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const;
 		float distanceMinimum(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const;
 		bool willBeHit(const Hitbox& other, const math::Vector2 nextMove) const;
 

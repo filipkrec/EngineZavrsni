@@ -1,7 +1,7 @@
 #include "LevelAssetManager.h"
 #include <algorithm>
-#define STEPFIDELITY 5
-#define STEPDISTANCE 0.5f
+#define STEPFIDELITY 1
+#define STEPDISTANCE 1.0f
 
 
 namespace lam {
@@ -51,7 +51,7 @@ namespace lam {
 					{
 						std::vector<math::Vector3> passed;
 						math::Vector2 checkPoint;
-						const math::Vector4 nextStep = calculatePath(passed, checkPoint, math::Vector2(0, 0), npc->getMoveToPoint(), 0, 0, *npc);
+						const math::Vector4 nextStep = calculatePath(passed, checkPoint, npc->getSpritePosition(), npc->getMoveToPoint(), 0, 0, *npc);
 						if (nextStep.x == 0.0f && nextStep.y == 0.0f && nextStep.w == 0.0f)
 						{
 							npc->setMoveDirection(math::Vector2::calculateUnitVector(npc->getSpritePosition() - npc->getMoveToPoint()));
@@ -98,7 +98,7 @@ namespace lam {
 			
 			for (activeObject npc: _NPCs)
 			{
-				((objects::NPC*)npc._object)->process();
+				((objects::NPC*)npc._object)->process(window);
 			}
 			
 			//colission
@@ -407,20 +407,20 @@ namespace lam {
 	{
 		std::vector<math::Vector2> directions;
 		std::vector<math::Vector2>& directionsAll = objects::NPC::directionsAll;
-
+		math::Vector2 currentPositionIn = currentPosition;
 		for (math::Vector2 direction : directionsAll)
 		{
-			math::Vector2 nextPosition = currentPosition + direction * STEPDISTANCE;
+			math::Vector2 nextPosition = currentPositionIn + direction * STEPDISTANCE;
 			if (!std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x) 
 				{return x.x == nextPosition.x && x.y == nextPosition.y && x.z < cumulativeSteps; }))
 			{
-				passed.push_back(math::Vector3(nextPosition.x,nextPosition.y,++cumulativeSteps));
+				passed.push_back(math::Vector3(nextPosition.x,nextPosition.y,cumulativeSteps + 1));
 				directions.push_back(direction);
 			}
 		}
 
 		math::Vector2 directionReturn = math::Vector2(0.0f,0.0f);
-		float smallestDistance = currentPosition.distanceFrom(currentPosition);
+		float smallestDistance = currentPositionIn.distanceFrom(goal);
 		float distance;
 
 		if (step == STEPFIDELITY)
@@ -429,7 +429,7 @@ namespace lam {
 			{
 				if (!pathBlocked(direction,npc))
 				{
-					distance = (currentPosition + direction * STEPDISTANCE).distanceFrom(npc.getMoveToPoint());
+					distance = (currentPositionIn + direction * STEPDISTANCE).distanceFrom(npc.getMoveToPoint());
 					if (distance < smallestDistance)
 					{
 						smallestDistance = distance;
@@ -447,20 +447,20 @@ namespace lam {
 		{
 			if (!pathBlocked(direction,npc))
 			{
-				currentPath = calculatePath(passed,checkPoint,currentPosition + direction * STEPDISTANCE, goal, step + 1,cumulativeSteps + 1,npc);
+				currentPath = calculatePath(passed,checkPoint, currentPositionIn + direction * STEPDISTANCE, goal, step + 1,cumulativeSteps + 1,npc);
 				if (currentPath.z < smallestDistance)
 				{
 					leastSteps = currentPath.w;
 					smallestDistance = currentPath.z;
-					directionReturn = math::Vector2(currentPath.x, currentPath.y);
+					directionReturn = math::Vector2(direction.x, direction.y);
 				}
-				else if (currentPath.z = smallestDistance)
+				else if (currentPath.z == smallestDistance)
 				{
 					if (currentPath.w < leastSteps)
 					{
 						leastSteps = currentPath.w;
 						smallestDistance = currentPath.z;
-						directionReturn = math::Vector2(currentPath.x, currentPath.y);
+						directionReturn = math::Vector2(direction.x, direction.y);
 					}
 				}
 			}
@@ -468,7 +468,7 @@ namespace lam {
 
 		if (smallestDistance < STEPDISTANCE)
 		{
-			return math::Vector4(currentPath.x, currentPath.y, smallestDistance, leastSteps);
+			return math::Vector4(directionReturn.x, directionReturn.y, smallestDistance, leastSteps);
 		}
 		else if (directions.empty())
 		{
@@ -476,9 +476,9 @@ namespace lam {
 		}
 		else
 		{
-			math::Vector4 path = calculatePath(passed, checkPoint, currentPosition + directionReturn * STEPDISTANCE, goal, 0, cumulativeSteps + 1, npc);
-			if (path.x != currentPath.x && path.y != currentPath.y && path.w)
-				checkPoint = currentPosition;
+			math::Vector4 path = calculatePath(passed, checkPoint, currentPositionIn + directionReturn * STEPDISTANCE, goal, 0, cumulativeSteps + 1, npc);
+			if (path.x != directionReturn.x && path.y != directionReturn.y && path.w)
+				checkPoint = currentPositionIn;
 			return path;
 		}
 	}
@@ -488,7 +488,7 @@ namespace lam {
 		for (activeObject gameObject : _gameObjects)
 		{
 			const objects::GameObject& gameObject1 = *(objects::GameObject*) gameObject._object;
-			if (gameObject1.willBeHit((objects::Hitbox)npc, npc.getSpritePosition()))
+			if (gameObject1.willBeHit((objects::Hitbox)npc, unitVector))
 				return true;
 		}
 		return false;

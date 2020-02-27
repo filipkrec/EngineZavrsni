@@ -19,7 +19,7 @@ namespace objects
 		virtual void init();
 		void moveInDirection();
 		void lookAt();
-		void process();
+		void process(const engine::Window& window);
 
 
 		inline const math::Vector2& getMoveDirection() const { return _moveDirection; }
