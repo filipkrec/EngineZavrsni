@@ -1,7 +1,6 @@
 #include "LevelAssetManager.h"
 #include <algorithm>
-#define STEPFIDELITY 2
-#define STEPDISTANCE 1.0f
+#define STEPDISTANCE 0.5f
 
 
 namespace lam {
@@ -63,37 +62,14 @@ namespace lam {
 				//pathfinding
 				if (!npc->isPointReached())
 				{
-					math::Vector2 checkPoint = npc->getMoveToCheckPoint();
-					if (npc->getSpritePosition().distanceFrom(checkPoint) <= STEPDISTANCE)
+					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(),*npc);
+					if (nextStep.x == 0.0f && nextStep.y == 0.0f)
 					{
-						if(!npc->isCheckpointReached())
-						npc->toggleCheckpointReached();
+						npc->setMoveDirection(math::Vector2::calculateUnitVector(npc->getSpritePosition() - npc->getMoveToPoint()));
 					}
-
-					//calculate path vrijednosti : X = X smjera, Y = Y smjera, Z = udaljenost od odredišta, W = broj koraka do odredišta
-					if (npc->isCheckpointReached() || npc->isColided())
+					else
 					{
-						if (npc->isCheckpointReached())
-						npc->toggleCheckpointReached();
-
-						std::vector<math::Vector3> passed;
-						math::Vector2 checkPoint;
-						bool checkPointChecked = false; 
-						const math::Vector4 nextStep = calculatePath(passed, checkPoint, checkPointChecked, npc->getSpritePosition(), npc->getMoveToPoint(), 0, 0, *npc);
-						if(nextStep.z < STEPDISTANCE)
-						if (nextStep.x == 0.0f && nextStep.y == 0.0f && nextStep.w == 0.0f)
-						{
-							npc->setMoveDirection(math::Vector2::calculateUnitVector(npc->getSpritePosition() - npc->getMoveToPoint()));
-						}
-						else
-						{
-							npc->setMoveDirection(math::Vector2(nextStep.x, nextStep.y));
-							if (checkPointChecked)
-								npc->setMoveToCheckPoint(checkPoint);
-							else
-								npc->setMoveToCheckPoint(npc->getMoveToPoint());
-						}
-						passed.clear();
+						npc->setMoveDirection(math::Vector2(nextStep.x, nextStep.y));
 					}
 					npc->moveInDirection();
 				}
@@ -458,10 +434,12 @@ namespace lam {
 
 	math::Vector2 LevelAssetManager::calculatePath(const math::Vector2& goal,const objects::NPC& npc)
 	{
+		//varijacija A* algoritma
 		std::vector<math::Vector3> endpoints;
 		std::vector<math::Vector3> path;
 		std::vector<math::Vector3> passed;
 		std::vector<math::Vector2>& directionsAll = objects::NPC::directionsAll;
+		std::vector<math::Vector2> splits;
 
 		if (goal.distanceFrom(npc.getSpritePosition()) < STEPDISTANCE)
 			return math::Vector2(0, 0);
@@ -483,6 +461,7 @@ namespace lam {
 						&& x.z < y.z;
 				});
 			math::Vector3& endpointCurrent = *it; //get endpoint
+			passed.push_back(endpointCurrent);
 
 			math::Vector2 currentPosition = math::Vector2(endpointCurrent.x, endpointCurrent.y);
 
@@ -490,8 +469,31 @@ namespace lam {
 			float smallestDistance = currentPosition.distanceFrom(goal);
 			if (smallestDistance < STEPDISTANCE)
 			{
-					math::Vector2 to(path.at(1).x, path.at(1).y);
-					return math::Vector2::calculateUnitVector(to - npc.getSpritePosition);
+				std::sort(passed.begin(), passed.end(), [](const math::Vector3& x, const math::Vector3& y) {return x.z > y.z;}); //order most steps to least
+				math::Vector3 currentPath = endpointCurrent;
+				path.push_back(currentPath);
+				for (math::Vector3 point : passed)
+				{
+					if (point.z == currentPath.z - 1)
+					{
+						if (math::Vector2(point.x, point.y).distanceFrom(math::Vector2(currentPath.x, currentPath.y)) <= STEPDISTANCE)
+						{
+							currentPath = point;
+							path.push_back(currentPath);
+						}
+					}
+				}
+				if (path.size() > 1)
+				{
+					path.pop_back();
+				}
+				math::Vector3 to;
+				if (!path.empty())
+				{
+					 to = path.back();
+				}
+				else to = endpointCurrent;
+					return math::Vector2::calculateUnitVector(math::Vector2(to.x,to.y) - npc.getSpritePosition());
 			}
 
 			//if shorter path_from exists, lower endpoint steps
@@ -513,6 +515,7 @@ namespace lam {
 			}
 
 			//get smallest distance from available directions
+			bool multipleEndpoints = false;
 			for (math::Vector2 direction : directions)
 			{
 				math::Vector2 nextPositionTemp = currentPosition + direction * STEPDISTANCE;
@@ -524,7 +527,6 @@ namespace lam {
 			}
 
 			//move endpoint to next, if more than 1 create additional
-			bool multipleEndpoints = false;
 
 			for (math::Vector2 direction : directions)
 			{
