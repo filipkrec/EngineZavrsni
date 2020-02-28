@@ -456,102 +456,94 @@ namespace lam {
 	}
 
 
-	math::Vector4 LevelAssetManager::calculatePath(std::vector<math::Vector3>& passed, math::Vector2& checkPoint, bool& checkPointChecked, const math::Vector2& currentPosition, const math::Vector2& goal, unsigned int step, unsigned int cumulativeSteps, objects::NPC& npc)
+	math::Vector2 LevelAssetManager::calculatePath(const math::Vector2& goal,const objects::NPC& npc)
 	{
-		std::vector<math::Vector2> directions;
+		std::vector<math::Vector3> endpoints;
+		std::vector<math::Vector3> path;
+		std::vector<math::Vector3> passed;
 		std::vector<math::Vector2>& directionsAll = objects::NPC::directionsAll;
-		math::Vector2 currentPositionIn = currentPosition;
-		for (math::Vector2 direction : directionsAll)
-		{
-			math::Vector2 nextPosition = currentPositionIn + direction * STEPDISTANCE;
-			if (!std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x) 
-				{return x.x == nextPosition.x && x.y == nextPosition.y; }))
-			{
-				if(step == 0)
-				passed.push_back(math::Vector3(nextPosition.x,nextPosition.y,cumulativeSteps + 1));
 
-				directions.push_back(direction);
-			}
-			else
-			{
-				std::vector<math::Vector3>::iterator it = std::find_if(passed.begin(), passed.end(), [&](const math::Vector3& x)
-					{return x.x == nextPosition.x && x.y == nextPosition.y; });
-				
-				if ((*it).z > cumulativeSteps + 1)
+		if (goal.distanceFrom(npc.getSpritePosition()) < STEPDISTANCE)
+			return math::Vector2(0, 0);
+
+		endpoints.push_back(math::Vector3(npc.getSpritePosition().x, npc.getSpritePosition().y, 0));
+		bool pathBlocked = false;
+		// vector3 - X,Y,STEPS
+		//pathBlocked(nextPositionTemp, npc)
+		while (true)
+		{
+			if (endpoints.empty())
+				return math::Vector2(0, 0);
+			std::vector<math::Vector2> directions;
+			//get endpoint least distance from end with least steps
+			std::vector<math::Vector3>::iterator it = min_element(endpoints.begin(), endpoints.end(),
+				[&](const math::Vector3& x, const math::Vector3& y)
 				{
-					(*it).z = cumulativeSteps + 1;
+					return math::Vector2(x.x, x.y).distanceFrom(goal) < math::Vector2(y.x, y.y).distanceFrom(goal)
+						&& x.z < y.z;
+				});
+			math::Vector3& endpointCurrent = *it; //get endpoint
+
+			math::Vector2 currentPosition = math::Vector2(endpointCurrent.x, endpointCurrent.y);
+
+			//if endpoint near end return first step;
+			float smallestDistance = currentPosition.distanceFrom(goal);
+			if (smallestDistance < STEPDISTANCE)
+			{
+					math::Vector2 to(path.at(1).x, path.at(1).y);
+					return math::Vector2::calculateUnitVector(to - npc.getSpritePosition);
+			}
+
+			//if shorter path_from exists, lower endpoint steps
+			for (math::Vector2 direction : directionsAll)
+			{
+				math::Vector2 nextPositionTemp = currentPosition + direction * STEPDISTANCE;
+				for (math::Vector3& pathPoint : path)
+					if (pathPoint.x == nextPositionTemp.x && pathPoint.y == nextPositionTemp.y && pathPoint.z + 1 < endpointCurrent.z)
+						endpointCurrent.z = pathPoint.z + 1;
+			}
+
+			//only directions to unpassed and unblocked points
+			for (math::Vector2 direction : directionsAll)
+			{
+				math::Vector2 nextPositionTemp = currentPosition + direction * STEPDISTANCE;
+				if (!pathBlocked && !std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x)
+					{return x.x == nextPositionTemp.x && x.y == nextPositionTemp.y; }))
 					directions.push_back(direction);
+			}
+
+			//get smallest distance from available directions
+			for (math::Vector2 direction : directions)
+			{
+				math::Vector2 nextPositionTemp = currentPosition + direction * STEPDISTANCE;
+				float distance = nextPositionTemp.distanceFrom(goal);
+				if (distance < smallestDistance)
+				{
+					smallestDistance = distance;
 				}
 			}
-		}
 
-		math::Vector2 directionReturn = math::Vector2(0.0f,0.0f);
-		float smallestDistance = currentPositionIn.distanceFrom(goal);
-		if (smallestDistance < STEPDISTANCE)
-		{
-			return math::Vector4(0, 0, smallestDistance, cumulativeSteps);
-		}
-		float distance;
+			//move endpoint to next, if more than 1 create additional
+			bool multipleEndpoints = false;
 
-		if (step == STEPFIDELITY)
-		{
-			for (math::Vector2& direction : directions)
+			for (math::Vector2 direction : directions)
 			{
-				if (!pathBlocked(direction,npc))
+				math::Vector2 nextPositionTemp = currentPosition + direction * STEPDISTANCE;
+				float distance = nextPositionTemp.distanceFrom(goal);
+				if (distance == smallestDistance)
 				{
-					distance = (currentPositionIn + direction * STEPDISTANCE).distanceFrom(goal);
-					if (distance < smallestDistance)
+					if (!multipleEndpoints)
 					{
-						smallestDistance = distance;
-						directionReturn = direction;
+						endpointCurrent.x = nextPositionTemp.x;
+						endpointCurrent.y = nextPositionTemp.y;
+						endpointCurrent.z++;
+					}
+					else
+					{
+						endpoints.push_back(math::Vector3(nextPositionTemp.x, nextPositionTemp.y, endpointCurrent.z));
 					}
 				}
 			}
-			return math::Vector4(directionReturn.x, directionReturn.y, smallestDistance,cumulativeSteps);
-		}
-
-		math::Vector4 currentPath;
-		unsigned int leastSteps = cumulativeSteps + 6;
-
-		for (math::Vector2& direction : directions)
-		{
-			if (!pathBlocked(direction,npc))
-			{
-				currentPath = calculatePath(passed,checkPoint,checkPointChecked, currentPositionIn + direction * STEPDISTANCE, goal, step + 1,cumulativeSteps + 1,npc);
-				if (currentPath.z < smallestDistance)
-				{
-					leastSteps = currentPath.w;
-					smallestDistance = currentPath.z;
-					directionReturn = math::Vector2(direction.x, direction.y);
-				}
-				else if (currentPath.z == smallestDistance)
-				{
-					if (currentPath.w < leastSteps)
-					{
-						leastSteps = currentPath.w;
-						directionReturn = math::Vector2(direction.x, direction.y);
-					}
-				}
-			}
-		}
-
-		if (smallestDistance < STEPDISTANCE)
-		{
-			return math::Vector4(directionReturn.x, directionReturn.y, smallestDistance, leastSteps);
-		}
-		else if (directions.empty())
-		{
-			return math::Vector4(0, 0, smallestDistance, cumulativeSteps);
-		}
-		else
-		{
-			math::Vector4 path = calculatePath(passed, checkPoint, checkPointChecked, currentPositionIn + directionReturn * STEPDISTANCE, goal, 0, cumulativeSteps + 1, npc);
-			if (path.x != directionReturn.x && path.y != directionReturn.y)
-			{
-					checkPoint = currentPositionIn;
-					checkPointChecked = true;
-			}
-			return path;
 		}
 	}
 
