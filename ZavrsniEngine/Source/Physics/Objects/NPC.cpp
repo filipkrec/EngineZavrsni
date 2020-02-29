@@ -36,21 +36,21 @@ namespace objects {
 		Actor::init();
 		if (directionsAll.empty())
 		{
-			math::Vector2 right = math::Vector2::calculateUnitVector(math::Vector2(1, 0));
+			math::Vector2 right = math::Vector2(1, 0);
 			directionsAll.push_back(right);
-			math::Vector2 up = math::Vector2::calculateUnitVector(math::Vector2(0, 1));
+			math::Vector2 up = math::Vector2(0, 1);
 			directionsAll.push_back(up);
-			math::Vector2 left = math::Vector2::calculateUnitVector(math::Vector2(-1, 0));
+			math::Vector2 left = math::Vector2(-1, 0);
 			directionsAll.push_back(left);
-			math::Vector2 down = math::Vector2::calculateUnitVector(math::Vector2(0, -1));
+			math::Vector2 down = math::Vector2(0, -1);
 			directionsAll.push_back(down);
-			math::Vector2 botRight = math::Vector2::calculateUnitVector(math::Vector2(1, -1));
+			math::Vector2 botRight = math::Vector2(1, -1);
 			directionsAll.push_back(botRight);
-			math::Vector2 topRight = math::Vector2::calculateUnitVector(math::Vector2(1, 1));
+			math::Vector2 topRight = math::Vector2(1, 1);
 			directionsAll.push_back(topRight);
-			math::Vector2 botLeft = math::Vector2::calculateUnitVector(math::Vector2(-1, -1));
+			math::Vector2 botLeft = math::Vector2(-1, -1);
 			directionsAll.push_back(botLeft);
-			math::Vector2 topleft = math::Vector2::calculateUnitVector(math::Vector2(-1, 1));
+			math::Vector2 topleft = math::Vector2(-1, 1);
 			directionsAll.push_back(topleft);
 		}
 	}

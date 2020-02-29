@@ -32,6 +32,8 @@ namespace math {
 
 		friend bool operator>=(Vector2 left, const Vector2& right);
 		friend bool operator<=(Vector2 left, const Vector2& right);
+		friend bool operator>(Vector2 left, const Vector2& right);
+		friend bool operator<(Vector2 left, const Vector2& right);
 
 
 		Vector2& operator+=(const Vector2& right);

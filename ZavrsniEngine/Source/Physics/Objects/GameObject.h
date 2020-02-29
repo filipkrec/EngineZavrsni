@@ -24,8 +24,6 @@ namespace objects {
 		GameObject(graphics::Sprite* sprite, unsigned int weight);
 		GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height = 0);
 
-		void swapSprite(graphics::Sprite* sprite);
-
 		inline const math::Vector3& getPreviousForce() const { return _previousForce; }
 		void savePreviousForce();
 

@@ -1,6 +1,6 @@
 #include "LevelAssetManager.h"
 #include <algorithm>
-#define STEPDISTANCE 0.5f
+#define STEPDISTANCE 1.0f
 
 
 namespace lam {
@@ -62,7 +62,7 @@ namespace lam {
 				//pathfinding
 				if (!npc->isPointReached())
 				{
-					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(),*npc);
+					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(),npc);
 					if (nextStep.x == 0.0f && nextStep.y == 0.0f)
 					{
 						npc->setMoveDirection(math::Vector2::calculateUnitVector(npc->getSpritePosition() - npc->getMoveToPoint()));
@@ -135,12 +135,8 @@ namespace lam {
 					objects::Hitbox* hitbox1 = (objects::Hitbox*)gameObject1;
 					if (gameObject1 != gameObject2)
 					{
+
 						if (gameObject2->willBeHit(*hitbox1, gameObject2->_nextMove))
-						{
-							gameObject1->collide(*gameObject2);
-							collided = true;
-						}
-						else if (gameObject2->isHit(*hitbox1))
 						{
 							gameObject1->collide(*gameObject2);
 							collided = true;
@@ -195,6 +191,17 @@ namespace lam {
 			{
 				gameObject1 = (objects::GameObject*)gameObject._object;
 				gameObject1->move();
+
+				//clear clipping
+				for (activeObject gameObjectOther : allObjects)
+				{
+					gameObject2 = (objects::GameObject*)gameObjectOther._object;
+					if(gameObject1 != gameObject2)
+					while (gameObject1->isHit((objects::Hitbox) * gameObject2))
+					{
+						gameObject1->getSprite()->move(math::Vector2::calculateUnitVector(gameObject1->getSpritePosition() - gameObject2->getSpritePosition()) * 0.001);
+					}
+				}
 			}
 		}
 	}
@@ -432,20 +439,24 @@ namespace lam {
 	}
 
 
-	math::Vector2 LevelAssetManager::calculatePath(const math::Vector2& goal,const objects::NPC& npc)
+	math::Vector2 LevelAssetManager::calculatePath(const math::Vector2& goal,const objects::NPC* npc)
 	{
 		//varijacija A* algoritma
 		std::vector<math::Vector3> endpoints;
 		std::vector<math::Vector3> path;
 		std::vector<math::Vector3> passed;
-		std::vector<math::Vector2>& directionsAll = objects::NPC::directionsAll;
+		std::vector<math::Vector2> directionsAll = objects::NPC::directionsAll;
+		for (math::Vector2 direction : directionsAll)
+		{
+			direction = direction * STEPDISTANCE;
+		}
+
 		std::vector<math::Vector2> splits;
 
-		if (goal.distanceFrom(npc.getSpritePosition()) < STEPDISTANCE)
+		if (goal.distanceFrom(npc->getSpritePosition()) < STEPDISTANCE)
 			return math::Vector2(0, 0);
 
-		endpoints.push_back(math::Vector3(npc.getSpritePosition().x, npc.getSpritePosition().y, 0));
-		bool pathBlocked = false;
+		endpoints.push_back(math::Vector3(npc->getSpritePosition().x, npc->getSpritePosition().y, 0));
 		// vector3 - X,Y,STEPS
 		//pathBlocked(nextPositionTemp, npc)
 		while (true)
@@ -476,7 +487,10 @@ namespace lam {
 				{
 					if (point.z == currentPath.z - 1)
 					{
-						if (math::Vector2(point.x, point.y).distanceFrom(math::Vector2(currentPath.x, currentPath.y)) <= STEPDISTANCE)
+						math::Vector2 vectorDistance = math::Vector2(point.x, point.y) - math::Vector2(currentPath.x, currentPath.y);
+						vectorDistance.x = abs(vectorDistance.x);
+						vectorDistance.y = abs(vectorDistance.y);
+						if (vectorDistance.x <= STEPDISTANCE && vectorDistance.y <= STEPDISTANCE)
 						{
 							currentPath = point;
 							path.push_back(currentPath);
@@ -493,23 +507,28 @@ namespace lam {
 					 to = path.back();
 				}
 				else to = endpointCurrent;
-					return math::Vector2::calculateUnitVector(math::Vector2(to.x,to.y) - npc.getSpritePosition());
+					return math::Vector2::calculateUnitVector(math::Vector2(to.x,to.y) - npc->getSpritePosition());
 			}
+
 
 			//if shorter path_from exists, lower endpoint steps
 			for (math::Vector2 direction : directionsAll)
 			{
 				math::Vector2 nextPositionTemp = currentPosition + direction * STEPDISTANCE;
-				for (math::Vector3& pathPoint : path)
+				for (math::Vector3& pathPoint : passed)
 					if (pathPoint.x == nextPositionTemp.x && pathPoint.y == nextPositionTemp.y && pathPoint.z + 1 < endpointCurrent.z)
+					{
 						endpointCurrent.z = pathPoint.z + 1;
+					}
 			}
+
+			passed.back().z = endpointCurrent.z;
 
 			//only directions to unpassed and unblocked points
 			for (math::Vector2 direction : directionsAll)
 			{
 				math::Vector2 nextPositionTemp = currentPosition + direction * STEPDISTANCE;
-				if (!pathBlocked && !std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x)
+				if (!pathBlocked(nextPositionTemp, currentPosition,npc) && !std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x)
 					{return x.x == nextPositionTemp.x && x.y == nextPositionTemp.y; }))
 					directions.push_back(direction);
 			}
@@ -520,7 +539,7 @@ namespace lam {
 			{
 				math::Vector2 nextPositionTemp = currentPosition + direction * STEPDISTANCE;
 				float distance = nextPositionTemp.distanceFrom(goal);
-				if (distance < smallestDistance)
+				if (distance < smallestDistance || direction == directions.front())
 				{
 					smallestDistance = distance;
 				}
@@ -536,6 +555,7 @@ namespace lam {
 				{
 					if (!multipleEndpoints)
 					{
+						multipleEndpoints = true;
 						endpointCurrent.x = nextPositionTemp.x;
 						endpointCurrent.y = nextPositionTemp.y;
 						endpointCurrent.z++;
@@ -546,18 +566,35 @@ namespace lam {
 					}
 				}
 			}
+
+			directions.clear();
 		}
 	}
 
-	bool LevelAssetManager::pathBlocked(const math::Vector2& unitVector, const objects::NPC& npc)
+	bool LevelAssetManager::pathBlocked(const math::Vector2& positionTo, const math::Vector2& current, const objects::NPC* npc)
 	{
-		return false;
+		math::Vector2 distanceVector = positionTo - current;
+		objects::Hitbox temp(current, npc->getCollisionRange());
 		for (activeObject gameObject : _gameObjects)
 		{
 			const objects::GameObject& gameObject1 = *(objects::GameObject*) gameObject._object;
-			if (gameObject1.willBeHit((objects::Hitbox)npc, unitVector))
+			if (gameObject1.willBeHit(temp, distanceVector))
 				return true;
 		}
+
+		for (activeObject NPC : _NPCs)
+		{
+			if (NPC._object != npc)
+			{
+				const objects::GameObject& gameObject1 = *(objects::GameObject*) NPC._object;
+				if (gameObject1.willBeHit(temp, distanceVector))
+					return true;
+			}
+		}
+
+		if (_player->willBeHit(temp, distanceVector))
+			return true;
+		
 		return false;
 	}
 }

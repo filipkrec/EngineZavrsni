@@ -38,8 +38,8 @@ namespace lam {
 		static std::vector<graphics::Line*> _shots;
 		static objects::Player* _player;
 
-		static math::Vector2 calculatePath(const math::Vector2& goal, const objects::NPC& npc);
-		static bool pathBlocked(const math::Vector2& unitVector, const objects::NPC& npc);
+		static math::Vector2 calculatePath(const math::Vector2& goal, const objects::NPC* npc);
+		static bool pathBlocked(const math::Vector2& positionTo, const math::Vector2& current, const objects::NPC* npc);
 	public:
 		static void init(objects::Player* player, graphics::Layer* layer);
 		static void processBegin(engine::Window& window);
