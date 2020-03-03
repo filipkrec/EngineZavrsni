@@ -104,7 +104,7 @@ namespace math {
 
 	bool Vector4::operator!=(const Vector4& right)
 	{
-		return (right.x != x && right.y != y && right.z != z && right.w != w);
+		return (right.x != x || right.y != y || right.z != z || right.w != w);
 	}
 
 	std::ostream& operator<<(std::ostream& stream, const Vector4& Vector4)

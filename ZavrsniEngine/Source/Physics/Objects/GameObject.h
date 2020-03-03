@@ -33,7 +33,7 @@ namespace objects {
 		inline const bool  isColided() const { return _colided; }
 
 		void calculateColission(const math::Vector3& force);
-		void collide(GameObject& other);
+		virtual void collide(GameObject& other);
 		void calculateNextMove();
 		virtual void move();
 

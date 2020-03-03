@@ -107,9 +107,6 @@ namespace objects {
 
 	bool Hitbox::willBeHit(const Hitbox & other, const math::Vector2 nextMove) const
 	{
-		if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition() + (other.getCollisionRange() * nextMove) + nextMove) != math::Vector4(0, 0, 0, 0))
-			return true;
-
 		math::Vector2 A = other.getSpritePosition() - other.getCollisionRange();
 		math::Vector2 B = other.getSpritePosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y);
 		math::Vector2 C = other.getSpritePosition() + other.getCollisionRange();
@@ -132,6 +129,10 @@ namespace objects {
 
 		if (nextMove.x < 0 && nextMove.y < 0) //ljevo dolje 
 		{
+			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition() 
+				+ A + nextMove) != math::Vector4(0, 0, 0, 0))
+				return true;
+
 			edgesTop[0] = H;
 			edgesTop[1] = D;
 			edgesBottom[0] = F;
@@ -141,12 +142,18 @@ namespace objects {
 		}
 		else if (nextMove.x == 0 && nextMove.y < 0) //dolje 
 		{
+			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+				- math::Vector2(0,other.getCollisionRange().y + 0.01) + nextMove) != math::Vector4(0, 0, 0, 0))
+				return true;
 			inLine = true;
 			furthestEdges[0] = E;
 			furthestEdges[1] = C;
 		}
 		else if (nextMove.x > 0 && nextMove.y < 0) //desno dolje
 		{
+			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+				+ B + nextMove) != math::Vector4(0, 0, 0, 0))
+				return true;
 			edgesTop[0] = C;
 			edgesTop[1] = G;
 			edgesBottom[0] = A;
@@ -156,12 +163,18 @@ namespace objects {
 		}
 		else if (nextMove.x > 0 && nextMove.y == 0) //desno
 		{
+			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+				+ math::Vector2(other.getCollisionRange().x + 0.01,0) + nextMove) != math::Vector4(0, 0, 0, 0))
+				return true;
 			inLine = true;
 			furthestEdges[0] = A;
 			furthestEdges[1] = G;
 		}
 		else if (nextMove.x > 0 && nextMove.y > 0) //desno gore
 		{
+			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+				+ C + nextMove) != math::Vector4(0, 0, 0, 0))
+				return true;
 			edgesTop[0] = D;
 			edgesTop[1] = H;
 			edgesBottom[0] = B;
@@ -171,12 +184,18 @@ namespace objects {
 		}
 		else if (nextMove.x == 0 && nextMove.y > 0) //gore
 		{
+			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+				+ math::Vector2(0,other.getCollisionRange().y + 0.01) + nextMove) != math::Vector4(0, 0, 0, 0))
+				return true;
 			inLine = true;
 			furthestEdges[0] = A;
 			furthestEdges[1] = G;
 		}
 		else if (nextMove.x < 0 && nextMove.y > 0) //ljevo gore
 		{
+			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+				+ D + nextMove) != math::Vector4(0, 0, 0, 0))
+				return true;
 			edgesTop[0] = D;
 			edgesTop[1] = H;
 			edgesBottom[0] = B;
@@ -186,6 +205,9 @@ namespace objects {
 		}
 		else if (nextMove.x < 0 && nextMove.y == 0) //ljevo
 		{
+			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+				- math::Vector2(other.getCollisionRange().x + 0.01,0) + nextMove) != math::Vector4(0, 0, 0, 0))
+				return true;
 			inLine = true;
 			furthestEdges[0] = E;
 			furthestEdges[1] = C;
@@ -195,7 +217,7 @@ namespace objects {
 		bool isInSquare = false;
 		for (int i = 0; i < 4; ++i)
 		{
-			if (dots[i] > furthestEdges[0] && dots[i] < furthestEdges[1])
+			if (dots[i] >= furthestEdges[0] && dots[i] <= furthestEdges[1])
 			{
 				isInSquare = true;
 				break;

@@ -7,7 +7,7 @@ namespace objects {
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const State& state)
 			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
-		_pointReached(false), _checkpointReached(false), _patrol(false), _patroling(false) 
+		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false) 
 		{
 		}
 
@@ -153,10 +153,18 @@ namespace objects {
 			_onSight = foo;
 		}
 
+
+		void Actor::collide(GameObject& other)
+		{
+			GameObject::collide(other);
+			if (_seekCheckpoint == false)
+				toggleSeekCheckpoint();
+		}
+
 		void Actor::setMoveToPoint(const math::Vector2& point)
 		{
 			_moveToPoint = point;
-			toggleCheckpointReached();
+			toggleSeekCheckpoint();
 		}
 
 
@@ -180,9 +188,9 @@ namespace objects {
 			_actorTimer.reset();
 		}
 
-		void Actor::toggleCheckpointReached()
+		void Actor::toggleSeekCheckpoint()
 		{
-			_checkpointReached = !_checkpointReached;
+			_seekCheckpoint = !_seekCheckpoint;
 		}
 		void Actor::togglePointReached()
 		{

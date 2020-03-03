@@ -34,10 +34,11 @@ namespace objects {
 		math::Vector2 _patrolOriginPoint;
 		math::Vector2 _patrolEndPoint;
 		math::Vector2 _moveToCheckPoint;
-		bool _checkpointReached;
+		bool _seekCheckpoint;
 		bool _pointReached;
 		bool _patrol;
 		bool _patroling;
+		bool _collided;
 
 		void (*_onSight)(GameObject*);
 
@@ -70,6 +71,7 @@ namespace objects {
 		void setState(const State& state);
 		void setWeapon(Weapon* weapon);
 		virtual void setOnSightFunction(void (*foo)(GameObject*));
+		void collide(GameObject& other) override;
 
 		void addSighted(GameObject* sighted);
 		void addPickupable(Pickup* pickupable);
@@ -92,13 +94,13 @@ namespace objects {
 		inline const float getActorTimer() { return _actorTimer.elapsed(); }
 		void resetActorTimer();
 
-		void toggleCheckpointReached();
+		void toggleSeekCheckpoint();
 		void togglePointReached();
 		void togglePatrol();
 		void togglePatroling();
 
 		inline const bool  isPointReached() const { return _pointReached; }
-		inline const bool  isCheckpointReached() const { return _checkpointReached; }
+		inline const bool  seekCheckpoint() const { return _seekCheckpoint; }
 		inline const bool  isPatrol() const { return _patrol; }
 		inline const bool  isPatroling() const { return _patroling; }
 	};

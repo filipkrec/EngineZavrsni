@@ -1,6 +1,6 @@
 #include "LevelAssetManager.h"
 #include <algorithm>
-#define STEPDISTANCE 1.0f
+#define STEPDISTANCE 1.5f
 
 
 namespace lam {
@@ -62,14 +62,15 @@ namespace lam {
 				//pathfinding
 				if (!npc->isPointReached())
 				{
-					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(),npc);
-					if (nextStep.x == 0.0f && nextStep.y == 0.0f)
+					if (!npc->seekCheckpoint() && npc->getSpritePosition().distanceFrom(npc->getMoveToCheckPoint()) <= STEPDISTANCE)
+						npc->toggleSeekCheckpoint();
+						
+					if (npc->seekCheckpoint())
 					{
-						npc->setMoveDirection(math::Vector2::calculateUnitVector(npc->getSpritePosition() - npc->getMoveToPoint()));
-					}
-					else
-					{
-						npc->setMoveDirection(math::Vector2(nextStep.x, nextStep.y));
+						const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(), npc);
+						npc->setMoveToCheckPoint(nextStep);
+						npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getSpritePosition()));
+						npc->toggleSeekCheckpoint();
 					}
 					npc->moveInDirection();
 				}
@@ -507,7 +508,7 @@ namespace lam {
 					 to = path.back();
 				}
 				else to = endpointCurrent;
-					return math::Vector2::calculateUnitVector(math::Vector2(to.x,to.y) - npc->getSpritePosition());
+					return math::Vector2(to.x,to.y);
 			}
 
 
