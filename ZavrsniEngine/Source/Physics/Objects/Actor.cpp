@@ -5,7 +5,7 @@
 namespace objects {
 		Actor::Actor() {}
 
-		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const State& state)
+		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const ActorState& state)
 			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
 		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false) 
 		{
@@ -30,8 +30,12 @@ namespace objects {
 
 		void Actor::move()
 		{
-			GameObject::move();
-			moveWeapon();
+			if (_state != STATE_DEAD)
+			{
+				_state = _currentForce.z != 0 ? STATE_MOVING : STATE_STILL;
+				GameObject::move();
+				moveWeapon();
+			}
 		}
 
 		void Actor::pickup(Pickup& pickup)
@@ -47,6 +51,10 @@ namespace objects {
 		void Actor::setHealth(unsigned int value)
 		{ 
 			_health = value; 
+			if (_health <= 0)
+			{
+				_state = STATE_DEAD;
+			}
 		}
 
 		void Actor::setMovementSpeed(float value)
@@ -60,7 +68,7 @@ namespace objects {
 			_sightRange = sightRange;
 		}
 
-		void Actor::setState(const State& state)
+		void Actor::setState(const ActorState& state)
 		{ 
 			_state = state; 
 		}
@@ -104,28 +112,31 @@ namespace objects {
 
 		bool Actor::objectIsInSight(const GameObject& gameObject)
 		{
-			if (_sightAngle == 0 && _sightRange == 0)
-				return true;
-
-			math::Vector2 objectPosition = gameObject.getSpritePosition();
-			float objectWidth = gameObject.getSpriteSize().x;
-			float objectHeight = gameObject.getSpriteSize().y;
-			math::Vector2 objectPoints[4] =
+			if (_state != STATE_DEAD)
 			{
-				math::Vector2(objectPosition.x - objectWidth,objectPosition.y - objectHeight),
-				math::Vector2(objectPosition.x + objectWidth,objectPosition.y - objectHeight),
-				math::Vector2(objectPosition.x + objectWidth,objectPosition.y + objectHeight),
-				math::Vector2(objectPosition.x - objectWidth,objectPosition.y + objectHeight)
-			};
+				if (_sightAngle == 0 && _sightRange == 0)
+					return true;
 
-			math::Vector2 spritePosition = _boundSprite->getPosition();
-			for (int i = 0; i < 4; ++i)
-			{
-				if (spritePosition.distanceFrom(objectPoints[i]) <= _sightRange || _sightRange == 0)
+				math::Vector2 objectPosition = gameObject.getSpritePosition();
+				float objectWidth = gameObject.getSpriteSize().x;
+				float objectHeight = gameObject.getSpriteSize().y;
+				math::Vector2 objectPoints[4] =
 				{
-					float angle = math::Vector2::getAngleBetween(_boundSprite->getRotation(), objectPoints[i] - _boundSprite->getPosition());
+					math::Vector2(objectPosition.x - objectWidth,objectPosition.y - objectHeight),
+					math::Vector2(objectPosition.x + objectWidth,objectPosition.y - objectHeight),
+					math::Vector2(objectPosition.x + objectWidth,objectPosition.y + objectHeight),
+					math::Vector2(objectPosition.x - objectWidth,objectPosition.y + objectHeight)
+				};
+
+				math::Vector2 spritePosition = _boundSprite->getPosition();
+				for (int i = 0; i < 4; ++i)
+				{
+					if (spritePosition.distanceFrom(objectPoints[i]) <= _sightRange || _sightRange == 0)
+					{
+						float angle = math::Vector2::getAngleBetween(_boundSprite->getRotation(), objectPoints[i] - _boundSprite->getPosition());
 						if (_sightAngle / 2 >= abs(angle) || _sightAngle == 0)
 							return true;
+					}
 				}
 			}
 			return false;
@@ -133,7 +144,10 @@ namespace objects {
 
 		void Actor::addSighted(GameObject* sighted)
 		{
-			_sighted.push_back(sighted);
+			if (_state != STATE_DEAD)
+			{
+				_sighted.push_back(sighted);
+			}
 		}
 
 		void Actor::processSight()
@@ -156,9 +170,12 @@ namespace objects {
 
 		void Actor::collide(GameObject& other)
 		{
-			GameObject::collide(other);
-			if (_seekCheckpoint == false)
-				toggleSeekCheckpoint();
+			if (_state != STATE_DEAD)
+			{
+				GameObject::collide(other);
+				if (_seekCheckpoint == false)
+					toggleSeekCheckpoint();
+			}
 		}
 
 		void Actor::setMoveToPoint(const math::Vector2& point)

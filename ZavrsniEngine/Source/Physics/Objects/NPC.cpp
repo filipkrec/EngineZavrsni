@@ -8,7 +8,7 @@ namespace objects {
 	}
 
 	NPC::NPC(GameObject gameObject, unsigned int health, float movementSpeed)
-		:Actor(gameObject, health, movementSpeed, Actor::State::STATE_STILL)
+		:Actor(gameObject, health, movementSpeed, Actor::ActorState::STATE_STILL)
 	{
 	}
 
@@ -19,7 +19,7 @@ namespace objects {
 
 	void NPC::moveInDirection()
 	{
-		if (_moveDirection != math::Vector2(0.0f, 0.0f))
+		if (_moveDirection != math::Vector2(0.0f, 0.0f) && _state != STATE_DEAD)
 		{
 			calculateColission(math::Vector3(_moveDirection.x, _moveDirection.y, (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight));
 		}
@@ -27,8 +27,11 @@ namespace objects {
 
 	void NPC::lookAt()
 	{
-		if(_lookingAt != nullptr && !_lookingAt->toDestroySprite())
-		rotateToPoint(_lookingAt->getPosition() - _boundSprite->getPosition()); //vektor udaljenosti
+		if (_state != STATE_DEAD)
+		{
+			if (_lookingAt != nullptr && !_lookingAt->toDestroySprite())
+				rotateToPoint(_lookingAt->getPosition() - _boundSprite->getPosition()); //vektor udaljenosti
+		}
 	}
 	 
 	void NPC::init()

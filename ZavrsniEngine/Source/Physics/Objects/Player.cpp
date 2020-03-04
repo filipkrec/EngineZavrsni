@@ -9,7 +9,7 @@ namespace objects {
 	}
 
 	Player::Player(GameObject gameObject, unsigned int health, float movementSpeed)
-		:Actor(gameObject,health, movementSpeed,Actor::State::STATE_STILL), _keyPickup(0), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D)
+		:Actor(gameObject,health, movementSpeed,Actor::ActorState::STATE_STILL), _keyPickup(0), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D)
 	{
 	}
 

@@ -12,7 +12,7 @@ namespace objects {
 	class Actor : public GameObject
 	{
 	protected:
-		enum State
+		enum ActorState
 		{
 		STATE_MOVING,
 		STATE_DEAD,
@@ -42,12 +42,12 @@ namespace objects {
 
 		void (*_onSight)(GameObject*);
 
-		State _state;
+		ActorState _state;
 		Weapon* _weapon;
 	protected:
 		Actor();
 		virtual ~Actor() {};
-		Actor(GameObject& gameObject, unsigned int health, float _movementSpeed, const State& state);
+		Actor(GameObject& gameObject, unsigned int health, float _movementSpeed, const ActorState& state);
 		void addTexture(const graphics::Texture& texture);
 		void moveWeapon();
 		void rotateToPoint(math::Vector2);
@@ -62,13 +62,13 @@ namespace objects {
 	public:
 		inline const unsigned int& getHealth() const { return _health; }
 		inline const float& getMovementSpeed() const { return _movementSpeed; }
-		inline const State& getState() const { return _state; }
+		inline const ActorState& getState() const { return _state; }
 		Weapon* getWeapon();
 
 		void setHealth(unsigned int value);
 		void setMovementSpeed(float value);
 		void setSight(float sightAngle, float sightRange);
-		void setState(const State& state);
+		void setState(const ActorState& state);
 		void setWeapon(Weapon* weapon);
 		virtual void setOnSightFunction(void (*foo)(GameObject*));
 		void collide(GameObject& other) override;
@@ -99,9 +99,9 @@ namespace objects {
 		void togglePatrol();
 		void togglePatroling();
 
-		inline const bool  isPointReached() const { return _pointReached; }
-		inline const bool  seekCheckpoint() const { return _seekCheckpoint; }
-		inline const bool  isPatrol() const { return _patrol; }
-		inline const bool  isPatroling() const { return _patroling; }
+		inline const bool  isPointReached() const { return _state != STATE_DEAD ? _pointReached : true; }
+		inline const bool  seekCheckpoint() const { return _state != STATE_DEAD ? _seekCheckpoint : false; }
+		inline const bool  isPatrol() const { return _state != STATE_DEAD ? _patrol : false; }
+		inline const bool  isPatroling() const { return _state != STATE_DEAD ? _patroling : false; }
 	};
 }
