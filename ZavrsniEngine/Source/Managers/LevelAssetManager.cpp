@@ -62,7 +62,7 @@ namespace lam {
 				//pathfinding
 				if (!npc->isPointReached())
 				{
-					if (!npc->seekCheckpoint() && npc->getSpritePosition().distanceFrom(npc->getMoveToCheckPoint()) <= STEPDISTANCE)
+					if (!npc->seekCheckpoint() && abs(npc->getSpritePosition().distanceFrom(npc->getMoveToCheckPoint())) <= STEPDISTANCE)
 						npc->toggleSeekCheckpoint();
 						
 					if (npc->seekCheckpoint())
@@ -137,10 +137,11 @@ namespace lam {
 					if (gameObject1 != gameObject2)
 					{
 
-						if (gameObject2->willBeHit(*hitbox1, gameObject2->_nextMove))
+						if (gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove))
 						{
-							gameObject1->collide(*gameObject2);
+							gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove);
 							collided = true;
+							gameObject1->collide(*gameObject2);
 						}
 					}
 				}
@@ -479,6 +480,13 @@ namespace lam {
 
 			//if endpoint near end return first step;
 			float smallestDistance = currentPosition.distanceFrom(goal);
+
+			if (passed.size() > 100)
+			{
+				math::Vector2 to(passed.at(1).x, passed.at(1).y);
+				return to;
+			}
+
 			if (smallestDistance < STEPDISTANCE)
 			{
 				std::sort(passed.begin(), passed.end(), [](const math::Vector3& x, const math::Vector3& y) {return x.z > y.z;}); //order most steps to least

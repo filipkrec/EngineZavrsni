@@ -129,8 +129,7 @@ namespace objects {
 
 		if (nextMove.x < 0 && nextMove.y < 0) //ljevo dolje 
 		{
-			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition() 
-				+ A + nextMove) != math::Vector4(0, 0, 0, 0))
+			if (getLineIntersection(other.getSpritePosition(), A + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 
 			edgesTop[0] = H;
@@ -151,8 +150,7 @@ namespace objects {
 		}
 		else if (nextMove.x > 0 && nextMove.y < 0) //desno dolje
 		{
-			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
-				+ B + nextMove) != math::Vector4(0, 0, 0, 0))
+			if (getLineIntersection(other.getSpritePosition(), B + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			edgesTop[0] = C;
 			edgesTop[1] = G;
@@ -172,8 +170,7 @@ namespace objects {
 		}
 		else if (nextMove.x > 0 && nextMove.y > 0) //desno gore
 		{
-			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
-				+ C + nextMove) != math::Vector4(0, 0, 0, 0))
+			if (getLineIntersection(other.getSpritePosition(), C + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			edgesTop[0] = D;
 			edgesTop[1] = H;
@@ -193,8 +190,7 @@ namespace objects {
 		}
 		else if (nextMove.x < 0 && nextMove.y > 0) //ljevo gore
 		{
-			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
-				+ D + nextMove) != math::Vector4(0, 0, 0, 0))
+			if (getLineIntersection(other.getSpritePosition(), D + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			edgesTop[0] = D;
 			edgesTop[1] = H;
