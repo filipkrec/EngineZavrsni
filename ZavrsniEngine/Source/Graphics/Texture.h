@@ -13,6 +13,7 @@ namespace graphics {
 	public:
 		Texture(const std::string& filename, const bool& repeat = false);
 		Texture(Font* font);
+		Texture(unsigned int textureId);
 		~Texture();
 
 		inline const GLuint getId() const { return _textureId; }

@@ -7,8 +7,10 @@ namespace objects {
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const ActorState& state)
 			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
-		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false) 
+		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0)
 		{
+			_allTextures.push_back((std::make_pair(gameObject.getSprite()->getTexture(), state)));
+			setState(state);
 		}
 
 		void Actor::init()
@@ -16,7 +18,14 @@ namespace objects {
 			_boundSprite->DoNotDestroySprite();
 		}
 		
-		void Actor::addTexture(const graphics::Texture& texture) { _textureIds.push_back(texture.getId()); }
+		void Actor::addTexture(const graphics::Texture* texture, ActorState state)
+		{ 
+			_allTextures.push_back(std::make_pair(texture , state));
+			if (_state == state)
+			{
+				setState(state);
+			}
+		}
 		
 		void Actor::moveWeapon()
 		{
@@ -32,7 +41,7 @@ namespace objects {
 		{
 			if (_state != STATE_DEAD)
 			{
-				_state = _currentForce.z != 0 ? STATE_MOVING : STATE_STILL;
+				setState(_currentForce.z != 0 ? STATE_MOVING : STATE_STILL);
 				GameObject::move();
 				moveWeapon();
 			}
@@ -41,6 +50,16 @@ namespace objects {
 		void Actor::pickup(Pickup& pickup)
 		{
 			pickup.onPickup(*this);
+		}
+
+		void Actor::animate()
+		{
+			if (_stateTextures.size() > 1)
+			{
+				const graphics::Texture* temp = _stateTextures.front();
+				_stateTextures.erase(_stateTextures.begin());
+				_stateTextures.push_back(temp);
+			}
 		}
 
 		Weapon* Actor::getWeapon() 
@@ -53,7 +72,7 @@ namespace objects {
 			_health = value; 
 			if (_health <= 0)
 			{
-				_state = STATE_DEAD;
+				setState(STATE_DEAD);
 			}
 		}
 
@@ -71,6 +90,19 @@ namespace objects {
 		void Actor::setState(const ActorState& state)
 		{ 
 			_state = state; 
+			_stateTextures.clear();
+			for (std::pair<const graphics::Texture*, ActorState> texture : _allTextures)
+			{
+				if (texture.second == state)
+				{
+					_stateTextures.push_back(texture.first);
+				}
+			}
+
+			if (!_stateTextures.empty())
+			{
+				_boundSprite->swapTexture(_stateTextures.at(0));
+			}
 		}
 
 		void Actor::setWeapon(Weapon* weapon)

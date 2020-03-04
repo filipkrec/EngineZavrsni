@@ -64,14 +64,14 @@ namespace objects {
 
 		if (window.getKeyPressed(_keyUp) || window.getKeyPressed(_keyDown) || window.getKeyPressed(_keyLeft) || window.getKeyPressed(_keyRight))
 		{
-			if(_state != State::STATE_DEAD && _state != State::STATE_MOVING)
-				_state = State::STATE_MOVING;
+			if(_state != ActorState::STATE_DEAD && _state != ActorState::STATE_MOVING)
+				_state = ActorState::STATE_MOVING;
 		}
 		else
 		{
-			if (_state != State::STATE_DEAD && _state != State::STATE_STILL)
+			if (_state != ActorState::STATE_DEAD && _state != ActorState::STATE_STILL)
 			{
-				_state = State::STATE_STILL;
+				_state = ActorState::STATE_STILL;
 				//calculateColission(math::Vector3(-_currentForce.x, -_currentForce.y, force)); //STOP
 			}
 		}

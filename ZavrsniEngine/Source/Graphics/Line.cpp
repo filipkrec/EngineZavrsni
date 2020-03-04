@@ -1,7 +1,7 @@
 #include "Line.h"
 namespace graphics {
 	Line::Line(const math::Vector2 lineBegin, const math::Vector2 lineEnd)
-		:Sprite(0xff00ffff,100),_originPoint(lineBegin),_destinationPoint(lineEnd),_duration(PROCESSING_INTERVAL / 5)
+		:Sprite(0xff00ffff,100),_originPoint(lineBegin),_destinationPoint(lineEnd),_duration(PROCESSING_INTERVAL / 10)
 	{
 
 	}

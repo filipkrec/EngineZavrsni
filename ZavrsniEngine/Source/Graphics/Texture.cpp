@@ -13,6 +13,10 @@ namespace graphics {
 		: _textureId(font->getId()) 
 	{}
 
+	Texture::Texture(unsigned int textureId)
+		: _textureId(textureId)
+	{}
+
 
 	Texture::~Texture()
 	{

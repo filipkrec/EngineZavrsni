@@ -24,8 +24,9 @@ namespace objects {
 		unsigned int _health;
 		float _movementSpeed;
 		float _sightAngle;
-		float _sightRange;
-		std::vector<unsigned int> _textureIds;
+		float _sightRange; 
+		std::vector<std::pair<const graphics::Texture*, ActorState>> _allTextures;
+		std::vector<const graphics::Texture*> _stateTextures;
 		std::vector<Pickup*> _pickUpable;
 		std::vector<GameObject*> _sighted;
 
@@ -38,7 +39,6 @@ namespace objects {
 		bool _pointReached;
 		bool _patrol;
 		bool _patroling;
-		bool _collided;
 
 		void (*_onSight)(GameObject*);
 
@@ -48,14 +48,14 @@ namespace objects {
 		Actor();
 		virtual ~Actor() {};
 		Actor(GameObject& gameObject, unsigned int health, float _movementSpeed, const ActorState& state);
-		void addTexture(const graphics::Texture& texture);
+		void addTexture(const graphics::Texture* texture, ActorState state); //first for state = default texture
 		void moveWeapon();
 		void rotateToPoint(math::Vector2);
 
 		virtual void init();
 		virtual void move() override;
 		virtual void pickup(Pickup& pickup);
-		virtual void animate() {};
+		virtual void animate();
 		virtual void processState() {};
 		void processSight();
 		virtual void process(const engine::Window& window) = 0;

@@ -22,6 +22,10 @@ namespace lam {
 			//fill secondary objects for processing
 			objects::GameObject* playerObject = (objects::GameObject*)_player;
 			std::vector<activeObject> allObjects;
+			std::vector<activeObject> allActors;
+			allActors.push_back(activeObject((void*)playerObject, "Player"));
+			allActors.insert(allActors.end(), _NPCs.begin(), _NPCs.end());
+
 			allObjects.push_back(activeObject((void*)playerObject, "Player"));
 			allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
 			allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
@@ -152,42 +156,45 @@ namespace lam {
 			}
 
 			//shot detection
-			if (_player->getWeapon() != nullptr)
+			for (activeObject actor : allActors)
 			{
-				for (math::Vector2 firedShot : _player->getWeapon()->_firedShots)
+				objects::Actor* currentActor = (objects::Actor*)actor._object;
+				if (currentActor->getWeapon() != nullptr)
 				{
-					std::vector<std::pair<objects::GameObject*, math::Vector2>> shotObjects;
-					for (activeObject gameObject : _gameObjects)
+					for (math::Vector2 firedShot : currentActor->getWeapon()->_firedShots)
 					{
-						objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
-						if (gameObject1 != _player && gameObject1->getLineIntersection(_player->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
+						std::vector<std::pair<objects::GameObject*, math::Vector2>> shotObjects;
+						for (activeObject gameObject : allObjects)
 						{
-							math::Vector4 clipPoints = gameObject1->getLineIntersection(_player->getWeapon()->getShotPosition(), firedShot);
-							shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.x, clipPoints.y)));
-							shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.z, clipPoints.w)));
+							objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
+							if (gameObject1 != currentActor && gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
+							{
+								math::Vector4 clipPoints = gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot);
+								shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.x, clipPoints.y)));
+								shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.z, clipPoints.w)));
+							}
 						}
-					}
-					if (!shotObjects.empty())
-					{
-						std::pair<objects::GameObject*, math::Vector2> closestShot = *std::min_element(shotObjects.begin(), shotObjects.end(),
-							[&](const std::pair<objects::GameObject*, math::Vector2>& s1, const std::pair<objects::GameObject*, math::Vector2>& s2)
-							{return s1.second.distanceFrom(firedShot) > s2.second.distanceFrom(firedShot); });
-						math::Vector2 hitPoint = closestShot.second;
-						graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), math::Vector2(hitPoint));
-						_shots.push_back(lineSprite);
-						math::Vector2 unitVector = hitPoint - _player->getWeapon()->getShotPosition();
-						unitVector = math::Vector2::calculateUnitVector(unitVector);
-						closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, _player->getWeapon()->getForce()));
-						shotObjects.clear();
-					}
-					else
-					{
-						graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), firedShot);
-						_shots.push_back(lineSprite);
+						if (!shotObjects.empty())
+						{
+							std::pair<objects::GameObject*, math::Vector2> closestShot = *std::min_element(shotObjects.begin(), shotObjects.end(),
+								[&](const std::pair<objects::GameObject*, math::Vector2>& s1, const std::pair<objects::GameObject*, math::Vector2>& s2)
+								{return s1.second.distanceFrom(firedShot) > s2.second.distanceFrom(firedShot); });
+							math::Vector2 hitPoint = closestShot.second;
+							graphics::Line* lineSprite = new graphics::Line(math::Vector2(currentActor->getWeapon()->getShotPosition()), math::Vector2(hitPoint));
+							_shots.push_back(lineSprite);
+							math::Vector2 unitVector = hitPoint - currentActor->getWeapon()->getShotPosition();
+							unitVector = math::Vector2::calculateUnitVector(unitVector);
+							closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, currentActor->getWeapon()->getForce()));
+							shotObjects.clear();
+						}
+						else
+						{
+							graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), firedShot);
+							_shots.push_back(lineSprite);
+						}
 					}
 				}
 			}
-
 			//movement
 			for (activeObject gameObject : allObjects)
 			{
