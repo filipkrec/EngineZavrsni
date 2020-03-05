@@ -4,6 +4,13 @@
 #include "../Hitbox.h"
 
 namespace objects {
+	enum class Allegiance {
+		GOOD,
+		BAD,
+		NEUTRAL,
+		ENVIROMENT
+	};
+
 	class GameObject : public Hitbox {
 	protected:
 		unsigned int _weight;
@@ -13,7 +20,7 @@ namespace objects {
 		float _currentSpeed; 
 
 		bool _colissionOn;
-		bool _colided;
+		Allegiance _allegiance;
 
 	public:
 		math::Vector2 _nextMove; //za racunanje kolizije
@@ -27,15 +34,19 @@ namespace objects {
 		inline const math::Vector3& getPreviousForce() const { return _previousForce; }
 		void savePreviousForce();
 
+		void setAllegiance(Allegiance allegiance);
+		inline const Allegiance getAllegiance() const { return _allegiance; }
 		void toggleColission();
-		void toggleColided();
 
-		inline const bool  isColided() const { return _colided; }
+
+		inline const unsigned int getWeight() const { return _weight; }
+
 
 		void calculateColission(const math::Vector3& force);
 		virtual void collide(GameObject& other);
 		void calculateNextMove();
 		virtual void move();
+
 
 	};
 }

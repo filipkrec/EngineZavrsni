@@ -6,13 +6,14 @@
 #include "Inventory/Pickup.h"
 #include "Inventory/Weapon.h"
 #include "../../Math/MathUtil.h"
+#include <algorithm>
 #define MOVEMENT_SPEED_COEFFICIENT 0.05
 
 namespace objects {
 	class Actor : public GameObject
 	{
 	protected:
-		enum ActorState
+		enum class ActorState
 		{
 		STATE_MOVING,
 		STATE_DEAD,
@@ -99,9 +100,9 @@ namespace objects {
 		void togglePatrol();
 		void togglePatroling();
 
-		inline const bool  isPointReached() const { return _state != STATE_DEAD ? _pointReached : true; }
-		inline const bool  seekCheckpoint() const { return _state != STATE_DEAD ? _seekCheckpoint : false; }
-		inline const bool  isPatrol() const { return _state != STATE_DEAD ? _patrol : false; }
-		inline const bool  isPatroling() const { return _state != STATE_DEAD ? _patroling : false; }
+		inline const bool  isPointReached() const { return _state != ActorState::STATE_DEAD ? _pointReached : true; }
+		inline const bool  seekCheckpoint() const { return _state != ActorState::STATE_DEAD ? _seekCheckpoint : false; }
+		inline const bool  isPatrol() const { return _state != ActorState::STATE_DEAD ? _patrol : false; }
+		inline const bool  isPatroling() const { return _state != ActorState::STATE_DEAD ? _patroling : false; }
 	};
 }

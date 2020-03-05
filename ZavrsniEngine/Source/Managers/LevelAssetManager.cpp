@@ -1,5 +1,4 @@
 #include "LevelAssetManager.h"
-#include <algorithm>
 #define STEPDISTANCE 1.5f
 
 
@@ -589,28 +588,23 @@ namespace lam {
 
 	bool LevelAssetManager::pathBlocked(const math::Vector2& positionTo, const math::Vector2& current, const objects::NPC* npc)
 	{
+
+		std::vector<activeObject> allObjects;
+		objects::GameObject* playerObject = (objects::GameObject*)_player;
+		allObjects.push_back(activeObject((void*)playerObject, "Player"));
+		allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
+		allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
+
 		math::Vector2 distanceVector = positionTo - current;
 		objects::Hitbox temp(current, npc->getCollisionRange());
-		for (activeObject gameObject : _gameObjects)
+		for (activeObject gameObject : allObjects)
 		{
 			const objects::GameObject& gameObject1 = *(objects::GameObject*) gameObject._object;
-			if (gameObject1.willBeHit(temp, distanceVector))
+			if (gameObject1.getAllegiance() == objects::Allegiance::ENVIROMENT || gameObject1.getWeight() >= npc->getWeight() * 4 && 
+				gameObject1.willBeHit(temp, distanceVector))
 				return true;
 		}
 
-		for (activeObject NPC : _NPCs)
-		{
-			if (NPC._object != npc)
-			{
-				const objects::GameObject& gameObject1 = *(objects::GameObject*) NPC._object;
-				if (gameObject1.willBeHit(temp, distanceVector))
-					return true;
-			}
-		}
-
-		if (_player->willBeHit(temp, distanceVector))
-			return true;
-		
 		return false;
 	}
 }

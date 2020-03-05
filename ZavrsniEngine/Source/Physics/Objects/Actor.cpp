@@ -39,9 +39,9 @@ namespace objects {
 
 		void Actor::move()
 		{
-			if (_state != STATE_DEAD)
+			if (_state != ActorState::STATE_DEAD)
 			{
-				setState(_currentForce.z != 0 ? STATE_MOVING : STATE_STILL);
+				setState(_currentForce.z != 0 ? ActorState::STATE_MOVING : ActorState::STATE_STILL);
 				GameObject::move();
 				moveWeapon();
 			}
@@ -72,7 +72,7 @@ namespace objects {
 			_health = value; 
 			if (_health <= 0)
 			{
-				setState(STATE_DEAD);
+				setState(ActorState::STATE_DEAD);
 			}
 		}
 
@@ -144,7 +144,7 @@ namespace objects {
 
 		bool Actor::objectIsInSight(const GameObject& gameObject)
 		{
-			if (_state != STATE_DEAD)
+			if (_state != ActorState::STATE_DEAD)
 			{
 				if (_sightAngle == 0 && _sightRange == 0)
 					return true;
@@ -176,7 +176,7 @@ namespace objects {
 
 		void Actor::addSighted(GameObject* sighted)
 		{
-			if (_state != STATE_DEAD)
+			if (_state != ActorState::STATE_DEAD)
 			{
 				_sighted.push_back(sighted);
 			}
@@ -202,7 +202,7 @@ namespace objects {
 
 		void Actor::collide(GameObject& other)
 		{
-			if (_state != STATE_DEAD)
+			if (_state != ActorState::STATE_DEAD)
 			{
 				GameObject::collide(other);
 				if (_seekCheckpoint == false)

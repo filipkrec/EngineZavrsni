@@ -12,17 +12,17 @@ namespace objects {
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite)
-		: Hitbox(sprite), _colissionOn(false)
+		: Hitbox(sprite), _colissionOn(false), _allegiance(Allegiance::NEUTRAL)
 	{
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight)
-		: Hitbox(sprite), _weight(weight),_colissionOn(true)
+		: Hitbox(sprite), _weight(weight),_colissionOn(true), _allegiance(Allegiance::NEUTRAL)
 	{
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height)
-		: Hitbox(sprite, shape, width, height), _weight(weight), _colissionOn(true)
+		: Hitbox(sprite, shape, width, height), _weight(weight), _colissionOn(true), _allegiance(Allegiance::NEUTRAL)
 	{
 	}
 
@@ -60,8 +60,6 @@ namespace objects {
 	{
 		if (_colissionOn)
 		{
-			_colided = true;
-
 			if (other._previousForce.z > 0)
 			{
 				other.calculateColission(math::Vector3(-other._previousForce.x, -other._previousForce.y, other._previousForce.z));
@@ -140,6 +138,10 @@ namespace objects {
 			_currentForce.z = 0;
 	}
 
+	void GameObject::setAllegiance(Allegiance allegiance)
+	{
+		_allegiance = allegiance;
+	}
 
 	void GameObject::toggleColission()
 	{

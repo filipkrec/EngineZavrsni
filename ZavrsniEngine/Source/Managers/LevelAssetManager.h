@@ -5,6 +5,7 @@
 #include "../Physics/Objects/Player.h"
 #include "../Physics/Objects/NPC.h"
 #include "../Graphics/Line.h"
+#include <algorithm>
 
 namespace lam {
 	class LevelAssetManager

@@ -1,8 +1,9 @@
 #pragma once
 #include "../../../Graphics/Sprite.h"
 #include "../../../Graphics/Camera.h"
+#include "../../../Util/Timer.h"
 namespace objects {
-		enum WeaponState
+		enum class WeaponState
 		{
 			CARRIED,
 			DROPED
@@ -11,6 +12,10 @@ namespace objects {
 
 		class Weapon :public graphics::Sprite
 		{
+			engine::Timer _reloadTimer;
+			engine::Timer _shotCooldownTimer;
+			float _reloadTime;
+			float _shotCooldownTime;
 			unsigned int _dmgMin; //random min dmg
 			unsigned int _dmgMax; //random max dmg
 			float _force; //max force output of shot, reduced over distance %range = %force
@@ -34,12 +39,24 @@ namespace objects {
 			inline const unsigned int getAmmoCurrent() const { return _ammoCurrent; }
 			inline const unsigned int getDmgMax() const { return _dmgMax; }
 			inline const unsigned int getDmgMin() const { return _dmgMin; }
+			inline const float getRange() const { return _range; }
+			inline const float getSpread() const { return _spread; }
+			inline const float getReloadTime() const { return _reloadTime; }
+			inline const float getShotCooldownTime() const { return _shotCooldownTime; }
 			inline const unsigned int getClipMax() const { return _clipMax; }
 			inline const unsigned int getClipCurrent() const { return _clipCurrent; }
 			inline const float getForce() const { return _force; }
 			const math::Vector2 getShotPosition() const;
 
 
+			inline void setReloadTime(unsigned int value) { 
+				_reloadTime = value; 
+				_reloadTimer = engine::Timer(value);
+			}
+			inline void setShotCooldownTime(unsigned int value) { 
+				_shotCooldownTime = value; 
+				_shotCooldownTimer = engine::Timer(value);
+			}
 			inline void setAmmoMax(unsigned int value) {  _ammoMax = value; }
 			inline void setAmmoCurrent(unsigned int value) {  _ammoCurrent = value; }
 			inline void setDmgMax(unsigned int value) {  _dmgMax = value; }

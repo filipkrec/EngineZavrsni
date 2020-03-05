@@ -15,6 +15,13 @@ namespace engine {
 			reset();
 		}
 
+		Timer(float startingTime)
+		{
+			int roundedUp = ceil(startingTime);
+			_Start = HighResolutionClock::now();
+			_Start -= std::chrono::seconds(roundedUp);
+		}
+
 		void reset()
 		{
 			_Start = HighResolutionClock::now();

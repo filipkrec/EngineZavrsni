@@ -8,7 +8,7 @@ namespace objects {
 	}
 
 	NPC::NPC(GameObject gameObject, unsigned int health, float movementSpeed)
-		:Actor(gameObject, health, movementSpeed, Actor::ActorState::STATE_STILL)
+		:Actor(gameObject, health, movementSpeed, Actor::ActorState::STATE_STILL),_lookingAt(nullptr),_AIState(AIState::AI_STATE_PASSIVE),_NPCTimer(engine::Timer())
 	{
 	}
 
@@ -17,9 +17,137 @@ namespace objects {
 	}
 
 
+	void NPC::animate()
+	{
+
+	}
+
+	void NPC::processState()
+	{
+	}
+
+	void NPC::processAI()
+	{
+		if (_NPCTimer.elapsed() <= _reactionDelay)
+		{
+			return;
+		}
+
+		switch (_AIState) {
+		case (AIState::AI_STATE_PASSIVE):
+				if (!std::any_of(_sighted.begin(), _sighted.end(), _lookingAt))
+				{
+					_lookingAt = nullptr;
+				}
+				break;
+		case (AIState::AI_STATE_DEFENSIVE):
+			if (!std::any_of(_sighted.begin(), _sighted.end(), _lookingAt))
+			{
+				_lookingAt = nullptr;
+			}
+			for (GameObject* sightedObject : _sighted)
+			{
+				if (std::any_of(_enemyAllegiances.begin(), _enemyAllegiances.end(), sightedObject->getAllegiance()))
+				{
+					setLookingAt(sightedObject->getSprite());
+					setAIState(AIState::AI_STATE_ALERT);
+				}
+			}
+			break;
+		case (AIState::AI_STATE_ALERT):
+			if (!std::any_of(_sighted.begin(), _sighted.end(), _lookingAt))
+			{
+				setMoveToPoint(_lookingAt->getPosition());
+				_lookingAt = nullptr;
+			}
+			else if (_weapon != nullptr)
+			{
+				if (_lookingAt->getPosition().distanceFrom(getSpritePosition()) <= 0.8 * _weapon->getRange())
+				{
+					setAIState(AIState::AI_STATE_TARGETING);
+				}
+			}
+			//ako nema mete na vidiku
+			if (_pointReached && !std::any_of(_sighted.begin(), _sighted.end(),
+				[&](GameObject* x)
+				{
+					return x->getSprite() == _lookingAt;
+				}))
+			{
+				if (_NPCTimer.elapsed >= 20.0f)
+				{
+					setAIState(AIState::AI_STATE_DEFENSIVE);
+					break;
+				}
+
+				if (_rotationGoal == 0)
+				{
+					_rotationGoal = rand() % 360;
+					_rotationGoal -= 180;
+				}
+				if (_rotationGoal < 0)
+				{
+					if (_rotationGoal <= -5.0f)
+					{
+						_boundSprite->rotate(-5.0f);
+						_rotationGoal += 5.0f;
+					}
+					else
+					{
+						_boundSprite->rotate(_rotationGoal);
+						_rotationGoal = 0;
+					}
+
+				}
+				else if (_rotationGoal > 0)
+				{
+					if (_rotationGoal >= 5.0f)
+					{
+						_boundSprite->rotate(5.0f);
+						_rotationGoal -= 5.0f;
+					}
+					else
+					{
+						_boundSprite->rotate(_rotationGoal);
+						_rotationGoal == 0;
+					}
+				}
+			}
+			break;
+		case (AIState::AI_STATE_TARGETING):
+			std::vector<GameObject*>::iterator it = std::find_if(_sighted.begin(), _sighted.end(),
+				[&](GameObject* x)
+				{
+					return x->getSprite() == _lookingAt;
+				});
+
+			if (it == _sighted.end())
+			{
+				setAIState(AIState::AI_STATE_ALERT);
+				break;
+			}
+
+			//ako vidi metu pucaj
+			if (_weapon != nullptr)
+			{
+				GameObject* temp = *it;
+				rotateToPoint(temp->getSpritePosition());
+				if (math::Vector2::getAngleBetween(getSprite()->getRotation(), getSprite()->getPosition() - temp->getSpritePosition())
+					<= _weapon->getSpread() / 2 * 0.5)
+				{
+					_weapon->shoot();
+				}
+			}
+
+			break;
+
+		}
+	}
+
+
 	void NPC::moveInDirection()
 	{
-		if (_moveDirection != math::Vector2(0.0f, 0.0f) && _state != STATE_DEAD)
+		if (_moveDirection != math::Vector2(0.0f, 0.0f) && _state != ActorState::STATE_DEAD)
 		{
 			calculateColission(math::Vector3(_moveDirection.x, _moveDirection.y, (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight));
 		}
@@ -27,7 +155,7 @@ namespace objects {
 
 	void NPC::lookAt()
 	{
-		if (_state != STATE_DEAD)
+		if (_state != ActorState::STATE_DEAD)
 		{
 			if (_lookingAt != nullptr && !_lookingAt->toDestroySprite())
 				rotateToPoint(_lookingAt->getPosition() - _boundSprite->getPosition()); //vektor udaljenosti
@@ -63,9 +191,20 @@ namespace objects {
 		_moveDirection = direction;
 	}
 
+	void NPC::setReactionDelay(float delay)
+	{
+		_reactionDelay = delay;
+	}
+
 	void NPC::setLookingAt(graphics::Sprite* sprite)
 	{
 		_lookingAt = sprite;
+	}
+
+	void NPC::setAIState(AIState state)
+	{
+		_NPCTimer.reset();
+		_AIState = state;
 	}
 
 }
