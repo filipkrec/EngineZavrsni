@@ -182,6 +182,42 @@ namespace objects {
 			}
 		}
 
+		void Actor::clearObstructedSighted()
+		{
+			bool obstructed = false;
+			math::Vector2 points[4];
+			for (GameObject* sighted : _sighted)
+			{
+				points[0] = sighted->getSpritePosition() - sighted->getCollisionRange();
+				points[1] = sighted->getSpritePosition() + math::Vector2(sighted->getCollisionRange().x, -sighted->getCollisionRange().y);
+				points[2] = sighted->getSpritePosition() + sighted->getCollisionRange();
+				points[3] = sighted->getSpritePosition() + math::Vector2(-sighted->getCollisionRange().x, sighted->getCollisionRange().y);
+
+				for (GameObject* otherSighted : _sighted)
+				{
+					if (otherSighted == sighted)
+						continue;
+
+					obstructed = true;
+					for (int i = 0; i < 4; ++i)
+					{
+						if (otherSighted->getLineIntersection(points[i], getSpritePosition()) == math::Vector4(0, 0, 0, 0))
+						{
+							obstructed = false;
+							break;
+						}
+					}
+					if (obstructed == true)
+						break;
+				}
+
+				if (obstructed == true)
+				{
+					_sighted.erase(std::find_if(_sighted.begin(), _sighted.end(), [&](GameObject* x) {return x == sighted; }));
+				}
+			}
+		}
+
 		void Actor::processSight()
 		{
 			if (_onSight != nullptr)

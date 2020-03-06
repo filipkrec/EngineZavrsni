@@ -91,6 +91,7 @@ namespace lam {
 								actor1->addSighted(gameObject1);
 						}
 					}
+					actor1->clearObstructedSighted();
 				}
 			}
 

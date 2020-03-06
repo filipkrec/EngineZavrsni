@@ -75,6 +75,7 @@ namespace objects {
 		void collide(GameObject& other) override;
 
 		void addSighted(GameObject* sighted);
+		void clearObstructedSighted();
 		void addPickupable(Pickup* pickupable);
 		void clearPickupable();
 

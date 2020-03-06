@@ -45,8 +45,8 @@ int main()
 	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, TextureManager::get("Space"),0), "Space");
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 	//lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), 100), "Player");
-	//lam::LevelAssetManager::add(new GameObject(&Sprite(9.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet");
-	//lam::LevelAssetManager::add(new GameObject(&Sprite(3.0f, -3.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet2");
+	lam::LevelAssetManager::add(new GameObject(&Sprite(9.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet");
+	lam::LevelAssetManager::add(new GameObject(&Sprite(3.0f, -3.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet2");
 	
 	
 
@@ -62,10 +62,12 @@ int main()
 	lam::LevelAssetManager::add(sprite,"Hitbox");
 	Hitbox hitbox = Hitbox(sprite);
 	lam::LevelAssetManager::getNPC("NPC")->setMoveToPoint(math::Vector2(8.0f,8.0f));
+	/*
 	lam::LevelAssetManager::getNPC("NPC")->setSight(45.0f,10.0f);
 	lam::LevelAssetManager::getNPC("NPC")->setAIState(AIState::AI_STATE_DEFENSIVE);
 	lam::LevelAssetManager::getNPC("NPC")->setAllegiance(Allegiance::BAD);
 	lam::LevelAssetManager::getNPC("NPC")->addEnemyAllegiance(Allegiance::GOOD);
+	*/
 
 	lam::LevelAssetManager::addToLayer(layer);
 	Timer* timer = new Timer();
