@@ -213,7 +213,12 @@ namespace objects {
 		void Actor::setMoveToPoint(const math::Vector2& point)
 		{
 			_moveToPoint = point;
-			toggleSeekCheckpoint();
+
+			if (_pointReached == true)
+				togglePointReached();
+
+			if (_seekCheckpoint == false)
+				toggleSeekCheckpoint();
 		}
 
 

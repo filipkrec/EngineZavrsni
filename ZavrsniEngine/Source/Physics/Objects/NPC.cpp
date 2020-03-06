@@ -14,6 +14,12 @@ namespace objects {
 
 	void NPC::process(const engine::Window& window)
 	{
+		moveInDirection();
+		lookAt();
+		animate();
+		processState();
+		processAI();
+		processSight();
 	}
 
 
@@ -35,31 +41,56 @@ namespace objects {
 
 		switch (_AIState) {
 		case (AIState::AI_STATE_PASSIVE):
-				if (!std::any_of(_sighted.begin(), _sighted.end(), _lookingAt))
+				if (!std::any_of(_sighted.begin(), _sighted.end(),  
+					[&](GameObject* x)
+					{
+						return x->getSprite() == _lookingAt;
+					}))
 				{
 					_lookingAt = nullptr;
 				}
 				break;
 		case (AIState::AI_STATE_DEFENSIVE):
-			if (!std::any_of(_sighted.begin(), _sighted.end(), _lookingAt))
+			//if no enemy sighted clear
+			if (!std::any_of(_sighted.begin(), _sighted.end(),
+				[&](GameObject* x)
+				{
+					return x->getSprite() == _lookingAt;
+				}))
 			{
 				_lookingAt = nullptr;
 			}
+
+			//if enemy sighted move to,alert
 			for (GameObject* sightedObject : _sighted)
 			{
-				if (std::any_of(_enemyAllegiances.begin(), _enemyAllegiances.end(), sightedObject->getAllegiance()))
+				if (std::any_of(_enemyAllegiances.begin(), _enemyAllegiances.end(), [&](Allegiance x)
+					{
+						return x == sightedObject->getAllegiance();
+					}))
 				{
 					setLookingAt(sightedObject->getSprite());
+					setMoveToPoint(sightedObject->getSpritePosition());
 					setAIState(AIState::AI_STATE_ALERT);
 				}
 			}
 			break;
 		case (AIState::AI_STATE_ALERT):
-			if (!std::any_of(_sighted.begin(), _sighted.end(), _lookingAt))
+			//if enemy escapes sight move to its last position
+			if(_lookingAt != nullptr)
+				setMoveToPoint(_lookingAt->getPosition());
+
+			if (_lookingAt != nullptr && (_sighted.empty() || !std::any_of(_sighted.begin(), _sighted.end(),
+				[&](GameObject* x)
+				{
+					return x->getSprite() == _lookingAt;
+				})))
 			{
 				setMoveToPoint(_lookingAt->getPosition());
 				_lookingAt = nullptr;
 			}
+
+			//if weapon target
 			else if (_weapon != nullptr)
 			{
 				if (_lookingAt->getPosition().distanceFrom(getSpritePosition()) <= 0.8 * _weapon->getRange())
@@ -67,14 +98,15 @@ namespace objects {
 					setAIState(AIState::AI_STATE_TARGETING);
 				}
 			}
-			//ako nema mete na vidiku
+
+			//if no enemy in sight look around
 			if (_pointReached && !std::any_of(_sighted.begin(), _sighted.end(),
 				[&](GameObject* x)
 				{
 					return x->getSprite() == _lookingAt;
 				}))
 			{
-				if (_NPCTimer.elapsed >= 20.0f)
+				if (_NPCTimer.elapsed() >= 20.0f)
 				{
 					setAIState(AIState::AI_STATE_DEFENSIVE);
 					break;
@@ -113,6 +145,18 @@ namespace objects {
 					}
 				}
 			}
+
+				//if enemy seen target 
+			for (GameObject* sightedObject : _sighted)
+			{
+				if (std::any_of(_enemyAllegiances.begin(), _enemyAllegiances.end(), [&](Allegiance x)
+					{
+						return x == sightedObject->getAllegiance();
+					}))
+				{
+					setLookingAt(sightedObject->getSprite());
+				}
+			}
 			break;
 		case (AIState::AI_STATE_TARGETING):
 			std::vector<GameObject*>::iterator it = std::find_if(_sighted.begin(), _sighted.end(),
@@ -125,6 +169,10 @@ namespace objects {
 			{
 				setAIState(AIState::AI_STATE_ALERT);
 				break;
+			}
+			else
+			{
+				setMoveToPoint(getSpritePosition());
 			}
 
 			//ako vidi metu pucaj
@@ -184,6 +232,12 @@ namespace objects {
 			math::Vector2 topleft = math::Vector2(-1, 1);
 			directionsAll.push_back(topleft);
 		}
+	}
+
+
+	void NPC::addEnemyAllegiance(Allegiance allegiance)
+	{
+		_enemyAllegiances.push_back(allegiance);
 	}
 
 	void NPC::setMoveDirection(const math::Vector2& direction)

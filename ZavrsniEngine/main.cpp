@@ -56,10 +56,16 @@ int main()
 			std::cout << x->getSpritePosition().x << std::endl;
 		}
 	);
+	lam::LevelAssetManager::getPlayer()->setAllegiance(Allegiance::GOOD);
+
 	Sprite* sprite = new Sprite(8.0f, 8.0f, 1.0f, 1.0f, 0xff00ff00, 0);
 	lam::LevelAssetManager::add(sprite,"Hitbox");
 	Hitbox hitbox = Hitbox(sprite);
 	lam::LevelAssetManager::getNPC("NPC")->setMoveToPoint(math::Vector2(8.0f,8.0f));
+	lam::LevelAssetManager::getNPC("NPC")->setSight(45.0f,10.0f);
+	lam::LevelAssetManager::getNPC("NPC")->setAIState(AIState::AI_STATE_DEFENSIVE);
+	lam::LevelAssetManager::getNPC("NPC")->setAllegiance(Allegiance::BAD);
+	lam::LevelAssetManager::getNPC("NPC")->addEnemyAllegiance(Allegiance::GOOD);
 
 	lam::LevelAssetManager::addToLayer(layer);
 	Timer* timer = new Timer();

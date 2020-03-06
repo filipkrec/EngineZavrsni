@@ -16,7 +16,6 @@ namespace objects
 		float _rotationGoal;
 		graphics::Sprite* _lookingAt;
 		math::Vector2 _moveDirection;
-		float _rotationGoal;
 	protected:
 		engine::Timer _NPCTimer;
 		AIState _AIState;
@@ -36,6 +35,8 @@ namespace objects
 		void moveInDirection();
 		void lookAt();
 		void process(const engine::Window& window);
+
+		void addEnemyAllegiance(Allegiance allegiance);
 
 		inline const math::Vector2& getMoveDirection() const { return _state != ActorState::STATE_DEAD ? _moveDirection : math::Vector2(0.0f,0.0f); }
 		void setMoveDirection(const math::Vector2& direction);

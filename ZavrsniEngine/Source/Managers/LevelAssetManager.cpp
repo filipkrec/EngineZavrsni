@@ -35,15 +35,6 @@ namespace lam {
 			for (activeObject NPC : _NPCs)
 			{
 				objects::NPC* npc = (objects::NPC*)NPC._object;
-				for (activeObject gameObject : allObjects)
-				{
-					gameObject1 = (objects::GameObject*)gameObject._object;
-					if (npc != NPC._object)
-					{
-						if (npc->objectIsInSight(*gameObject1))
-							npc->addSighted(gameObject1);
-					}
-				}
 
 				if (!npc->isPatroling() && npc->isPatrol())
 				{
@@ -75,7 +66,6 @@ namespace lam {
 						npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getSpritePosition()));
 						npc->toggleSeekCheckpoint();
 					}
-					npc->moveInDirection();
 				}
 				else
 				{
@@ -87,19 +77,24 @@ namespace lam {
 				}
 			}
 
-
-			if (_player != nullptr)
+			for (activeObject actor : allActors)
 			{
+				objects::Actor* actor1 = (objects::Actor*) actor._object;
+				if (actor1 != nullptr)
+				{
 					for (activeObject gameObject : allObjects)
 					{
 						gameObject1 = (objects::GameObject*)gameObject._object;
-							if (_player != gameObject1)
-							{
-								if (_player->objectIsInSight(*gameObject1))
-									_player->addSighted(gameObject1);
-							}
+						if (actor1 != gameObject1)
+						{
+							if (actor1->objectIsInSight(*gameObject1))
+								actor1->addSighted(gameObject1);
+						}
 					}
+				}
 			}
+
+
 
 			if (_player != nullptr)
 			{
@@ -132,7 +127,6 @@ namespace lam {
 			for (activeObject gameObject : allObjects)
 			{
 				gameObject1 = (objects::GameObject*)gameObject._object;
-				bool collided = false;
 				for (activeObject gameObjectOther : allObjects)
 				{
 					gameObject2 = (objects::GameObject*)gameObjectOther._object;
@@ -143,14 +137,9 @@ namespace lam {
 						if (gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove))
 						{
 							gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove);
-							collided = true;
 							gameObject1->collide(*gameObject2);
 						}
 					}
-				}
-				if (!collided && gameObject1->isColided())
-				{
-					gameObject1->toggleColided();
 				}
 			}
 

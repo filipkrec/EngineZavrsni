@@ -147,9 +147,4 @@ namespace objects {
 	{
 		_colissionOn = !_colissionOn;
 	}
-
-	void GameObject::toggleColided()
-	{
-		_colided = !_colided;
-	}
 }
