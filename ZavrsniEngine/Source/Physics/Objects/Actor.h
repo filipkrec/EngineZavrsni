@@ -10,24 +10,32 @@
 #define MOVEMENT_SPEED_COEFFICIENT 0.05
 
 namespace objects {
-	class Actor : public GameObject
+	enum class ActorState
 	{
-	protected:
-		enum class ActorState
-		{
 		STATE_MOVING,
 		STATE_DEAD,
 		STATE_STILL
-		};
+	};
 
+	class Actor : public GameObject
+	{
+	protected:
 		engine::Timer _actorTimer;
+		engine::Timer _animationTimer;
+
+
 
 		unsigned int _health;
 		float _movementSpeed;
 		float _sightAngle;
 		float _sightRange; 
+
 		std::vector<std::pair<const graphics::Texture*, ActorState>> _allTextures;
 		std::vector<const graphics::Texture*> _stateTextures;
+
+		std::vector<std::pair<float, ActorState>> _animationTimers;
+		float _animationTime;
+
 		std::vector<Pickup*> _pickUpable;
 		std::vector<GameObject*> _sighted;
 
@@ -49,7 +57,6 @@ namespace objects {
 		Actor();
 		virtual ~Actor() {};
 		Actor(GameObject& gameObject, unsigned int health, float _movementSpeed, const ActorState& state);
-		void addTexture(const graphics::Texture* texture, ActorState state); //first for state = default texture
 		void moveWeapon();
 		void rotateToPoint(math::Vector2);
 
@@ -57,10 +64,12 @@ namespace objects {
 		virtual void move() override;
 		virtual void pickup(Pickup& pickup);
 		virtual void animate();
-		virtual void processState() {};
 		void processSight();
 		virtual void process(const engine::Window& window) = 0;
 	public:
+		void addTexture(const graphics::Texture* texture, ActorState state); //first for state = default texture
+		void setAnimationTimerForState(float interval, ActorState state); //first for state = default texture
+
 		inline const unsigned int& getHealth() const { return _health; }
 		inline const float& getMovementSpeed() const { return _movementSpeed; }
 		inline const ActorState& getState() const { return _state; }

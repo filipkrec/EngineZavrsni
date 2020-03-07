@@ -9,23 +9,13 @@ namespace objects {
 	}
 
 	Player::Player(GameObject gameObject, unsigned int health, float movementSpeed)
-		:Actor(gameObject,health, movementSpeed,Actor::ActorState::STATE_STILL), _keyPickup(0), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D)
+		:Actor(gameObject,health, movementSpeed,ActorState::STATE_STILL), _keyPickup(0), _keyUp(GLFW_KEY_W), _keyDown(GLFW_KEY_S), _keyLeft(GLFW_KEY_A), _keyRight(GLFW_KEY_D)
 	{
 	}
 
 	void Player::init()
 	{
 		Actor::init();
-	}
-
-	void Player::animate()
-	{
-
-	}
-
-	void Player::processState()
-	{
-
 	}
 
 	void Player::processInput(const engine::Window& window)
@@ -60,20 +50,6 @@ namespace objects {
 		if (window.getKeyPressed(_keyRight))
 		{
 			calculateColission(math::Vector3(1.0f, 0.0f, force));
-		}
-
-		if (window.getKeyPressed(_keyUp) || window.getKeyPressed(_keyDown) || window.getKeyPressed(_keyLeft) || window.getKeyPressed(_keyRight))
-		{
-			if(_state != ActorState::STATE_DEAD && _state != ActorState::STATE_MOVING)
-				_state = ActorState::STATE_MOVING;
-		}
-		else
-		{
-			if (_state != ActorState::STATE_DEAD && _state != ActorState::STATE_STILL)
-			{
-				_state = ActorState::STATE_STILL;
-				//calculateColission(math::Vector3(-_currentForce.x, -_currentForce.y, force)); //STOP
-			}
 		}
 
 		//rotation
@@ -114,7 +90,6 @@ namespace objects {
 		}
 		processInput(window);
 		processSight();
-		processState();
 		animate();
 	}
 

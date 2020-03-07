@@ -8,7 +8,7 @@ namespace objects {
 	}
 
 	NPC::NPC(GameObject gameObject, unsigned int health, float movementSpeed)
-		:Actor(gameObject, health, movementSpeed, Actor::ActorState::STATE_STILL),_lookingAt(nullptr),_AIState(AIState::AI_STATE_PASSIVE),_NPCTimer(engine::Timer())
+		:Actor(gameObject, health, movementSpeed, ActorState::STATE_STILL),_lookingAt(nullptr),_AIState(AIState::AI_STATE_PASSIVE),_NPCTimer(engine::Timer())
 	{
 	}
 
@@ -17,19 +17,8 @@ namespace objects {
 		moveInDirection();
 		lookAt();
 		animate();
-		processState();
 		processAI();
 		processSight();
-	}
-
-
-	void NPC::animate()
-	{
-
-	}
-
-	void NPC::processState()
-	{
 	}
 
 	void NPC::processAI()

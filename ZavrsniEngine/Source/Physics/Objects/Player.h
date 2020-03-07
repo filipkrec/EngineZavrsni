@@ -19,8 +19,6 @@ namespace objects {
 		const math::Vector2 getVectorToMouse(const engine::Window& window) const;
 
 		virtual void init();
-		virtual void animate();
-		virtual void processState();
 		virtual void processInput(const engine::Window&  window); //process movement, process rotation (following cursor)
 		virtual void process(const engine::Window& window); 
 

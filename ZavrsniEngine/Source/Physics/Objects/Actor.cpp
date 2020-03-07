@@ -7,7 +7,7 @@ namespace objects {
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const ActorState& state)
 			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
-		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0)
+		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0),_animationTimer(0)
 		{
 			_allTextures.push_back((std::make_pair(gameObject.getSprite()->getTexture(), state)));
 			setState(state);
@@ -21,6 +21,26 @@ namespace objects {
 		void Actor::addTexture(const graphics::Texture* texture, ActorState state)
 		{ 
 			_allTextures.push_back(std::make_pair(texture , state));
+			if (_state == state)
+			{
+				setState(state);
+			}
+		}
+		void Actor::setAnimationTimerForState(float interval, ActorState state) 
+		{
+			
+			std::vector<std::pair<float, ActorState>>::iterator it
+				= std::find_if(_animationTimers.begin(), _animationTimers.end(), [&](const std::pair<float, ActorState>& x)
+					{
+						return x.second == state;
+					});
+			if (it != _animationTimers.end() || _animationTimers.empty())
+				_animationTimers.push_back(std::make_pair(interval, state));
+			else
+			{
+				(*it).first = interval;
+			}
+			
 			if (_state == state)
 			{
 				setState(state);
@@ -40,8 +60,12 @@ namespace objects {
 		void Actor::move()
 		{
 			if (_state != ActorState::STATE_DEAD)
-			{
-				setState(_currentForce.z != 0 ? ActorState::STATE_MOVING : ActorState::STATE_STILL);
+			{	
+				if (_currentForce.z != 0 && _state != ActorState::STATE_MOVING)
+					setState(ActorState::STATE_MOVING);
+				else if (_currentForce.z == 0 && _state != ActorState::STATE_STILL)
+					setState(ActorState::STATE_STILL);
+
 				GameObject::move();
 				moveWeapon();
 			}
@@ -54,11 +78,13 @@ namespace objects {
 
 		void Actor::animate()
 		{
-			if (_stateTextures.size() > 1)
+			if (_stateTextures.size() > 1 && _animationTimer.elapsed() >= _animationTime)
 			{
+				_animationTimer.reset();
 				const graphics::Texture* temp = _stateTextures.front();
 				_stateTextures.erase(_stateTextures.begin());
 				_stateTextures.push_back(temp);
+				_boundSprite->swapTexture(_stateTextures.at(0));
 			}
 		}
 
@@ -90,6 +116,8 @@ namespace objects {
 		void Actor::setState(const ActorState& state)
 		{ 
 			_state = state; 
+
+			//textures
 			_stateTextures.clear();
 			for (std::pair<const graphics::Texture*, ActorState> texture : _allTextures)
 			{
@@ -103,6 +131,19 @@ namespace objects {
 			{
 				_boundSprite->swapTexture(_stateTextures.at(0));
 			}
+
+			//animationTimer
+			std::vector<std::pair<float, ActorState>>::iterator it
+				= std::find_if(_animationTimers.begin(), _animationTimers.end(), [&](const std::pair<float, ActorState>& x)
+					{
+						return x.second == state;
+					});
+			if (it != _animationTimers.end())
+				_animationTime = (*it).first;
+			else
+				_animationTime = 0.0f;
+
+			_animationTimer.reset();
 		}
 
 		void Actor::setWeapon(Weapon* weapon)

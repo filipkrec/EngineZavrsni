@@ -27,8 +27,6 @@ namespace objects
 		NPC();
 		virtual ~NPC() {};
 		NPC(GameObject gameObject, unsigned int health, float movementSpeed);
-		virtual void animate();
-		virtual void processState();
 		virtual void processAI();
 		virtual void init();
 

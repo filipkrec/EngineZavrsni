@@ -33,11 +33,19 @@ int main()
 	TextureManager::add(new Texture("Assets/rifle.png"), "Rifle");
 	TextureManager::add(new Texture("Assets/riflePickup.png"), "RiflePickup");
 
+	TextureManager::add(new Texture("Assets/Character/Main_idle.png"), "Main_idle");
+	TextureManager::add(new Texture("Assets/Character/Main_walking1.png"), "Main_walking1");
+	TextureManager::add(new Texture("Assets/Character/Main_walking2.png"), "Main_walking2");
+
+	TextureManager::add(new Texture("Assets/Character/Enemy_idle.png"), "Enemy_idle");
+	TextureManager::add(new Texture("Assets/Character/Enemy_walking1.png"), "Enemy_walking1");
+	TextureManager::add(new Texture("Assets/Character/Enemy_walking2.png"), "Enemy_walking2");
+
 	Font* font = new Font("Assets/arial.ttf", 20);
 	font->setScale(16, 9);
 
-	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Player"),2), 100), 100, 150), layer);
-	lam::LevelAssetManager::add(new NPC(GameObject(new Sprite(-8.0f, -8.0f, 1.0f, 1.0f, TextureManager::get("Player"), 2),100),100,50),"NPC");
+	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Main_idle"),2), 100), 100, 150), layer);
+	//lam::LevelAssetManager::add(new NPC(GameObject(new Sprite(-8.0f, -8.0f, 1.0f, 1.0f, TextureManager::get("Enemy_idle"), 2),100),100,50),"NPC");
 	lam::LevelAssetManager::add(new Label("100/100", -10.0f, 6.0f, 0xff00ff00, font, 16), "AmmoLabel");
 	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 1.0f, 0.5f, TextureManager::get("Rifle"), 2), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
 	lam::LevelAssetManager::add((Pickup*)(new Ammo(new Sprite(-4.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), 0, 20)),"Ammo");
@@ -58,10 +66,15 @@ int main()
 	);
 	lam::LevelAssetManager::getPlayer()->setAllegiance(Allegiance::GOOD);
 
+	lam::LevelAssetManager::getPlayer()->addTexture(TextureManager::get("Main_walking1"), ActorState::STATE_MOVING);
+	lam::LevelAssetManager::getPlayer()->addTexture(TextureManager::get("Main_walking2"), ActorState::STATE_MOVING);
+	lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, ActorState::STATE_MOVING);
+
 	Sprite* sprite = new Sprite(8.0f, 8.0f, 1.0f, 1.0f, 0xff00ff00, 0);
 	lam::LevelAssetManager::add(sprite,"Hitbox");
 	Hitbox hitbox = Hitbox(sprite);
-	lam::LevelAssetManager::getNPC("NPC")->setMoveToPoint(math::Vector2(8.0f,8.0f));
+	
+	//lam::LevelAssetManager::getNPC("NPC")->setMoveToPoint(math::Vector2(8.0f,8.0f));
 	/*
 	lam::LevelAssetManager::getNPC("NPC")->setSight(45.0f,10.0f);
 	lam::LevelAssetManager::getNPC("NPC")->setAIState(AIState::AI_STATE_DEFENSIVE);
@@ -78,10 +91,6 @@ int main()
 	while (!display->closed())
 	{
 		display->clear();
-		if (hitbox.isHit(*(Hitbox*)lam::LevelAssetManager::getNPC("NPC")))
-		{
-			fps = 15;
-		}
 		lam::LevelAssetManager::processBegin(*display);
 		fps++;
 		display->getMousePosition(x, y);
