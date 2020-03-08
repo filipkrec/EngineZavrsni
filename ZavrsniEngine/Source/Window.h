@@ -36,7 +36,7 @@ namespace engine {
 		void clear();
 		bool toggleVsync();
 		bool toggleCursor();
-		void getMousePosition(float& x, float& y) const;
+		void getMousePosition(math::Vector2& point) const;
 
 		bool getKeyPressed(int key) const;
 		bool getKey(int key) const;

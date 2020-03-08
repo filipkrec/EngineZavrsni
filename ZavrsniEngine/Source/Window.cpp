@@ -124,11 +124,11 @@ namespace engine {
 		win->_mouseY = ypos;
 	}
 
-	void Window::getMousePosition(float& x, float& y) const
+	void Window::getMousePosition(math::Vector2& point) const
 	{
 		
-		x = (_mouseX / _width) * 32 - 16 - Camera::getInstance()->getOffset().x;
-		y = -((_mouseY / _height) * 18 - 9) - Camera::getInstance()->getOffset().y;
+		point.x = (_mouseX / _width) * 32 - 16 - Camera::getInstance()->getOffset().x;
+		point.y = -((_mouseY / _height) * 18 - 9) - Camera::getInstance()->getOffset().y;
 	}
 
 	void Window::resetInputPress()

@@ -56,8 +56,8 @@ namespace graphics {
 		float posx = position.x;
 
 		Font* currentFont = label->getFont();
-		float fontSize = currentFont->getSize();
-		const math::Vector2& scale = currentFont->getScale() / currentFont->getSize();
+		float fontSize = label->getSize();
+		const math::Vector2& scale = currentFont->getScale() / fontSize;
 		texture_font_t* FTFont = currentFont->getFont();
 		std::string text = label->getText();
 
@@ -88,7 +88,7 @@ namespace graphics {
 				Sprite* spriteTemp = (Sprite*)label;
 				Sprite* sprite = new Sprite();
 				memcpy(sprite, spriteTemp, sizeof(Sprite));
-				sprite->setScale(math::Vector2(currentFont->getSize(),currentFont->getSize()));
+				sprite->setScale(math::Vector2(fontSize, fontSize));
 				sprite->setPosition(math::Vector2(symbolPos.x, symbolPos.y));
 				sprite->setTextureCoordinates(math::Vector2(u0, v1), 0);
 				sprite->setTextureCoordinates(math::Vector2(u0, v0), 1);

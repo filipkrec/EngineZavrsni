@@ -22,9 +22,12 @@ namespace lam {
 			objects::GameObject* playerObject = (objects::GameObject*)_player;
 			std::vector<activeObject> allObjects;
 			std::vector<activeObject> allActors;
+
+			if(_player != nullptr)
 			allActors.push_back(activeObject((void*)playerObject, "Player"));
 			allActors.insert(allActors.end(), _NPCs.begin(), _NPCs.end());
 
+			if (_player != nullptr)
 			allObjects.push_back(activeObject((void*)playerObject, "Player"));
 			allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
 			allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
@@ -234,6 +237,7 @@ namespace lam {
 					temp->resetActorTimer();
 			}
 
+			if (_player != nullptr)
 			if (_player->getActorTimer() >= 1.0f)
 				_player->resetActorTimer();
 
@@ -266,6 +270,15 @@ namespace lam {
 	{
 			_player = player;
 			_layer = layer;
+	}
+
+
+	void LevelAssetManager::setPlayer(objects::Player* player)
+	{
+		if(_player != nullptr)
+		delete _player;
+
+		_player = player;
 	}
 
 	void LevelAssetManager::add(graphics::Sprite* sprite, const std::string& name)
@@ -388,7 +401,10 @@ namespace lam {
 
 	objects::Player* LevelAssetManager::getPlayer()
 	{
+		if (_player != nullptr)
 		return _player;
+
+		return nullptr;
 	}
 
 
@@ -580,10 +596,13 @@ namespace lam {
 
 	bool LevelAssetManager::pathBlocked(const math::Vector2& positionTo, const math::Vector2& current, const objects::NPC* npc)
 	{
-
 		std::vector<activeObject> allObjects;
-		objects::GameObject* playerObject = (objects::GameObject*)_player;
-		allObjects.push_back(activeObject((void*)playerObject, "Player"));
+
+		if (_player != nullptr)
+		{
+			objects::GameObject* playerObject = (objects::GameObject*)_player;
+			allObjects.push_back(activeObject((void*)playerObject, "Player"));
+		}
 		allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
 		allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
 

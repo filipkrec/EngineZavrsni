@@ -96,11 +96,12 @@ namespace objects {
 
 	const math::Vector2 Player::getVectorToMouse(const engine::Window& window) const
 	{
-		float x;
-		float y;
-		window.getMousePosition(x, y);
+		math::Vector2 vector;
+		window.getMousePosition(vector);
+		vector.x -= _boundSprite->getPosition().x;
+		vector.y -= _boundSprite->getPosition().y;
 
-		return math::Vector2(x - _boundSprite->getPosition().x , y - _boundSprite->getPosition().y);
+		return vector;
 	}
 
 

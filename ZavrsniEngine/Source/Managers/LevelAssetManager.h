@@ -43,6 +43,9 @@ namespace lam {
 		static bool pathBlocked(const math::Vector2& positionTo, const math::Vector2& current, const objects::NPC* npc);
 	public:
 		static void init(objects::Player* player, graphics::Layer* layer);
+
+		static void setPlayer(objects::Player* player); //do not use midlevel
+
 		static void processBegin(engine::Window& window);
 		static void processEnd(engine::Window& window);
 

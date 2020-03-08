@@ -8,13 +8,14 @@ namespace graphics {
 	{
 		std::string _text;
 		Font* _font;
+		float _size;
 	public:
-		Label(const std::string& text, float x, float y, unsigned int color, Font* font, float zindex = 0.0f);
+		Label(const std::string& text, float x, float y, unsigned int color, float size, Font* font, float zindex = 0.0f);
 		~Label();
 
 		inline const std::string& getText() const { return _text; }
 		inline Font* getFont() const { return _font; }
-		inline Font* getTextureId() const { return getTextureId(); }
+		inline float getSize() const { return _size; }
 		void setText(const std::string& text);
 	};
 }
