@@ -3,7 +3,7 @@
 #include "Inventory/Weapon.h"
 
 namespace objects {
-		Actor::Actor() {}
+		Actor::Actor() : GameObject() {}
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const ActorState& state)
 			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
@@ -15,6 +15,7 @@ namespace objects {
 
 		void Actor::init()
 		{
+			if(_boundSprite != nullptr)
 			_boundSprite->DoNotDestroySprite();
 		}
 		

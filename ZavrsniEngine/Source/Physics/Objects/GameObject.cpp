@@ -2,6 +2,7 @@
 namespace objects {
 
 	GameObject::GameObject()
+		:Hitbox()
 	{
 	}
 

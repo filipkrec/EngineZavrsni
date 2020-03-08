@@ -41,6 +41,7 @@ namespace objects {
 		inline const math::Vector2& getSpriteSize() const { return _boundSprite->getSize(); }
 		inline graphics::Sprite* getSprite() { return _boundSprite; }
 		inline const math::Vector2& getCollisionRange() const { return _collisionRange; }
+		inline const bool isSpriteless() const { return _spriteless; }
 
 		bool isHit(const Hitbox& other) const;
 		bool isHit(const math::Vector2& point) const;

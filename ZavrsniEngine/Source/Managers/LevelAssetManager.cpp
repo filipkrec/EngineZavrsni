@@ -422,9 +422,11 @@ namespace lam {
 			layer->add(((objects::Pickup*)pickup._object)->getSprite());
 		}
 
-		if (_player != nullptr)
+		if (_player != nullptr && !_player->isSpriteless())
+		{
 			_player->init();
 			layer->add((_player->getSprite()));
+		}
 	}
 
 

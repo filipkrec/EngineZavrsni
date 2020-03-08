@@ -3,6 +3,7 @@
 
 namespace objects {
 	Hitbox::Hitbox()
+		:_shape(Shape::SQUARE), _collisionRange(math::Vector2(0.0f,0.0f)), _location(math::Vector2(0.0f, 0.0f)), _spriteless(true)
 	{
 	}
 
