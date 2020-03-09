@@ -1,10 +1,11 @@
 #pragma once
 #include "../../Source/Engine.h"
 
-namespace objects
+class Rifle: public objects::Weapon
 {
-	class Rifle: public Weapon
-	{
-		void onPickup
-	};
-}
+	static Rifle* instance;
+	Rifle();
+public:
+	static Rifle* getInstance();
+	void onShot(objects::GameObject* target) override;
+};

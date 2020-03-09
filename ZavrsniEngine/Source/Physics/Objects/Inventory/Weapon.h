@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../Graphics/Sprite.h"
+#include "../GameObject.h"
 #include "../../../Graphics/Camera.h"
 #include "../../../Util/Timer.h"
 namespace objects {
@@ -68,6 +68,7 @@ namespace objects {
 
 			void reload(bool infinite = false);
 			void shoot();
+			virtual void onShot(GameObject* target) {};
 			void clearShots();
 		};
 }

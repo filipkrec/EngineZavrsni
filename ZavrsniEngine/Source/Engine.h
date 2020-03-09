@@ -61,7 +61,7 @@ namespace engine {
 			_Timer = new Timer();
 			float timer = 0.0f;
 			float updateTimer = 0.0f;
-			float updateTick = 1.0f / 60.0f;
+			float updateTick = 1.0f / PROCESSING_INTERVAL;
 			unsigned int frames = 0;
 			unsigned int updates = 0;
 			while (!_Window->closed())

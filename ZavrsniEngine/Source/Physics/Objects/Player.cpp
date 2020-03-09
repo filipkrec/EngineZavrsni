@@ -94,6 +94,27 @@ namespace objects {
 	}
 
 
+	void Player::move()
+	{
+		Actor::move();
+
+		if (Camera::getInstance()->doFollowPlayer())
+			Camera::getInstance()->move(math::Vector2(_currentSpeed * _currentForce.x, _currentSpeed * _currentForce.y));
+	}
+
+	void Player::setCameraFollow()
+	{
+		Camera::getInstance()->recenter();
+		Camera::getInstance()->followPlayer();
+		Camera::getInstance()->move(getSpritePosition());
+	}
+
+	void setCameraUnfollow(math::Vector2 newPosition = math::Vector2(0, 0))
+	{
+		Camera::getInstance()->recenter();
+		Camera::getInstance()->move(newPosition);
+	}
+
 	const math::Vector2 Player::getVectorToMouse(const engine::Window& window) const
 	{
 		math::Vector2 vector;

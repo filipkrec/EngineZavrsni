@@ -176,6 +176,7 @@ namespace lam {
 							_shots.push_back(lineSprite);
 							math::Vector2 unitVector = hitPoint - currentActor->getWeapon()->getShotPosition();
 							unitVector = math::Vector2::calculateUnitVector(unitVector);
+							currentActor->getWeapon()->onShot(closestShot.first);
 							closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, currentActor->getWeapon()->getForce()));
 							shotObjects.clear();
 						}

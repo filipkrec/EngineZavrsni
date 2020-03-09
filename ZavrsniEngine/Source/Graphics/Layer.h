@@ -25,6 +25,7 @@ namespace graphics {
 		void add(Label* label);
 		void labelToSprite(Label* label);
 		void add(const Group& group);
+		void clear();
 		void render();
 	};
 	

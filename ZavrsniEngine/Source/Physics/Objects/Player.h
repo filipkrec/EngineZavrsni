@@ -21,6 +21,10 @@ namespace objects {
 		virtual void init();
 		virtual void processInput(const engine::Window&  window); //process movement, process rotation (following cursor)
 		virtual void process(const engine::Window& window); 
+		virtual void move();
+
+		void setCameraFollow();
+		void setCameraUnfollow(math::Vector2 newPosition = math::Vector2(0,0));
 
 		void setKeys(int keyPickup = 0,int keyUp = GLFW_KEY_W, int keyDown = GLFW_KEY_S, int keyRight = GLFW_KEY_D, int keyLeft = GLFW_KEY_A);
 

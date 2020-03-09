@@ -44,6 +44,17 @@ namespace graphics {
 		}
 	}
 
+	void Layer::clear()
+	{
+		_sprites.clear();
+
+		_labels.clear();
+
+		_labelSprites.clear();
+
+		_renderingSprites.clear();
+	}
+
 	void Layer::add(Label* label)
 	{
 		_labels.push_back(label);

@@ -54,7 +54,7 @@ namespace graphics {
 
 		temp.Color = color;
 		temp.TextureSlot = -1;
-		math::Vector2 offset(0.01f, 0.01f);
+		math::Vector2 offset(0.05f, 0.05f);
 
 		temp.Position = _camera->getViewMatrix() * lineBegin;
 		temp.TextureCoordinate = math::Vector2(0.0f,0.0f);
