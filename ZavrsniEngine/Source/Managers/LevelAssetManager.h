@@ -37,15 +37,27 @@ namespace lam {
 		static std::vector<activeObject> _labels;
 		static std::vector<activeObject> _pickups;
 		static std::vector<graphics::Line*> _shots;
+		static std::vector<activeObject> _allObjects;
+		static std::vector<activeObject> _allActors;
 		static objects::Player* _player;
 
 		static math::Vector2 calculatePath(const math::Vector2& goal, const objects::NPC* npc);
 		static bool pathBlocked(const math::Vector2& positionTo, const math::Vector2& current, const objects::NPC* npc);
+
+		static void fillObjects(); //fill allObjects allActors
+		static void processPathfinding(); //process patroling, calculate next move for NPCs FORCE CALCULATION
+		static void processSight(); //add to allActors sighted
+		static void processPlayer(engine::Window& window); //add to player.pickupable, player.process() FORCE CALCULATION
+		static void processNPCs(engine::Window& window); //NPC.process
+		static void processCollision(); //process collision between 2 objects FORCE CALCULATION
+		static void processHitDetection(); //process shots and consequences FORCE CALCULATION
+		static void processMovement(); //move in final FORCE direction
 	public:
-		static void init(objects::Player* player, graphics::Layer* layer);
+		static void init(graphics::Layer* layer);
 
 		static void setPlayer(objects::Player* player); //do not use midlevel
 
+		//Base game loop
 		static void processBegin(engine::Window& window);
 		static void processEnd(engine::Window& window);
 

@@ -53,6 +53,7 @@ namespace objects {
 
 		ActorState _state;
 		Weapon* _weapon;
+		math::Vector2 _weaponOffset;
 	protected:
 		Actor();
 		virtual ~Actor() {};
@@ -90,6 +91,9 @@ namespace objects {
 		void clearPickupable();
 
 		virtual void onHit(const objects::Weapon* weapon);
+
+		inline const math::Vector2& getWeaponOffset() const { return _weaponOffset; }
+		void setWeaponOffset(const math::Vector2& weaponOffset);
 
 		bool objectIsInSight(const GameObject& gameObject);
 

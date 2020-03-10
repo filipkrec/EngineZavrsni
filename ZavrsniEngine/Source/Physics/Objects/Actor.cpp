@@ -52,7 +52,7 @@ namespace objects {
 		{
 			if (_weapon != nullptr)
 			{
-				_weapon->setPosition(_boundSprite->getPosition());
+				_weapon->setPosition(_boundSprite->getPosition() + math::Matrix4::rotation(_boundSprite->getRotation(),math::Vector3(0,0,1)) * _weaponOffset);
 				_weapon->setScale(_boundSprite->getScale());
 				_weapon->setRotation(_boundSprite->getRotation());
 			}
@@ -187,6 +187,12 @@ namespace objects {
 		{
 			_health -= rand() % (weapon->getDmgMax() - weapon->getDmgMin());
 			weapon->onShot((GameObject*)this);
+		}
+
+
+		void Actor::setWeaponOffset(const math::Vector2& weaponOffset)
+		{
+			_weaponOffset = weaponOffset;
 		}
 
 		bool Actor::objectIsInSight(const GameObject& gameObject)

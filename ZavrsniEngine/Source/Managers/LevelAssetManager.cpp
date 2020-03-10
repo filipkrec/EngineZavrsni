@@ -11,6 +11,8 @@ namespace lam {
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_NPCs;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_labels;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_pickups;
+	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_allObjects;
+	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_allActors;
 	std::vector<graphics::Line*> LevelAssetManager::_shots;
 	objects::Player* LevelAssetManager::_player = nullptr;
 
@@ -18,90 +20,60 @@ namespace lam {
 	{
 		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
 		{
-			//fill secondary objects for processing
-			objects::GameObject* playerObject = (objects::GameObject*)_player;
-			std::vector<activeObject> allObjects;
-			std::vector<activeObject> allActors;
+			processPathfinding();
+			processSight();
+			processPlayer(window); 
+			processNPCs(window);
+			processCollision();
+			processHitDetection();
+			processMovement();
+		}
+	}
 
-			if(_player != nullptr)
-			allActors.push_back(activeObject((void*)playerObject, "Player"));
-			allActors.insert(allActors.end(), _NPCs.begin(), _NPCs.end());
+	void LevelAssetManager::fillObjects()
+	{
+		_allActors.clear();
+		_allObjects.clear();
 
-			if (_player != nullptr)
-			allObjects.push_back(activeObject((void*)playerObject, "Player"));
-			allObjects.insert(allObjects.end(), _gameObjects.begin(), _gameObjects.end());
-			allObjects.insert(allObjects.end(), _NPCs.begin(), _NPCs.end());
+		objects::GameObject* playerObject = (objects::GameObject*)_player;
 
-			objects::GameObject* gameObject1;
-			objects::GameObject* gameObject2;
+		if (_player != nullptr)
+		_allActors.push_back(activeObject((void*)playerObject, "Player"));
 
-			for (activeObject NPC : _NPCs)
+		_allActors.insert(_allActors.end(), _NPCs.begin(), _NPCs.end());
+
+		if (_player != nullptr)
+			_allObjects.push_back(activeObject((void*)playerObject, "Player"));
+
+		_allObjects.insert(_allObjects.end(), _gameObjects.begin(), _gameObjects.end());
+		_allObjects.insert(_allObjects.end(), _NPCs.begin(), _NPCs.end());
+
+	}
+
+	void LevelAssetManager::processSight()
+	{
+		for (activeObject actor : _allActors)
+		{
+			objects::Actor* actor1 = (objects::Actor*) actor._object;
+			if (actor1 != nullptr)
 			{
-				objects::NPC* npc = (objects::NPC*)NPC._object;
-
-				if (!npc->isPatroling() && npc->isPatrol())
+				for (activeObject gameObject : _allObjects)
 				{
-					npc->togglePatroling();
-					npc->setMoveToPoint(npc->getPatrolEndPoint());
-					npc->setPatrolOriginPoint(npc->getSpritePosition());
-				}
-				if (npc->isPatroling() && !npc->isPatrol())
-				{
-					npc->togglePatroling();
-				}
-
-				if (npc->getSpritePosition().distanceFrom(npc->getMoveToPoint()) <= STEPDISTANCE)
-				{
-					if (!npc->isPointReached())
-						npc->togglePointReached();
-				}
-
-				//pathfinding
-				if (!npc->isPointReached())
-				{
-					if (!npc->seekCheckpoint() && abs(npc->getSpritePosition().distanceFrom(npc->getMoveToCheckPoint())) <= STEPDISTANCE)
-						npc->toggleSeekCheckpoint();
-						
-					if (npc->seekCheckpoint())
+					objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
+					if (actor1 != gameObject1)
 					{
-						const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(), npc);
-						npc->setMoveToCheckPoint(nextStep);
-						npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getSpritePosition()));
-						npc->toggleSeekCheckpoint();
+						if (actor1->objectIsInSight(*gameObject1))
+							actor1->addSighted(gameObject1);
 					}
 				}
-				else
-				{
-					npc->setMoveDirection(math::Vector2(0.0f, 0.0f));
-					if (npc->isPatroling())
-					{
-						npc->setMoveToPoint(npc->getMoveToPoint() == npc->getPatrolEndPoint() ? npc->getPatrolOriginPoint() : npc->getPatrolEndPoint());
-					}
-				}
+				actor1->clearObstructedSighted();
 			}
+		}
+	}
 
-			//sight
-			for (activeObject actor : allActors)
-			{
-				objects::Actor* actor1 = (objects::Actor*) actor._object;
-				if (actor1 != nullptr)
-				{
-					for (activeObject gameObject : allObjects)
-					{
-						gameObject1 = (objects::GameObject*)gameObject._object;
-						if (actor1 != gameObject1)
-						{
-							if (actor1->objectIsInSight(*gameObject1))
-								actor1->addSighted(gameObject1);
-						}
-					}
-					actor1->clearObstructedSighted();
-				}
-			}
-
-
-			//pickups
-			if (_player != nullptr)
+	void LevelAssetManager::processPlayer(engine::Window& window)
+	{
+		if (_player != nullptr)
 			{
 				for (activeObject pickup : _pickups)
 				{
@@ -114,97 +86,157 @@ namespace lam {
 				_player->process(window);
 				_player->clearPickupable();
 			}
-			
-			for (activeObject npc: _NPCs)
+	}
+
+	void LevelAssetManager::processPathfinding()
+	{
+		for (activeObject NPC : _NPCs)
+		{
+			objects::NPC* npc = (objects::NPC*)NPC._object;
+
+			if (!npc->isPatroling() && npc->isPatrol())
 			{
-				((objects::NPC*)npc._object)->process(window);
+				npc->togglePatroling();
+				npc->setMoveToPoint(npc->getPatrolEndPoint());
+				npc->setPatrolOriginPoint(npc->getSpritePosition());
 			}
-			
-			//colission
-			for (activeObject gameObject : allObjects)
+			if (npc->isPatroling() && !npc->isPatrol())
 			{
-				objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
-				gameObject1->savePreviousForce();
-				gameObject1->calculateNextMove();
+				npc->togglePatroling();
 			}
 
-			for (activeObject gameObject : allObjects)
+			if (npc->getSpritePosition().distanceFrom(npc->getMoveToPoint()) <= STEPDISTANCE)
 			{
-				gameObject1 = (objects::GameObject*)gameObject._object;
-				for (activeObject gameObjectOther : allObjects)
+				if (!npc->isPointReached())
+					npc->togglePointReached();
+			}
+
+			if (!npc->isPointReached())
+			{
+				if (!npc->seekCheckpoint() && abs(npc->getSpritePosition().distanceFrom(npc->getMoveToCheckPoint())) <= STEPDISTANCE)
+					npc->toggleSeekCheckpoint();
+
+				if (npc->seekCheckpoint())
 				{
-					gameObject2 = (objects::GameObject*)gameObjectOther._object;
-					objects::Hitbox* hitbox1 = (objects::Hitbox*)gameObject1;
-					if (gameObject1 != gameObject2)
-					{
+					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(), npc);
+					npc->setMoveToCheckPoint(nextStep);
+					npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getSpritePosition()));
+					npc->toggleSeekCheckpoint();
+				}
+			}
+			else
+			{
+				npc->setMoveDirection(math::Vector2(0.0f, 0.0f));
+				if (npc->isPatroling())
+				{
+					npc->setMoveToPoint(npc->getMoveToPoint() == npc->getPatrolEndPoint() ? npc->getPatrolOriginPoint() : npc->getPatrolEndPoint());
+				}
+			}
+		}
+	}
 
-						if (gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove))
-						{
-							gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove);
-							gameObject1->collide(*gameObject2);
-						}
+	void LevelAssetManager::processNPCs(engine::Window& window)
+	{
+		for (activeObject npc : _NPCs)
+		{
+			((objects::NPC*)npc._object)->process(window);
+		}
+	}
+
+	void LevelAssetManager::processCollision()
+	{
+		//colission
+		objects::GameObject* gameObject1;
+		objects::GameObject* gameObject2;
+		for (activeObject gameObject : _allObjects)
+		{
+			gameObject1 = (objects::GameObject*)gameObject._object;
+			gameObject1->savePreviousForce();
+			gameObject1->calculateNextMove();
+		}
+
+		for (activeObject gameObject : _allObjects)
+		{
+			gameObject1 = (objects::GameObject*)gameObject._object;
+			for (activeObject gameObjectOther : _allObjects)
+			{
+				gameObject2 = (objects::GameObject*)gameObjectOther._object;
+				objects::Hitbox* hitbox1 = (objects::Hitbox*)gameObject1;
+				if (gameObject1 != gameObject2)
+				{
+
+					if (gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove))
+					{
+						gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove);
+						gameObject1->collide(*gameObject2);
 					}
 				}
 			}
+		}
+	}
 
-			//shot detection
-			for (activeObject actor : allActors)
+	void LevelAssetManager::processHitDetection()
+	{
+		for (activeObject actor : _allActors)
+		{
+			objects::Actor* currentActor = (objects::Actor*)actor._object;
+			if (currentActor->getWeapon() != nullptr)
 			{
-				objects::Actor* currentActor = (objects::Actor*)actor._object;
-				if (currentActor->getWeapon() != nullptr)
+				for (math::Vector2 firedShot : currentActor->getWeapon()->_firedShots)
 				{
-					for (math::Vector2 firedShot : currentActor->getWeapon()->_firedShots)
+					std::vector<std::pair<objects::GameObject*, math::Vector2>> shotObjects;
+					for (activeObject gameObject : _allObjects)
 					{
-						std::vector<std::pair<objects::GameObject*, math::Vector2>> shotObjects;
-						for (activeObject gameObject : allObjects)
+						objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
+						if (gameObject1 != currentActor && gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
 						{
-							objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
-							if (gameObject1 != currentActor && gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
-							{
-								math::Vector4 clipPoints = gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot);
-								shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.x, clipPoints.y)));
-								shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.z, clipPoints.w)));
-							}
+							math::Vector4 clipPoints = gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot);
+							shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.x, clipPoints.y)));
+							shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.z, clipPoints.w)));
 						}
-						if (!shotObjects.empty())
-						{
-							std::pair<objects::GameObject*, math::Vector2> closestShot = *std::min_element(shotObjects.begin(), shotObjects.end(),
-								[&](const std::pair<objects::GameObject*, math::Vector2>& s1, const std::pair<objects::GameObject*, math::Vector2>& s2)
-								{return s1.second.distanceFrom(firedShot) > s2.second.distanceFrom(firedShot); });
-							math::Vector2 hitPoint = closestShot.second;
-							graphics::Line* lineSprite = new graphics::Line(math::Vector2(currentActor->getWeapon()->getShotPosition()), math::Vector2(hitPoint));
-							_shots.push_back(lineSprite);
-							math::Vector2 unitVector = hitPoint - currentActor->getWeapon()->getShotPosition();
-							unitVector = math::Vector2::calculateUnitVector(unitVector);
-							closestShot.first->onHit(currentActor->getWeapon());
-							closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, currentActor->getWeapon()->getForce()));
-							shotObjects.clear();
-						}
-						else
-						{
-							graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), firedShot);
-							_shots.push_back(lineSprite);
-						}
+					}
+					if (!shotObjects.empty())
+					{
+						std::pair<objects::GameObject*, math::Vector2> closestShot = *std::min_element(shotObjects.begin(), shotObjects.end(),
+							[&](const std::pair<objects::GameObject*, math::Vector2>& s1, const std::pair<objects::GameObject*, math::Vector2>& s2)
+							{return s1.second.distanceFrom(firedShot) > s2.second.distanceFrom(firedShot); });
+						math::Vector2 hitPoint = closestShot.second;
+						graphics::Line* lineSprite = new graphics::Line(math::Vector2(currentActor->getWeapon()->getShotPosition()), math::Vector2(hitPoint));
+						_shots.push_back(lineSprite);
+						math::Vector2 unitVector = hitPoint - currentActor->getWeapon()->getShotPosition();
+						unitVector = math::Vector2::calculateUnitVector(unitVector);
+						currentActor->getWeapon()->onShot(closestShot.first);
+						closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, currentActor->getWeapon()->getForce()));
+						shotObjects.clear();
+					}
+					else
+					{
+						graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), firedShot);
+						_shots.push_back(lineSprite);
 					}
 				}
 			}
+		}
+	}
 
-			//movement
-			for (activeObject gameObject : allObjects)
+	void LevelAssetManager::processMovement()
+	{
+		objects::GameObject* gameObject1;
+		objects::GameObject* gameObject2;
+		for (activeObject gameObject : _allObjects)
+		{
+			gameObject1 = (objects::GameObject*)gameObject._object;
+			gameObject1->move();
+
+			//clear clipping
+			for (activeObject gameObjectOther : _allObjects)
 			{
-				gameObject1 = (objects::GameObject*)gameObject._object;
-				gameObject1->move();
-
-				//clear clipping
-				for (activeObject gameObjectOther : allObjects)
-				{
-					gameObject2 = (objects::GameObject*)gameObjectOther._object;
-					if(gameObject1 != gameObject2)
+				gameObject2 = (objects::GameObject*)gameObjectOther._object;
+				if (gameObject1 != gameObject2)
 					while (gameObject1->isHit((objects::Hitbox) * gameObject2))
 					{
 						gameObject1->getSprite()->move(math::Vector2::calculateUnitVector(gameObject1->getSpritePosition() - gameObject2->getSpritePosition()) * 0.001);
 					}
-				}
 			}
 		}
 	}
@@ -268,9 +300,8 @@ namespace lam {
 		}
 	}
 
-	void LevelAssetManager::init(objects::Player* player, graphics::Layer* layer)
+	void LevelAssetManager::init(graphics::Layer* layer)
 	{
-			_player = player;
 			_layer = layer;
 	}
 
@@ -281,11 +312,15 @@ namespace lam {
 		delete _player;
 
 		_player = player;
+
+		fillObjects();
 	}
 
 	void LevelAssetManager::add(graphics::Sprite* sprite, const std::string& name)
 	{
 		_sprites.push_back(activeObject((void*)sprite, name));
+
+		fillObjects();
 	}
 
 	void LevelAssetManager::cleanSprites()
@@ -332,6 +367,7 @@ namespace lam {
 	void LevelAssetManager::add(objects::GameObject* gameObject, const std::string& name)
 	{
 		_gameObjects.push_back(activeObject((void*)gameObject, name));
+		fillObjects();
 	}
 
 	void LevelAssetManager::cleanGameObjects()
@@ -340,6 +376,7 @@ namespace lam {
 			delete (objects::GameObject*)gameObject._object;
 
 		_gameObjects.clear();
+		fillObjects();
 	}
 
 	objects::GameObject* LevelAssetManager::getGameObject(const std::string& name)
@@ -355,6 +392,7 @@ namespace lam {
 	void LevelAssetManager::add(objects::NPC* NPC, const std::string& name)
 	{
 		_NPCs.push_back(activeObject((void*)NPC, name));
+		fillObjects();
 	}
 
 	void LevelAssetManager::cleanNPCs()
@@ -363,6 +401,7 @@ namespace lam {
 			delete (objects::NPC*)NPC._object;
 
 		_NPCs.clear();
+		fillObjects();
 	}
 
 	objects::NPC* LevelAssetManager::getNPC(const std::string& name)
