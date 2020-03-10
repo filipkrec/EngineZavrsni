@@ -58,8 +58,6 @@ int main()
 	//lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), 100), "Player");
 	lam::LevelAssetManager::add(new GameObject(&Sprite(9.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet");
 	lam::LevelAssetManager::add(new GameObject(&Sprite(3.0f, -3.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet2");
-	
-	
 
 	lam::LevelAssetManager::getPlayer()->setSight(45.0f,10.0f);
 	lam::LevelAssetManager::getPlayer()->setOnSightFunction([](GameObject* x)
