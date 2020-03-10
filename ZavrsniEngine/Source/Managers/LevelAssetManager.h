@@ -45,6 +45,7 @@ namespace lam {
 		static bool pathBlocked(const math::Vector2& positionTo, const math::Vector2& current, const objects::NPC* npc);
 
 		static void fillObjects(); //fill allObjects allActors
+		static void refreshWeapons(); //refresh weapons
 		static void processPathfinding(); //process patroling, calculate next move for NPCs FORCE CALCULATION
 		static void processSight(); //add to allActors sighted
 		static void processPlayer(engine::Window& window); //add to player.pickupable, player.process() FORCE CALCULATION

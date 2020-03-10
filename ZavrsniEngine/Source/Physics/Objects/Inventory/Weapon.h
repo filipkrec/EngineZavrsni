@@ -8,6 +8,8 @@ namespace objects {
 			engine::Timer _reloadTimer;
 			engine::Timer _shotCooldownTimer;
 		protected:
+			static unsigned int _idCurrent;
+			unsigned int _id;
 			float _reloadTime;
 			float _shotCooldownTime;
 			unsigned int _dmgMin; //random min dmg
@@ -29,6 +31,7 @@ namespace objects {
 			Weapon(const Weapon& other);
 			Weapon(const graphics::Sprite& sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset);
 
+			inline const unsigned int getID() const { return _id; }
 			inline const unsigned int getAmmoMax() const { return _ammoMax; }
 			inline const unsigned int getAmmoCurrent() const { return _ammoCurrent; }
 			inline const unsigned int getDmgMax() const { return _dmgMax; }

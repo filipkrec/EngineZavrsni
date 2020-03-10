@@ -1,27 +1,33 @@
 #include "Weapon.h"
 namespace objects
 {
-	Weapon::Weapon()
-	{
+	unsigned int Weapon::_idCurrent = 0;
 
+	Weapon::Weapon()
+		:_id(_idCurrent)
+	{
+		_idCurrent++;
 	}
 
 	Weapon::Weapon(const graphics::Sprite& sprite)
-		: Sprite(sprite)
+		: Sprite(sprite), _id(_idCurrent)
 	{
+		_idCurrent++;
 		_destroySprite = false;
 	}
 
 	Weapon::Weapon(const Weapon& other)
-		: Sprite(other), _dmgMin(other._dmgMin), _dmgMax(other._dmgMax), _force(other._force), _range(other._range), _spread(other._spread), _ammoMax(other._ammoMax), _ammoCurrent(other._ammoMax), _shotOriginOffset(other._shotOriginOffset)
+		: Sprite(other), _id(_idCurrent), _dmgMin(other._dmgMin), _dmgMax(other._dmgMax), _force(other._force), _range(other._range), _spread(other._spread), _ammoMax(other._ammoMax), _ammoCurrent(other._ammoMax),_clipCurrent(other._clipMax), _clipMax(other._clipMax), _shotOriginOffset(other._shotOriginOffset)
 		,_shotCooldownTime(other._shotCooldownTime),_reloadTime(other._reloadTime),_reloadTimer(engine::Timer(other._reloadTime)),_shotCooldownTimer(engine::Timer(other._shotCooldownTime))
 	{
+		_idCurrent++;
 		_destroySprite = false;
 	}
 
 	Weapon::Weapon(const graphics::Sprite& sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset)
-		: Sprite(sprite), _dmgMin(dmgMin), _dmgMax(dmgMax), _force(force), _range(range), _spread(spread), _ammoMax(ammoMax), _ammoCurrent(ammoMax), _clipMax(clipMax), _clipCurrent(clipMax), _shotOriginOffset(shotOriginOffset)
+		: Sprite(sprite), _id(_idCurrent), _dmgMin(dmgMin), _dmgMax(dmgMax), _force(force), _range(range), _spread(spread), _ammoMax(ammoMax), _ammoCurrent(ammoMax), _clipMax(clipMax), _clipCurrent(clipMax), _shotOriginOffset(shotOriginOffset)
 	{
+		_idCurrent++;
 		_destroySprite = false;
 	}
 

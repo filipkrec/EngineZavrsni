@@ -51,7 +51,6 @@ int main()
 	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Rifle"), 999), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
 	lam::LevelAssetManager::getPlayer()->setWeaponOffset(math::Vector2(0.5f, -0.4f));
 	lam::LevelAssetManager::add((Pickup*)(new Ammo(new Sprite(-4.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), 0, 20)),"Ammo");
-	layer->add(weapon);
 	lam::LevelAssetManager::add((Pickup*)(new WeaponObject(new Sprite(-5.0f, -5.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), weapon)),"WeaponObject");
 	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, 0xffffffff,0), "Space");
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
