@@ -183,6 +183,11 @@ namespace objects {
 			}
 		}
 
+		void Actor::onHit(const objects::Weapon* weapon)
+		{
+			_health -= rand() % (weapon->getDmgMax() - weapon->getDmgMin());
+			weapon->onShot((GameObject*)this);
+		}
 
 		bool Actor::objectIsInSight(const GameObject& gameObject)
 		{

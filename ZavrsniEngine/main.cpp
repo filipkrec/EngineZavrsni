@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include <windows.system.h>
 #include "Source/Math/Math.h"
 #include "Source/window.h"
@@ -41,16 +41,16 @@ int main()
 	TextureManager::add(new Texture("Assets/Character/Enemy_walking1.png"), "Enemy_walking1");
 	TextureManager::add(new Texture("Assets/Character/Enemy_walking2.png"), "Enemy_walking2");
 
-	Font* font = new Font("Assets/arial.ttf", 20);
+	Font* font = new Font("Assets/arial.ttf");
 	font->setScale(16, 9);
 
 	lam::LevelAssetManager::init(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Main_idle"),2), 100), 100, 150), layer);
 	//lam::LevelAssetManager::add(new NPC(GameObject(new Sprite(-8.0f, -8.0f, 1.0f, 1.0f, TextureManager::get("Enemy_idle"), 2),100),100,50),"NPC");
-	lam::LevelAssetManager::add(new Label("100/100", -10.0f, 6.0f, 0xff00ff00, font, 16), "AmmoLabel");
-	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 1.0f, 0.5f, TextureManager::get("Rifle"), 2), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
+	lam::LevelAssetManager::add(new Label("100/100", -10.0f, 6.0f, 0xff00ff00, 0.5f, font, 16), "AmmoLabel");
+	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 1.0f, 1.0f, TextureManager::get("Rifle"), 999), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
 	lam::LevelAssetManager::add((Pickup*)(new Ammo(new Sprite(-4.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), 0, 20)),"Ammo");
-	lam::LevelAssetManager::add((Pickup*)(new WeaponObject(new Sprite(0.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("RiflePickup"), 1), weapon)),"WeaponObject");
-	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, TextureManager::get("Space"),0), "Space");
+	lam::LevelAssetManager::add((Pickup*)(new WeaponObject(new Sprite(-5.0f, -5.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), weapon)),"WeaponObject");
+	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, 0xffffffff,0), "Space");
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 	//lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), 100), "Player");
 	lam::LevelAssetManager::add(new GameObject(&Sprite(9.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet");
@@ -87,13 +87,13 @@ int main()
 	Timer* timerTick = new Timer();
 	int fps = 0;
 
-	float x, y;
+	math::Vector2 mousePosition;
 	while (!display->closed())
 	{
 		display->clear();
 		lam::LevelAssetManager::processBegin(*display);
 		fps++;
-		display->getMousePosition(x, y);
+		display->getMousePosition(mousePosition);
 		if (timerTick->elapsed() >= 1.0f / 60.0f)
 		{
 			Player* player = lam::LevelAssetManager::getPlayer();

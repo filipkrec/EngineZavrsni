@@ -99,7 +99,7 @@ namespace objects {
 		Actor::move();
 
 		if (Camera::getInstance()->doFollowPlayer())
-			Camera::getInstance()->move(math::Vector2(_currentSpeed * _currentForce.x, _currentSpeed * _currentForce.y));
+			Camera::getInstance()->move(math::Vector2(-_currentSpeed * _currentForce.x,- _currentSpeed * _currentForce.y));
 	}
 
 	void Player::setCameraFollow()

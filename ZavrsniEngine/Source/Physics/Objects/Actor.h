@@ -64,6 +64,7 @@ namespace objects {
 		virtual void move() override;
 		virtual void pickup(Pickup& pickup);
 		virtual void animate();
+
 		void processSight();
 		virtual void process(const engine::Window& window) = 0;
 	public:
@@ -87,6 +88,8 @@ namespace objects {
 		void clearObstructedSighted();
 		void addPickupable(Pickup* pickupable);
 		void clearPickupable();
+
+		virtual void onHit(const objects::Weapon* weapon);
 
 		bool objectIsInSight(const GameObject& gameObject);
 

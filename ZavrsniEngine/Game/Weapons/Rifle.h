@@ -3,9 +3,9 @@
 
 class Rifle: public objects::Weapon
 {
-	static Rifle* instance;
-	Rifle();
 public:
-	static Rifle* getInstance();
-	void onShot(objects::GameObject* target) override;
+	Rifle();
+	Rifle(const math::Vector2& spriteSize,const math::Vector2& modelOffset, const math::Vector2& shotOffset, const graphics::Texture* texture);
+	Rifle* clone();
+	void onShot(objects::GameObject* target) const override;
 };

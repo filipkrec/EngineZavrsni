@@ -3,17 +3,11 @@
 #include "../../../Graphics/Camera.h"
 #include "../../../Util/Timer.h"
 namespace objects {
-		enum class WeaponState
-		{
-			CARRIED,
-			DROPED
-		};
-
-
 		class Weapon :public graphics::Sprite
 		{
 			engine::Timer _reloadTimer;
 			engine::Timer _shotCooldownTimer;
+		protected:
 			float _reloadTime;
 			float _shotCooldownTime;
 			unsigned int _dmgMin; //random min dmg
@@ -28,10 +22,10 @@ namespace objects {
 
 			math::Vector2 _shotOriginOffset; // offset from center of carrying sprite
 		public:
-			WeaponState _weaponState;
 			std::vector<math::Vector2> _firedShots; // destination points 
 
 			Weapon();
+			Weapon(const graphics::Sprite& sprite);
 			Weapon(const Weapon& other);
 			Weapon(const graphics::Sprite& sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset);
 
@@ -68,7 +62,7 @@ namespace objects {
 
 			void reload(bool infinite = false);
 			void shoot();
-			virtual void onShot(GameObject* target) {};
+			virtual void onShot(GameObject* target) const {};
 			void clearShots();
 		};
 }

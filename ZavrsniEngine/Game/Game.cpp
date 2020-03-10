@@ -1,6 +1,7 @@
-#if 1
+#if 0
 #include "../Source/Engine.h"
 #include "Pickups/Ammo.h"
+#include "Weapons/Rifle.h"
 
 class Game : public engine::Engine
 {
@@ -8,6 +9,7 @@ class Game : public engine::Engine
 	graphics::Layer* layer = new graphics::Layer();
 	graphics::Font* font = new graphics::Font("Assets/arial.ttf");
 	math::Vector2 mousePosition;
+	std::vector<objects::Weapon*> weapons;
 
 	void (Game::*level)();
 	bool skipRender = false;
@@ -120,16 +122,18 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/crosshair.png"), "crosshairCursor");
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, graphics::TextureManager::get("crosshairCursor"), 100), "crosshairCursor");
 
-		lam::LevelAssetManager::add(new graphics::Label("0", -14.0f, 8.0f, 0xff00ff00, 0.3f, font, 4), "FPS");
-		graphics::TextureManager::add(new graphics::Texture("Assets/test3.png"), "floorTexture");
+		lam::LevelAssetManager::add(new graphics::Label("0", -14.0f, 8.0f, 0xff00ff00, 0.3f, font, 5), "FPS");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Ground.png"), "floorTexture");
 
-		int width = 25;
-		int height = 25;
+		Camera::getInstance()->followPlayer();
+
+		int width = 4;
+		int height = 4;
 		for (int x = -width; x < width; ++x)
 		{
 			for (int y = -height; y < height; ++y)
 			{
-				lam::LevelAssetManager::add(new graphics::Sprite(x, y, 1.0f, 1.0f, graphics::TextureManager::get("floorTexture"), 0), std::to_string(x) + "," + std::to_string(y));
+				lam::LevelAssetManager::add(new graphics::Sprite(x*10, y*10, 10.0f, 10.0f, graphics::TextureManager::get("floorTexture"), 0), std::to_string(x) + "," + std::to_string(y));
 			}
 		}
 
@@ -141,11 +145,16 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_walking1.png"), "Enemy_walking1");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_walking2.png"), "Enemy_walking2");
 
-		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(new graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 2), 100), 100, 150));
+		graphics::TextureManager::add(new graphics::Texture("Assets/rifle.png"), "Rifle");
+
+		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(new graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 5), 100), 100, 150));
 		lam::LevelAssetManager::getPlayer()->setAllegiance(objects::Allegiance::GOOD);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking1"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, objects::ActorState::STATE_MOVING);
+
+		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));
+		lam::LevelAssetManager::getPlayer()->setWeapon(weapons.at(0));
 	}
 
 	void LevelDemo()

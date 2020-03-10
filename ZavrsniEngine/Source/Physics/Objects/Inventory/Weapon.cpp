@@ -6,15 +6,21 @@ namespace objects
 
 	}
 
+	Weapon::Weapon(const graphics::Sprite& sprite)
+		: Sprite(sprite)
+	{
+		_destroySprite = false;
+	}
+
 	Weapon::Weapon(const Weapon& other)
-		: Sprite(other), _dmgMin(other._dmgMin), _dmgMax(other._dmgMax), _force(other._force), _range(other._range), _spread(other._spread), _ammoMax(other._ammoMax), _ammoCurrent(other._ammoMax), _weaponState(WeaponState::DROPED), _shotOriginOffset(other._shotOriginOffset)
+		: Sprite(other), _dmgMin(other._dmgMin), _dmgMax(other._dmgMax), _force(other._force), _range(other._range), _spread(other._spread), _ammoMax(other._ammoMax), _ammoCurrent(other._ammoMax), _shotOriginOffset(other._shotOriginOffset)
 		,_shotCooldownTime(other._shotCooldownTime),_reloadTime(other._reloadTime),_reloadTimer(engine::Timer(other._reloadTime)),_shotCooldownTimer(engine::Timer(other._shotCooldownTime))
 	{
 		_destroySprite = false;
 	}
 
 	Weapon::Weapon(const graphics::Sprite& sprite, unsigned int weight, unsigned int dmgMin, unsigned int dmgMax, float force, float range, unsigned int spread, unsigned int ammoMax, unsigned int clipMax, math::Vector2 shotOriginOffset)
-		: Sprite(sprite), _dmgMin(dmgMin), _dmgMax(dmgMax), _force(force), _range(range), _spread(spread), _ammoMax(ammoMax), _ammoCurrent(ammoMax), _clipMax(clipMax), _clipCurrent(clipMax), _weaponState(WeaponState::DROPED), _shotOriginOffset(shotOriginOffset)
+		: Sprite(sprite), _dmgMin(dmgMin), _dmgMax(dmgMax), _force(force), _range(range), _spread(spread), _ammoMax(ammoMax), _ammoCurrent(ammoMax), _clipMax(clipMax), _clipCurrent(clipMax), _shotOriginOffset(shotOriginOffset)
 	{
 		_destroySprite = false;
 	}
@@ -28,7 +34,6 @@ namespace objects
 	{
 		if (_reloadTimer.elapsed() >= _reloadTime)
 		{
-			_reloadTimer.reset();
 			if (!infinite)
 			{
 				unsigned int clipDifference = _clipMax - _clipCurrent;
@@ -40,6 +45,7 @@ namespace objects
 			{
 				_clipCurrent = _clipMax;
 			}
+			_reloadTimer.reset();
 		}
 	}
 
@@ -53,6 +59,11 @@ namespace objects
 			_firedShots.push_back(getShotPosition() + destinationPoint);
 			_shotCooldownTimer.reset();
 		}
+	}
+
+
+	void onShot(GameObject* target)
+	{
 	}
 
 	void Weapon::clearShots()

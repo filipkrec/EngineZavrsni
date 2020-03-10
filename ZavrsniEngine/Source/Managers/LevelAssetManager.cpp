@@ -80,6 +80,7 @@ namespace lam {
 				}
 			}
 
+			//sight
 			for (activeObject actor : allActors)
 			{
 				objects::Actor* actor1 = (objects::Actor*) actor._object;
@@ -99,7 +100,7 @@ namespace lam {
 			}
 
 
-
+			//pickups
 			if (_player != nullptr)
 			{
 				for (activeObject pickup : _pickups)
@@ -120,7 +121,6 @@ namespace lam {
 			}
 			
 			//colission
-
 			for (activeObject gameObject : allObjects)
 			{
 				objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
@@ -176,7 +176,7 @@ namespace lam {
 							_shots.push_back(lineSprite);
 							math::Vector2 unitVector = hitPoint - currentActor->getWeapon()->getShotPosition();
 							unitVector = math::Vector2::calculateUnitVector(unitVector);
-							currentActor->getWeapon()->onShot(closestShot.first);
+							closestShot.first->onHit(currentActor->getWeapon());
 							closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, currentActor->getWeapon()->getForce()));
 							shotObjects.clear();
 						}
@@ -188,6 +188,7 @@ namespace lam {
 					}
 				}
 			}
+
 			//movement
 			for (activeObject gameObject : allObjects)
 			{

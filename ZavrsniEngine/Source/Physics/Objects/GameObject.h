@@ -2,8 +2,11 @@
 
 #include "../../Graphics/Sprite.h"
 #include "../Hitbox.h"
+#include "Inventory/Weapon.h"
 
 namespace objects {
+	class Weapon;
+
 	enum class Allegiance {
 		GOOD,
 		BAD,
@@ -38,9 +41,9 @@ namespace objects {
 		inline const Allegiance getAllegiance() const { return _allegiance; }
 		void toggleColission();
 
-
 		inline const unsigned int getWeight() const { return _weight; }
 
+		virtual void onHit(const Weapon* weapon) {};
 
 		void calculateColission(const math::Vector3& force);
 		virtual void collide(GameObject& other);
