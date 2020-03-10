@@ -25,7 +25,7 @@ namespace objects {
 
 
 
-		unsigned int _health;
+		int _health;
 		float _movementSpeed;
 		float _sightAngle;
 		float _sightRange; 
@@ -77,7 +77,7 @@ namespace objects {
 		inline const ActorState& getState() const { return _state; }
 		Weapon* getWeapon();
 
-		void setHealth(unsigned int value);
+		void setHealth(int value);
 		void setMovementSpeed(float value);
 		void setSight(float sightAngle, float sightRange);
 		void setState(const ActorState& state);

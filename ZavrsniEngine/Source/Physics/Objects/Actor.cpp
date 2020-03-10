@@ -94,7 +94,7 @@ namespace objects {
 			return _weapon; 
 		}
 
-		void Actor::setHealth(unsigned int value)
+		void Actor::setHealth(int value)
 		{ 
 			_health = value; 
 			if (_health <= 0)
@@ -120,6 +120,9 @@ namespace objects {
 
 			//textures
 			_stateTextures.clear();
+			if (state == ActorState::STATE_DEAD)
+				_colissionOn = false;
+
 			for (std::pair<const graphics::Texture*, ActorState> texture : _allTextures)
 			{
 				if (texture.second == state)
@@ -185,8 +188,8 @@ namespace objects {
 
 		void Actor::onHit(const objects::Weapon* weapon)
 		{
-			_health -= rand() % (weapon->getDmgMax() - weapon->getDmgMin());
-			weapon->onShot((GameObject*)this);
+			unsigned int damage = weapon->getDmgMax() - weapon->getDmgMin() == 0 ? weapon->getDmgMax() : weapon->getDmgMax() - rand() % (weapon->getDmgMax() - weapon->getDmgMin());
+			setHealth(_health - damage);
 		}
 
 

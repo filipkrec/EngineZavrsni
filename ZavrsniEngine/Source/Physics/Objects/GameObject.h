@@ -39,6 +39,8 @@ namespace objects {
 
 		void setAllegiance(Allegiance allegiance);
 		inline const Allegiance getAllegiance() const { return _allegiance; }
+
+		inline const bool isCollsionOn() const { return _colissionOn; }
 		void toggleColission();
 
 		inline const unsigned int getWeight() const { return _weight; }

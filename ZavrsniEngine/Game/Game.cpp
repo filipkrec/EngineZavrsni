@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include "../Source/Engine.h"
 #include "Pickups/Ammo.h"
 #include "Weapons/Rifle.h"
@@ -17,7 +17,7 @@ class Game : public engine::Engine
 	void init() //First level on init - MAIN MENU
 	{
 		window->toggleCursor();
-		lam::LevelAssetManager::init(nullptr, layer);
+		lam::LevelAssetManager::init(layer);
 		swapLevel(&Game::levelMenuInit, &Game::levelMenu);
 	}
 	// jednom svake sekunde

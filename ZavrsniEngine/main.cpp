@@ -1,4 +1,4 @@
-#if 1
+#if 0
 #include <windows.system.h>
 #include "Source/Math/Math.h"
 #include "Source/window.h"
@@ -46,7 +46,7 @@ int main()
 
 	lam::LevelAssetManager::init(layer);
 	lam::LevelAssetManager::setPlayer(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Main_idle"), 2), 100), 100, 150));
-	//lam::LevelAssetManager::add(new NPC(GameObject(new Sprite(-8.0f, -8.0f, 1.0f, 1.0f, TextureManager::get("Enemy_idle"), 2),100),100,50),"NPC");
+	lam::LevelAssetManager::add(new NPC(GameObject(new Sprite(-8.0f, -8.0f, 1.0f, 1.0f, TextureManager::get("Enemy_idle"), 2),100),50,50),"NPC");
 	lam::LevelAssetManager::add(new Label("100/100", -10.0f, 6.0f, 0xff00ff00, 0.5f, font, 16), "AmmoLabel");
 	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Rifle"), 999), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
 	lam::LevelAssetManager::getPlayer()->setWeaponOffset(math::Vector2(0.5f, -0.4f));
@@ -74,7 +74,7 @@ int main()
 	lam::LevelAssetManager::add(sprite,"Hitbox");
 	Hitbox hitbox = Hitbox(sprite);
 	
-	//lam::LevelAssetManager::getNPC("NPC")->setMoveToPoint(math::Vector2(8.0f,8.0f));
+	lam::LevelAssetManager::getNPC("NPC")->setMoveToPoint(math::Vector2(8.0f,8.0f));
 	/*
 	lam::LevelAssetManager::getNPC("NPC")->setSight(45.0f,10.0f);
 	lam::LevelAssetManager::getNPC("NPC")->setAIState(AIState::AI_STATE_DEFENSIVE);

@@ -198,13 +198,13 @@ namespace lam {
 		for (activeObject gameObject : _allObjects)
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
+			if(gameObject1->isCollsionOn())
 			for (activeObject gameObjectOther : _allObjects)
 			{
 				gameObject2 = (objects::GameObject*)gameObjectOther._object;
 				objects::Hitbox* hitbox1 = (objects::Hitbox*)gameObject1;
-				if (gameObject1 != gameObject2)
+				if (gameObject2->isCollsionOn() && gameObject1 != gameObject2)
 				{
-
 					if (gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove))
 					{
 						gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove);
@@ -228,7 +228,7 @@ namespace lam {
 					for (activeObject gameObject : _allObjects)
 					{
 						objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
-						if (gameObject1 != currentActor && gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
+						if (gameObject1->isCollsionOn() && gameObject1 != currentActor && gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
 						{
 							math::Vector4 clipPoints = gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot);
 							shotObjects.push_back(std::make_pair(gameObject1, math::Vector2(clipPoints.x, clipPoints.y)));
@@ -246,6 +246,7 @@ namespace lam {
 						math::Vector2 unitVector = hitPoint - currentActor->getWeapon()->getShotPosition();
 						unitVector = math::Vector2::calculateUnitVector(unitVector);
 						currentActor->getWeapon()->onShot(closestShot.first);
+						closestShot.first->onHit(currentActor->getWeapon());
 						closestShot.first->calculateColission(math::Vector3(unitVector.x, unitVector.y, currentActor->getWeapon()->getForce()));
 						shotObjects.clear();
 					}
@@ -269,10 +270,11 @@ namespace lam {
 			gameObject1->move();
 
 			//clear clipping
+			if(gameObject1->isCollsionOn())
 			for (activeObject gameObjectOther : _allObjects)
 			{
 				gameObject2 = (objects::GameObject*)gameObjectOther._object;
-				if (gameObject1 != gameObject2)
+				if (gameObject2->isCollsionOn() && gameObject1 != gameObject2)
 					while (gameObject1->isHit((objects::Hitbox) * gameObject2))
 					{
 						gameObject1->getSprite()->move(math::Vector2::calculateUnitVector(gameObject1->getSpritePosition() - gameObject2->getSpritePosition()) * 0.001);

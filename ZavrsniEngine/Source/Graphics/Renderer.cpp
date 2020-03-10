@@ -54,9 +54,9 @@ namespace graphics {
 
 		temp.Color = color;
 		temp.TextureSlot = -1;
-		math::Vector2 offset(0.05f, 0.05f);
+		math::Vector2 offset(0.02f, 0.02f);
 
-		temp.Position = _camera->getViewMatrix() * lineBegin;
+		temp.Position = _camera->getViewMatrix() * (lineBegin - offset);
 		temp.TextureCoordinate = math::Vector2(0.0f,0.0f);
 		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
 
@@ -64,7 +64,7 @@ namespace graphics {
 		temp.TextureCoordinate = math::Vector2(0.0f, 1.0f);
 		const unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
 
-		temp.Position = _camera->getViewMatrix() * lineEnd;
+		temp.Position = _camera->getViewMatrix() * (lineEnd - offset);
 		temp.TextureCoordinate = math::Vector2(1.0f, 1.0f);
 		const unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
 
