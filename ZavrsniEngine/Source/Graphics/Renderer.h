@@ -39,8 +39,6 @@ namespace graphics {
 		VertexData* _vertexBufferDataBegin;
 		unsigned int* _indicesBegin;
 
-		Camera* _camera;
-
 		unsigned int _count;
 		unsigned int _indexCount;
 		std::vector<GLuint> _textures;

@@ -156,6 +156,33 @@ class Game : public engine::Engine
 			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-x - 5, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 		}
 
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(7, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(7, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(5, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-5, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-7, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-5, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-5, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-7, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-5, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(7, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(7, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(5, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+
+		for (y = -10; y < 25; y+= 2)
+		{
+			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-20, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		}
+
+		for (x = -22; x < 0; x += 2)
+		{
+			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-x, -12, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		}
+
+
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_idle.png"), "Main_idle");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_walking1.png"), "Main_walking1");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_walking2.png"), "Main_walking2");

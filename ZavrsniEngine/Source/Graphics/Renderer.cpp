@@ -2,7 +2,7 @@
 
 namespace graphics {
 	Renderer::Renderer()
-		:_count(0), _indexCount(0), _camera(Camera::getInstance())
+		:_count(0), _indexCount(0)
 	{
 		init();
 	}
@@ -61,19 +61,19 @@ namespace graphics {
 		math::Vector2 CounterClockwise = math::Vector2(-zeroVector.y, zeroVector.x);
 		CounterClockwise = math::Vector2::calculateUnitVector(CounterClockwise) * thickness;
 
-		temp.Position = _camera->getViewMatrix() * (lineBegin + Clockwise);
+		temp.Position = Camera::getInstance()->getViewMatrix() * (lineBegin + Clockwise);
 		temp.TextureCoordinate = math::Vector2(0.0f,0.0f);
 		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
 
-		temp.Position = _camera->getViewMatrix() * (lineBegin + CounterClockwise);
+		temp.Position = Camera::getInstance()->getViewMatrix() * (lineBegin + CounterClockwise);
 		temp.TextureCoordinate = math::Vector2(0.0f, 1.0f);
 		const unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
 
-		temp.Position = _camera->getViewMatrix() * (lineEnd + Clockwise);
+		temp.Position = Camera::getInstance()->getViewMatrix() * (lineEnd + Clockwise);
 		temp.TextureCoordinate = math::Vector2(1.0f, 1.0f);
 		const unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
 
-		temp.Position = _camera->getViewMatrix() * (lineEnd + CounterClockwise);
+		temp.Position = Camera::getInstance()->getViewMatrix() * (lineEnd + CounterClockwise);
 		temp.TextureCoordinate = math::Vector2(1.0f, 0.0f);
 		const unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
 
@@ -102,6 +102,7 @@ namespace graphics {
 			submit(math::Vector2(lineElements.x,lineElements.y), math::Vector2(lineElements.z, lineElements.w), sprite->getColor());
 			return;
 		}
+		
 
 		const math::Vector2& position = sprite->getPosition();
 		const math::Vector2& offset = sprite->getOffset();
@@ -111,6 +112,10 @@ namespace graphics {
 		const Texture* texture = sprite->getTexture();
 		float textureSlot;
 		const math::Matrix4& modelMatrix = sprite->getModelMatrix();
+
+		//ne submitaj spriteove van vida kamere
+		if (sprite->getPosition().distanceFrom(math::Vector2(0, 0) - Camera::getInstance()->getOffset()) - math::Vector2(size.x, size.y).length() >= math::Vector2(16, 9).length())
+			return;
 
 		if (texture != nullptr)
 		{
@@ -128,19 +133,19 @@ namespace graphics {
 		temp.Color = color;
 		temp.TextureSlot = textureSlot;
 
-		temp.Position = _camera->getViewMatrix() * modelMatrix * (math::Vector2(-size.x / 2, -size.y / 2) + offset);
+		temp.Position = Camera::getInstance()->getViewMatrix() * modelMatrix * (math::Vector2(-size.x / 2, -size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[0];
 		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
 
-		temp.Position = _camera->getViewMatrix() * modelMatrix * (math::Vector2(-size.x / 2, size.y / 2) + offset);
+		temp.Position = Camera::getInstance()->getViewMatrix() * modelMatrix * (math::Vector2(-size.x / 2, size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[1];
 		const unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
 
-		temp.Position = _camera->getViewMatrix() * modelMatrix * (math::Vector2(size.x / 2, size.y / 2) + offset);
+		temp.Position = Camera::getInstance()->getViewMatrix() * modelMatrix * (math::Vector2(size.x / 2, size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[2];
 		const unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
 
-		temp.Position = _camera->getViewMatrix() * modelMatrix * (math::Vector2(size.x / 2, -size.y / 2) + offset);
+		temp.Position = Camera::getInstance()->getViewMatrix() * modelMatrix * (math::Vector2(size.x / 2, -size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[3];
 		const unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
 
