@@ -122,7 +122,9 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/crosshair.png"), "crosshairCursor");
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, graphics::TextureManager::get("crosshairCursor"), 100), "crosshairCursor");
 
-		lam::LevelAssetManager::add(new graphics::Label("0", -14.0f, 8.0f, 0xff00ff00, 0.3f, font, 101), "FPS");
+		lam::LevelAssetManager::add(new graphics::Label("0", 0.0f, 0.0f, 0xff00ff00, 0.3f, font, 101), "FPS");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("FPS"), "FPS", math::Vector2(-14.0f, 8.0f));
+
 		graphics::TextureManager::add(new graphics::Texture("Assets/Ground.png"), "floorTexture");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Wall.png"), "wallTexture");
 
@@ -170,6 +172,7 @@ class Game : public engine::Engine
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->setSight(1.0f, 1.0f);
+		lam::LevelAssetManager::getPlayer()->setWeaponOffset(math::Vector2(0.5f, -0.4f));
 
 		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));
 		lam::LevelAssetManager::getPlayer()->setWeapon(weapons.at(0));

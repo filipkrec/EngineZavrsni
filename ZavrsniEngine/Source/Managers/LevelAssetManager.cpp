@@ -13,8 +13,10 @@ namespace lam {
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_pickups;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_allObjects;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_allActors;
-	std::vector<graphics::Line*> LevelAssetManager::_shots;
 	objects::Player* LevelAssetManager::_player = nullptr;
+
+	std::vector<LevelAssetManager::UIElement> LevelAssetManager::_UIElements;
+	std::vector<graphics::Line*> LevelAssetManager::_shots;
 
 	void LevelAssetManager::processBegin(engine::Window& window)
 	{
@@ -28,6 +30,7 @@ namespace lam {
 			processCollision();
 			processHitDetection();
 			processMovement();
+			processUI();
 		}
 	}
 
@@ -301,6 +304,15 @@ namespace lam {
 			}
 		}
 	}
+	
+	void LevelAssetManager::processUI()
+	{
+		for (UIElement element : _UIElements)
+		{
+				element._sprite->setPosition(math::Vector2(0,0) - Camera::getInstance()->getOffset() + element._UIPosition);
+		}
+	}
+
 
 	void LevelAssetManager::processEnd(engine::Window& window)
 	{
@@ -356,6 +368,8 @@ namespace lam {
 					}),
 				_pickups.end());
 
+			cleanUI();
+
 			window.clearInput();
 			_timer->reset();
 		}
@@ -384,11 +398,39 @@ namespace lam {
 		fillObjects();
 	}
 
+	void LevelAssetManager::addUI(graphics::Sprite* sprite, const std::string& name,const math::Vector2& UIPosition)
+	{
+		_UIElements.push_back(UIElement(sprite,name, UIPosition));
+	}
+
+	void LevelAssetManager::cleanUI()
+	{
+		std::remove_if(_UIElements.begin(), _UIElements.end(), [](UIElement x)
+			{
+					return x._sprite->toDestroySprite();
+			});
+	}
+
+	void LevelAssetManager::changeUIElementPosition(const std::string& name, const math::Vector2& UIPosition)
+	{
+		std::vector<UIElement>::iterator it = std::find_if(_UIElements.begin(), _UIElements.end()
+			, [&](UIElement x)
+			{
+				return x._name == name;
+			});
+
+		if (it != _UIElements.end())
+			(*it)._UIPosition = UIPosition;
+	}
+
+
+
 	void LevelAssetManager::cleanSprites()
 	{
 		for (activeObject sprite : _sprites)
 			delete (graphics::Sprite*)sprite._object;
 
+		_UIElements.clear();
 		_sprites.clear();
 	}
 

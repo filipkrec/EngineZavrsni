@@ -27,6 +27,20 @@ namespace lam {
 				_name = object._name;
 			}
 		};
+
+		struct UIElement {
+			graphics::Sprite* _sprite;
+			math::Vector2 _UIPosition;
+			std::string _name;
+
+			UIElement(graphics::Sprite* sprite, std::string name, const math::Vector2& UIPosition)
+			{
+				_sprite = sprite;
+				_name = name;
+				_UIPosition = UIPosition;
+			}
+		};
+
 	private:
 		static graphics::Layer* _layer;
 		static engine::Timer* _timer;
@@ -39,6 +53,7 @@ namespace lam {
 		static std::vector<graphics::Line*> _shots;
 		static std::vector<activeObject> _allObjects;
 		static std::vector<activeObject> _allActors;
+		static std::vector<UIElement> _UIElements;
 		static objects::Player* _player;
 
 		static math::Vector2 calculatePath(const math::Vector2& goal, const objects::NPC* npc);
@@ -53,6 +68,7 @@ namespace lam {
 		static void processCollision(); //process collision between 2 objects FORCE CALCULATION
 		static void processHitDetection(); //process shots and consequences FORCE CALCULATION
 		static void processMovement(); //move in final FORCE direction
+		static void processUI(); //move UI to camera position
 	public:
 		static void init(graphics::Layer* layer);
 
@@ -66,6 +82,9 @@ namespace lam {
 		static void cleanSprites();
 		static graphics::Sprite* getSprite(const std::string& name);
 
+		static void addUI(graphics::Sprite* sprite, const std::string& name, const math::Vector2& UIPosition);
+		static void cleanUI();
+		static void changeUIElementPosition(const std::string& name, const math::Vector2& UIPosition);
 
 		static void add(graphics::Label* label, const std::string& name);
 		static void cleanLabels();
