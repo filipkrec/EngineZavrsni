@@ -191,6 +191,10 @@ namespace lam {
 		for (activeObject gameObject : _allObjects)
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
+
+			if (gameObject1->getAllegiance() == objects::Allegiance::ENVIROMENT)
+				continue;
+
 			gameObject1->savePreviousForce();
 			gameObject1->calculateNextMove();
 		}
@@ -198,10 +202,18 @@ namespace lam {
 		for (activeObject gameObject : _allObjects)
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
-			if(gameObject1->isCollsionOn())
+
+			if (gameObject1->isCollsionOn() || gameObject1->getAllegiance() != objects::Allegiance::ENVIROMENT) //ne racunaj koliziju za enviroment
+				continue; 
+
 			for (activeObject gameObjectOther : _allObjects)
 			{
 				gameObject2 = (objects::GameObject*)gameObjectOther._object;
+				//skip ako su 2 objekta predaleko za collision
+				if ( ((gameObject1->getSpritePosition()).distanceFrom(gameObject2->getSpritePosition())
+					>= gameObject1->_nextMove.length() + gameObject2->getCollisionRange().length() + gameObject1->getCollisionRange().length()));
+				continue;
+
 				objects::Hitbox* hitbox1 = (objects::Hitbox*)gameObject1;
 				if (gameObject2->isCollsionOn() && gameObject1 != gameObject2)
 				{
@@ -209,6 +221,9 @@ namespace lam {
 					{
 						gameObject2->willBeHit(*hitbox1, gameObject1->_nextMove);
 						gameObject1->collide(*gameObject2);
+
+						if(gameObject2->getAllegiance() == objects::Allegiance::ENVIROMENT) //ako je enviroment racunaj povratnu silu
+							gameObject2->collide(*gameObject1); 
 					}
 				}
 			}
@@ -267,6 +282,10 @@ namespace lam {
 		for (activeObject gameObject : _allObjects)
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
+
+			if (gameObject1->getAllegiance() == objects::Allegiance::ENVIROMENT)
+				continue;
+
 			gameObject1->move();
 
 			//clear clipping

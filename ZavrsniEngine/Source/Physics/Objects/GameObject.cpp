@@ -17,13 +17,14 @@ namespace objects {
 	{
 	}
 
-	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight)
-		: Hitbox(sprite), _weight(weight),_colissionOn(true), _allegiance(Allegiance::NEUTRAL)
+	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, bool enviroment)
+		: Hitbox(sprite), _weight(weight == 0 ? WEIGHTMAX : weight),_colissionOn(true), _allegiance(enviroment ? Allegiance::ENVIROMENT :Allegiance::NEUTRAL)
 	{
+		
 	}
 
 	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height)
-		: Hitbox(sprite, shape, width, height), _weight(weight), _colissionOn(true), _allegiance(Allegiance::NEUTRAL)
+		: Hitbox(sprite, shape, width, height), _weight(weight == 0 ? WEIGHTMAX : weight), _colissionOn(true), _allegiance(Allegiance::NEUTRAL)
 	{
 	}
 

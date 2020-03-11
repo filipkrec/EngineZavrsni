@@ -27,8 +27,15 @@ void Camera::move(const math::Vector2& vector)
 void Camera::recenter()
 {
 	_followPlayer = false;
-	_viewMatrix *= math::Matrix4::orthographic(-16, 16, -9, 9, -1, 1);
+	_viewMatrix = math::Matrix4::orthographic(-16, 16, -9, 9, -1, 1);
 	_offset = math::Vector2(0.0f, 0.0f);
+}
+
+void Camera::setLocation(const math::Vector2& vector)
+{
+	math::Vector2 temp = math::Vector2(-vector.x,-vector.y);
+	_viewMatrix = math::Matrix4::orthographic(-16, 16, -9, 9, -1, 1) * math::Matrix4::translation(temp);
+	_offset = temp;
 }
 
 void Camera::followPlayer()

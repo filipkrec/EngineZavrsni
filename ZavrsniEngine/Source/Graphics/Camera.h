@@ -16,6 +16,7 @@ public:
     void move(const math::Vector2& vector);
 	void recenter();
 	void followPlayer();
+	void setLocation(const math::Vector2& vector);
 
     inline const math::Matrix4& getViewMatrix() const { return _viewMatrix; }
     inline const math::Vector2& getOffset() const { return _offset; }

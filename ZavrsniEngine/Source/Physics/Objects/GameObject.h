@@ -4,6 +4,8 @@
 #include "../Hitbox.h"
 #include "Inventory/Weapon.h"
 
+#define WEIGHTMAX 999999999
+
 namespace objects {
 	class Weapon;
 
@@ -31,7 +33,7 @@ namespace objects {
 		GameObject();
 		virtual ~GameObject();
 		GameObject(graphics::Sprite* sprite);
-		GameObject(graphics::Sprite* sprite, unsigned int weight);
+		GameObject(graphics::Sprite* sprite, unsigned int weight, bool enviroment = false);
 		GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height = 0);
 
 		inline const math::Vector3& getPreviousForce() const { return _previousForce; }

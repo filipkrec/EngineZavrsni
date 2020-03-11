@@ -19,6 +19,7 @@ namespace math {
 
 		Vector2& divide(const float& scalar);
 		Vector2& multiply(const float& scalar);
+		float length() const;
 		static Vector2 calculateUnitVector(math::Vector2 vec);
 		static float getAngleBetween(float currentRotation, const math::Vector2& vectorDistanceToOther);
 

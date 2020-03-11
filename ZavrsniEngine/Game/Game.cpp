@@ -122,8 +122,9 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/crosshair.png"), "crosshairCursor");
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, graphics::TextureManager::get("crosshairCursor"), 100), "crosshairCursor");
 
-		lam::LevelAssetManager::add(new graphics::Label("0", -14.0f, 8.0f, 0xff00ff00, 0.3f, font, 5), "FPS");
+		lam::LevelAssetManager::add(new graphics::Label("0", -14.0f, 8.0f, 0xff00ff00, 0.3f, font, 101), "FPS");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Ground.png"), "floorTexture");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Wall.png"), "wallTexture");
 
 		Camera::getInstance()->followPlayer();
 
@@ -131,10 +132,26 @@ class Game : public engine::Engine
 		int height = 4;
 		for (int x = -width; x < width; ++x)
 		{
-			for (int y = -height; y < height; ++y)
+				for (int y = -height; y < height; ++y)
 			{
-				lam::LevelAssetManager::add(new graphics::Sprite(x*10, y*10, 10.0f, 10.0f, graphics::TextureManager::get("floorTexture"), 0), std::to_string(x) + "," + std::to_string(y));
+				lam::LevelAssetManager::add(new graphics::Sprite(x*10, y*10, 10.0f, 10.0f, graphics::TextureManager::get("floorTexture"), 0), "FLOOR" +std::to_string(x) + "." + std::to_string(y));
 			}
+		}
+
+		int x;
+		int y;
+		for (x = -width * 10 - 5; x <= width * 10 - 5; x += 2)
+		{
+			y = 10 * height;
+			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x, y - 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(y));
+			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x, -y - 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(-y));
+		}
+
+		for (y = -height * 10 - 5; y <= height * 10 - 5; y += 2)
+		{
+			x = 10 * width;
+			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x -5, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(y));
+			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-x - 5, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 		}
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_idle.png"), "Main_idle");
@@ -152,6 +169,7 @@ class Game : public engine::Engine
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking1"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, objects::ActorState::STATE_MOVING);
+		lam::LevelAssetManager::getPlayer()->setSight(1.0f, 1.0f);
 
 		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));
 		lam::LevelAssetManager::getPlayer()->setWeapon(weapons.at(0));
