@@ -3,7 +3,7 @@
 
 namespace objects {
 	Hitbox::Hitbox()
-		:_shape(Shape::SQUARE), _collisionRange(math::Vector2(0.0f,0.0f)), _location(math::Vector2(0.0f, 0.0f)), _spriteless(true)
+		:Sprite(),_shape(Shape::SQUARE), _collisionRange(math::Vector2(0.0f,0.0f))
 	{
 	}
 
@@ -14,29 +14,24 @@ namespace objects {
 
 
 	Hitbox::Hitbox(const math::Vector2 location, const math::Vector2 collisionRange)
-		:_shape(Shape::SQUARE),_collisionRange(collisionRange),_location(location),_spriteless(true)
+		:Sprite(),_shape(Shape::SQUARE),_collisionRange(collisionRange)
 	{
-
+		_position.x = location.x;
+		_position.y = location.y;
 	}
 
-	Hitbox::Hitbox(const Hitbox& other)
-		:_shape(other._shape),_collisionRange(other._collisionRange),_boundSprite(other._boundSprite), _spriteless(other._spriteless)
-	{
-		_boundSprite->DoNotDestroySprite();
-	}
-
-	Hitbox::Hitbox(graphics::Sprite* sprite)
-		:_boundSprite(sprite),_shape(Shape::SQUARE), _spriteless(false)
+	Hitbox::Hitbox(const graphics::Sprite& sprite)
+		:Sprite(sprite),_shape(Shape::SQUARE)
 	{
 		math::Vector2 center = math::Vector2(0.0f, 0.0f);
-		_collisionRange = math::Vector2(center.x + sprite->getSize().x/2, center.y + sprite->getSize().y / 2);
+		_collisionRange = math::Vector2(center.x + getSize().x/2, center.y + getSize().y / 2);
 	}
 
 	bool Hitbox::isHit(const math::Vector2& point) const
 	{
 		math::Vector2 collisionRangeFinal[2];
-		collisionRangeFinal[0] = _boundSprite->getPosition() - _collisionRange;
-		collisionRangeFinal[1] = _boundSprite->getPosition() + _collisionRange;
+		collisionRangeFinal[0] = getPosition() - _collisionRange;
+		collisionRangeFinal[1] = getPosition() + _collisionRange;
 		switch (_shape) {
 		case(SQUARE):
 			if (
@@ -50,8 +45,8 @@ namespace objects {
 		return false;
 	}
 
-	Hitbox::Hitbox(graphics::Sprite* sprite, Shape shape, const float width, const float height) :
-		_boundSprite(sprite), _shape(shape), _spriteless(false)
+	Hitbox::Hitbox(const graphics::Sprite& sprite, Shape shape, const float width, const float height) :
+		Sprite(sprite), _shape(shape)
 	{
 		math::Vector2 center = math::Vector2(0.0f, 0.0f);
 		float widthFinal = width / 2;
@@ -71,23 +66,22 @@ namespace objects {
 	}
 
 
-	Hitbox::Hitbox(graphics::Sprite* sprite, Shape shape, math::Vector2 collisionRange)
-		:_boundSprite(sprite),_shape(shape), _collisionRange(collisionRange), _spriteless(false)
+	Hitbox::Hitbox(const graphics::Sprite& sprite, Shape shape, math::Vector2 collisionRange)
+		:Sprite(sprite),_shape(shape), _collisionRange(collisionRange)
 	{
-
 	}
 
 	bool Hitbox::isHit(const Hitbox& other) const
 	{
-		math::Vector2 A = other.getSpritePosition() - other.getCollisionRange();
-		math::Vector2 B = other.getSpritePosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y);
-		math::Vector2 C = other.getSpritePosition() + other.getCollisionRange();
-		math::Vector2 D = other.getSpritePosition() + math::Vector2(-other.getCollisionRange().x, other.getCollisionRange().y);
+		math::Vector2 A = other.getPosition() - other.getCollisionRange();
+		math::Vector2 B = other.getPosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y);
+		math::Vector2 C = other.getPosition() + other.getCollisionRange();
+		math::Vector2 D = other.getPosition() + math::Vector2(-other.getCollisionRange().x, other.getCollisionRange().y);
 
-		math::Vector2 E = getSpritePosition() - getCollisionRange();
-		math::Vector2 F = getSpritePosition() + math::Vector2(getCollisionRange().x, -getCollisionRange().y);
-		math::Vector2 G = getSpritePosition() + getCollisionRange();
-		math::Vector2 H = getSpritePosition() + math::Vector2(-getCollisionRange().x, getCollisionRange().y);
+		math::Vector2 E = getPosition() - getCollisionRange();
+		math::Vector2 F = getPosition() + math::Vector2(getCollisionRange().x, -getCollisionRange().y);
+		math::Vector2 G = getPosition() + getCollisionRange();
+		math::Vector2 H = getPosition() + math::Vector2(-getCollisionRange().x, getCollisionRange().y);
 		switch (_shape) {
 		case(SQUARE):
 			if (
@@ -108,20 +102,24 @@ namespace objects {
 
 	bool Hitbox::willBeHit(const Hitbox & other, const math::Vector2 nextMove) const
 	{
-		math::Vector2 A = other.getSpritePosition() - other.getCollisionRange();
-		math::Vector2 B = other.getSpritePosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y);
-		math::Vector2 C = other.getSpritePosition() + other.getCollisionRange();
-		math::Vector2 D = other.getSpritePosition() + math::Vector2(-other.getCollisionRange().x, other.getCollisionRange().y);
+		if (other.getPosition().distanceFrom(getPosition()) + nextMove.length()
+			> other.getCollisionRange().length() + getCollisionRange().length())
+			return false;
 
-		math::Vector2 E = other.getSpritePosition() - other.getCollisionRange() + nextMove;
-		math::Vector2 F = other.getSpritePosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y) + nextMove;
-		math::Vector2 G = other.getSpritePosition() + other.getCollisionRange() + nextMove;
-		math::Vector2 H = other.getSpritePosition() + math::Vector2(-other.getCollisionRange().x, other.getCollisionRange().y) + nextMove;
+		math::Vector2 A = other.getPosition() - other.getCollisionRange();
+		math::Vector2 B = other.getPosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y);
+		math::Vector2 C = other.getPosition() + other.getCollisionRange();
+		math::Vector2 D = other.getPosition() + math::Vector2(-other.getCollisionRange().x, other.getCollisionRange().y);
 
-		math::Vector2 dots[4]{ getSpritePosition() - getCollisionRange(),
-		getSpritePosition() + math::Vector2(getCollisionRange().x, -getCollisionRange().y),
-		getSpritePosition() + getCollisionRange(),
-		getSpritePosition() + math::Vector2(-getCollisionRange().x, getCollisionRange().y)};
+		math::Vector2 E = other.getPosition() - other.getCollisionRange() + nextMove;
+		math::Vector2 F = other.getPosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y) + nextMove;
+		math::Vector2 G = other.getPosition() + other.getCollisionRange() + nextMove;
+		math::Vector2 H = other.getPosition() + math::Vector2(-other.getCollisionRange().x, other.getCollisionRange().y) + nextMove;
+
+		math::Vector2 dots[4]{ getPosition() - getCollisionRange(),
+		getPosition() + math::Vector2(getCollisionRange().x, -getCollisionRange().y),
+		getPosition() + getCollisionRange(),
+		getPosition() + math::Vector2(-getCollisionRange().x, getCollisionRange().y)};
 
 		math::Vector2 edgesTop[2];
 		math::Vector2 edgesBottom[2];
@@ -130,7 +128,7 @@ namespace objects {
 
 		if (nextMove.x < 0 && nextMove.y < 0) //ljevo dolje 
 		{
-			if (getLineIntersection(other.getSpritePosition(), A + nextMove) != math::Vector4(0, 0, 0, 0))
+			if (getLineIntersection(other.getPosition(), A + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 
 			edgesTop[0] = H;
@@ -142,7 +140,7 @@ namespace objects {
 		}
 		else if (nextMove.x == 0 && nextMove.y < 0) //dolje 
 		{
-			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+			if (getLineIntersection(other.getPosition(), other.getPosition()
 				- math::Vector2(0,other.getCollisionRange().y * 1.01) + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			inLine = true;
@@ -151,7 +149,7 @@ namespace objects {
 		}
 		else if (nextMove.x > 0 && nextMove.y < 0) //desno dolje
 		{
-			if (getLineIntersection(other.getSpritePosition(), B + nextMove) != math::Vector4(0, 0, 0, 0))
+			if (getLineIntersection(other.getPosition(), B + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			edgesTop[0] = C;
 			edgesTop[1] = G;
@@ -162,7 +160,7 @@ namespace objects {
 		}
 		else if (nextMove.x > 0 && nextMove.y == 0) //desno
 		{
-			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+			if (getLineIntersection(other.getPosition(), other.getPosition()
 				+ math::Vector2(other.getCollisionRange().x * 1.01,0) + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			inLine = true;
@@ -171,7 +169,7 @@ namespace objects {
 		}
 		else if (nextMove.x > 0 && nextMove.y > 0) //desno gore
 		{
-			if (getLineIntersection(other.getSpritePosition(), C + nextMove) != math::Vector4(0, 0, 0, 0))
+			if (getLineIntersection(other.getPosition(), C + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			edgesTop[0] = D;
 			edgesTop[1] = H;
@@ -182,7 +180,7 @@ namespace objects {
 		}
 		else if (nextMove.x == 0 && nextMove.y > 0) //gore
 		{
-			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+			if (getLineIntersection(other.getPosition(), other.getPosition()
 				+ math::Vector2(0,other.getCollisionRange().y * 1.01) + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			inLine = true;
@@ -191,7 +189,7 @@ namespace objects {
 		}
 		else if (nextMove.x < 0 && nextMove.y > 0) //ljevo gore
 		{
-			if (getLineIntersection(other.getSpritePosition(), D + nextMove) != math::Vector4(0, 0, 0, 0))
+			if (getLineIntersection(other.getPosition(), D + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			edgesTop[0] = D;
 			edgesTop[1] = H;
@@ -202,7 +200,7 @@ namespace objects {
 		}
 		else if (nextMove.x < 0 && nextMove.y == 0) //ljevo
 		{
-			if (getLineIntersection(other.getSpritePosition(), other.getSpritePosition()
+			if (getLineIntersection(other.getPosition(), other.getPosition()
 				- math::Vector2(other.getCollisionRange().x * 1.01,0) + nextMove) != math::Vector4(0, 0, 0, 0))
 				return true;
 			inLine = true;
@@ -246,8 +244,8 @@ namespace objects {
 	math::Vector4 Hitbox::getLineIntersection(const math::Vector2& vectorOrigin, const math::Vector2& vectorEndpoint) const
 	{
 
-			math::Vector2 min = _boundSprite->getPosition() - _collisionRange;
-			math::Vector2 max = _boundSprite->getPosition() + _collisionRange;
+			math::Vector2 min = getPosition() - _collisionRange;
+			math::Vector2 max = getPosition() + _collisionRange;
 
 			float ymin = min.y;
 			float ymax = max.y;
@@ -328,8 +326,8 @@ namespace objects {
 
 		int Hitbox::computeCode(const math::Vector2& vector) const
 		{
-			math::Vector2 min = _boundSprite->getPosition() - _collisionRange;
-			math::Vector2 max = _boundSprite->getPosition() + _collisionRange;
+			math::Vector2 min = getPosition() - _collisionRange;
+			math::Vector2 max = getPosition() + _collisionRange;
 
 			float ymin = min.y;
 			float ymax = max.y;

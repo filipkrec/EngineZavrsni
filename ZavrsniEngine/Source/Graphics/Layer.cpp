@@ -71,6 +71,7 @@ namespace graphics {
 		const math::Vector2& scale = currentFont->getScale() / fontSize;
 		texture_font_t* FTFont = currentFont->getFont();
 		std::string text = label->getText();
+		Sprite* spriteLabel = new Sprite(*label);
 
 		for (int i = 0; i < text.size(); ++i)
 		{
@@ -96,9 +97,8 @@ namespace graphics {
 				float u1 = glyph->s1;
 				float v1 = glyph->t1;
 
-				Sprite* spriteTemp = (Sprite*)label;
 				Sprite* sprite = new Sprite();
-				memcpy(sprite, spriteTemp, sizeof(Sprite));
+				memcpy(sprite, spriteLabel, sizeof(Sprite));
 				sprite->setScale(math::Vector2(fontSize, fontSize));
 				sprite->setPosition(math::Vector2(symbolPos.x, symbolPos.y));
 				sprite->setTextureCoordinates(math::Vector2(u0, v1), 0);
@@ -124,6 +124,7 @@ namespace graphics {
 				labelToSprite(label);
 			}
 		}
+		std::vector<Sprite*>::iterator it;
 		//spriteove labelova i ostali spriteovi se stavlaju u isti vektor, sortiraju i renderaju
 		_sprites.erase(
 			std::remove_if(_sprites.begin(), _sprites.end(),
@@ -145,9 +146,11 @@ namespace graphics {
 		_renderer->end();
 		_renderer->flush();
 		//brišu se 'novonastali' spriteovi labele
-		for (std::vector<Sprite*>::iterator i = _labelSprites.begin(); i != _labelSprites.end(); ++i) {
-			delete *i;
+		for (it = _labelSprites.begin(); it != _labelSprites.end();) {
+			delete *it;
+			it = _labelSprites.erase(it);
 		}
+
 		_labelSprites.clear();
 		_renderingSprites.clear();
 	}

@@ -11,20 +11,14 @@ namespace graphics {
 		_textureCoordinates[3] = math::Vector2(0, 0);
 		applyTransformations();
 	}
-	
-	void Sprite::virtualDestructor()
-	{
-	}
 
 	Sprite::~Sprite()
 	{
-		virtualDestructor();
 	}
 
 	Sprite::Sprite(unsigned int color, unsigned int zindex)
 		:_color(color), _zindex(zindex),_destroySprite(false)
 	{
-
 	}
 
 	Sprite::Sprite(const Sprite& sprite)
@@ -78,7 +72,7 @@ namespace graphics {
 		_offset = value;
 	}
 
-	void Sprite::move(const math::Vector2& value)
+	void Sprite::movePosition(const math::Vector2& value)
 	{
 		_position += value;
 		applyTransformations();

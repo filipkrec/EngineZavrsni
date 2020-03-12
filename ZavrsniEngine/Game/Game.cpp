@@ -2,6 +2,7 @@
 #include "../Source/Engine.h"
 #include "Pickups/Ammo.h"
 #include "Weapons/Rifle.h"
+#include "Spawners/Spawner.h"
 
 class Game : public engine::Engine
 {
@@ -10,6 +11,7 @@ class Game : public engine::Engine
 	graphics::Font* font = new graphics::Font("Assets/arial.ttf");
 	math::Vector2 mousePosition;
 	std::vector<objects::Weapon*> weapons;
+	std::vector<Spawner*> spawners;
 
 	void (Game::*level)();
 	bool skipRender = false;
@@ -49,7 +51,6 @@ class Game : public engine::Engine
 		layer->clear();
 		level = newLevel;
 		(this->*newLevelInit)();
-		lam::LevelAssetManager::addToLayer(layer);
 		skipRender = true;
 	}
 
@@ -64,9 +65,9 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/Cursor5.png"), "menuCursor2");
 		lam::LevelAssetManager::add(new graphics::Label("0", -14.0f, 8.0f, 0xff00ff00, 0.3f, font, 4), "FPS");
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 32.0f, 18.0f, graphics::TextureManager::get("menuBackground"), 0), "background");
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(0.0f, 3.0f, 8.0f, 2.0f, graphics::TextureManager::get("menuNewgame"), 1), 0), "menuNewGame");
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(0.0f, 0.0f, 8.0f, 2.0f, graphics::TextureManager::get("menuScore"), 2), 0), "menuScore");
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(0.0f, -3.0f, 6.0f, 2.0f, graphics::TextureManager::get("menuQuit"), 3), 0), "menuQuit");
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(0.0f, 3.0f, 8.0f, 2.0f, graphics::TextureManager::get("menuNewgame"), 1), 0), "menuNewGame");
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(0.0f, 0.0f, 8.0f, 2.0f, graphics::TextureManager::get("menuScore"), 2), 0), "menuScore");
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(0.0f, -3.0f, 6.0f, 2.0f, graphics::TextureManager::get("menuQuit"), 3), 0), "menuQuit");
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, graphics::TextureManager::get("menuCursor"), 100), "menuCursor");
 	}
 
@@ -89,7 +90,7 @@ class Game : public engine::Engine
 		mousePosition.y += cursor->getSize().y / 2;
 		if (newGame->isHit(mousePosition))
 		{
-			newGame->getSprite()->setColor(0xff8a8a8a);
+			newGame->setColor(0xff8a8a8a);
 			if (window->getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 			{
 				swapLevel(&Game::levelDemoInit, &Game::LevelDemo);
@@ -97,14 +98,14 @@ class Game : public engine::Engine
 		}
 		else if (score->isHit(mousePosition))
 		{
-			score->getSprite()->setColor(0xff8a8a8a);
+			score->setColor(0xff8a8a8a);
 			if (window->getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 			{
 			}
 		}
 		else if (quit->isHit(mousePosition))
 		{
-			quit->getSprite()->setColor(0xff8a8a8a);
+			quit->setColor(0xff8a8a8a);
 			if (window->getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 			{
 				window->close();
@@ -112,9 +113,9 @@ class Game : public engine::Engine
 		}
 		else
 		{
-			newGame->getSprite()->setColor(0xffffffff);
-			score->getSprite()->setColor(0xffffffff);
-			quit->getSprite()->setColor(0xffffffff);
+			newGame->setColor(0xffffffff);
+			score->setColor(0xffffffff);
+			quit->setColor(0xffffffff);
 		}
 	}
 
@@ -149,41 +150,41 @@ class Game : public engine::Engine
 		for (x = -width * 10 - 5; x <= width * 10 - 5; x += 2)
 		{
 			y = 10 * height;
-			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x, y - 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(y));
-			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x, -y - 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(-y));
+			lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(x, y - 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(y));
+			lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(x, -y - 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(-y));
 		}
 
 		for (y = -height * 10 - 5; y <= height * 10 - 5; y += 2)
 		{
 			x = 10 * width;
-			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x -5, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(y));
-			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-x - 5, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+			lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(x -5, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(x) + "." + std::to_string(y));
+			lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-x - 5, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 		}
 
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(7, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(7, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(5, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(7, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(7, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(5, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-5, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-7, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-5, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-5, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-7, 5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-5, 7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-5, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-7, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-5, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-5, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-7, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-5, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(7, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(7, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
-		lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(5, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(7, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(7, -5, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(5, -7, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 
 		for (y = -10; y < 25; y+= 2)
 		{
-			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-20, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+			lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-20, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 		}
 
 		for (x = -22; x < 0; x += 2)
 		{
-			lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-x, -12, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+			lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-x, -12, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 		}
 
 		for (x = 25; x < 35; x += 2)
@@ -191,10 +192,10 @@ class Game : public engine::Engine
 			for (y = -30; y < 30; y += 2)
 			{
 				if(rand()%10 == 0)
-					lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+					lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(x, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 				
 				if (rand() % 10 == 0)
-					lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(-x, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+					lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-x, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 			}
 		}
 
@@ -203,10 +204,10 @@ class Game : public engine::Engine
 			for (x = -35; x < 35; x += 2)
 			{
 				if (rand() % 10 == 0)
-					lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+					lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(x, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 
 				if (rand() % 10 == 0)
-					lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x, -y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
+					lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(x, -y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 			}
 		}
 		//WALLS END
@@ -221,14 +222,24 @@ class Game : public engine::Engine
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/rifle.png"), "Rifle");
 
-		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(new graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 5), 100), 100, 150));
+		//PLAYER SETUP
+		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 5), 100), 100, 150));
 		lam::LevelAssetManager::getPlayer()->setAllegiance(objects::Allegiance::GOOD);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking1"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, objects::ActorState::STATE_MOVING);
-		lam::LevelAssetManager::getPlayer()->setSight(1.0f, 1.0f);
+		lam::LevelAssetManager::getPlayer()->setSight(0.01f, 0.01f);
 		lam::LevelAssetManager::getPlayer()->setWeaponOffset(math::Vector2(0.5f, -0.4f));
 
+		//NPC SETUP
+		objects::NPC prototype(objects::GameObject(graphics::Sprite(-8.0f, -8.0f, 1.0f, 1.0f, graphics::TextureManager::get("Enemy_idle"), 2), 100), 50, 50);
+		prototype.setSight(45.0f, 6.0f);
+
+		math::Vector2 destination(rand() % 500 * 0.01, rand() % 500 * 0.01);
+		math::Vector2 spawnerLocation(-31, -40);
+
+		Spawner* spawner = new Spawner(prototype,spawnerLocation,destination,5.0f,1);
+		spawners.push_back(spawner);
 
 		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));
 		lam::LevelAssetManager::getPlayer()->setWeapon(weapons.at(0));
@@ -238,6 +249,13 @@ class Game : public engine::Engine
 	{
 		window->getMousePosition(mousePosition);
 		graphics::Sprite* cursor = lam::LevelAssetManager::getSprite("crosshairCursor");
+		for (Spawner* spawner : spawners)
+		{
+			objects::NPC* npc = spawner->Spawn();
+			if(npc != nullptr)
+			lam::LevelAssetManager::add(npc,spawner->getSpawnName());
+		}
+
 		cursor->setPosition(mousePosition);
 	}
 

@@ -8,7 +8,7 @@ namespace objects {
 			unsigned int _currentQuantity;
 		public:
 			Ammo();
-			Ammo(graphics::Sprite* sprite, float duration, unsigned int quantity);
+			Ammo(const graphics::Sprite& sprite, float duration, unsigned int quantity);
 			void onPickup(Actor& actor);
 			void destroy();
 		};

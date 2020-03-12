@@ -32,9 +32,9 @@ namespace objects {
 
 		GameObject();
 		virtual ~GameObject();
-		GameObject(graphics::Sprite* sprite);
-		GameObject(graphics::Sprite* sprite, unsigned int weight, bool enviroment = false);
-		GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height = 0);
+		GameObject(const graphics::Sprite& sprite);
+		GameObject(const graphics::Sprite& sprite, unsigned int weight, bool enviroment = false);
+		GameObject(const graphics::Sprite& sprite, unsigned int weight, Shape shape, float width, float height = 0);
 
 		inline const math::Vector3& getPreviousForce() const { return _previousForce; }
 		void savePreviousForce();
@@ -53,7 +53,6 @@ namespace objects {
 		virtual void collide(GameObject& other);
 		void calculateNextMove();
 		virtual void move();
-
 
 	};
 }

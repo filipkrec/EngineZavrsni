@@ -23,19 +23,8 @@ namespace graphics {
 	{
 		_duration -= 1;
 		if (_duration == 0)
-			destroyLine();
+			DestroySprite();
 	}
-
-	void Line::destroyLine()
-	{
-		Sprite::DestroySprite();
-	}
-
-	void Line::virtualDestructor()
-	{
-		delete this;
-	}
-
 
 	bool Line::isNew()
 	{

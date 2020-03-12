@@ -102,7 +102,6 @@ namespace lam {
 		static void cleanPickups();
 		static objects::Pickup* getPickup(const std::string& name);
 
-		static void addToLayer(graphics::Layer* layer);
 		static void clean();
 
 		static objects::Player* getPlayer();

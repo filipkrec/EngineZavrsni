@@ -96,6 +96,9 @@ namespace graphics {
 
 	void Renderer::submit(const Sprite* sprite)
 	{
+		if (sprite->getColor() < 0x00ffffff)
+			return;
+
 		math::Vector4 lineElements = sprite->getLineElements();
 		if (lineElements != math::Vector4(0,0,0,0))
 		{

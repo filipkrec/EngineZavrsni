@@ -9,21 +9,20 @@ namespace objects {
 
 	GameObject::~GameObject()
 	{
-		_boundSprite->DestroySprite();
 	}
 
-	GameObject::GameObject(graphics::Sprite* sprite)
+	GameObject::GameObject(const graphics::Sprite& sprite)
 		: Hitbox(sprite), _colissionOn(false), _allegiance(Allegiance::NEUTRAL)
 	{
 	}
 
-	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, bool enviroment)
+	GameObject::GameObject(const graphics::Sprite& sprite, unsigned int weight, bool enviroment)
 		: Hitbox(sprite), _weight(weight == 0 ? WEIGHTMAX : weight),_colissionOn(true), _allegiance(enviroment ? Allegiance::ENVIROMENT :Allegiance::NEUTRAL)
 	{
 		
 	}
 
-	GameObject::GameObject(graphics::Sprite* sprite, unsigned int weight, Shape shape, float width, float height)
+	GameObject::GameObject(const graphics::Sprite& sprite, unsigned int weight, Shape shape, float width, float height)
 		: Hitbox(sprite, shape, width, height), _weight(weight == 0 ? WEIGHTMAX : weight), _colissionOn(true), _allegiance(Allegiance::NEUTRAL)
 	{
 	}
@@ -80,8 +79,8 @@ namespace objects {
 
 			if (_previousForce.z == 0 && other._previousForce.z == 0)
 			{
-				math::Vector2 vector = getSpritePosition() - other.getSpritePosition();
-				float multiplier = getSpritePosition().distanceFrom(_collisionRange) / getSpritePosition().distanceFrom(other.getSpritePosition());
+				math::Vector2 vector = getPosition() - other.getPosition();
+				float multiplier = getPosition().distanceFrom(_collisionRange) / getPosition().distanceFrom(other.getPosition());
 				vector = math::Vector2::calculateUnitVector(vector);
 				if (_weight / other._weight <= 2)
 				{
@@ -114,7 +113,7 @@ namespace objects {
 		_currentSpeed = (_currentForce.z / _weight) / PROCESSING_INTERVAL;
 		_currentForce.z -= (_weight * 10 * FRICTION) / PROCESSING_INTERVAL;
 		if (_currentForce.z > 0)
-			_boundSprite->move(math::Vector2(_currentSpeed * _currentForce.x, _currentSpeed * _currentForce.y));
+			movePosition(math::Vector2(_currentSpeed * _currentForce.x, _currentSpeed * _currentForce.y));
 		else
 		{
 			_currentForce.z = 0;

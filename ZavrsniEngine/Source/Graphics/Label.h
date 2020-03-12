@@ -11,7 +11,7 @@ namespace graphics {
 		float _size;
 	public:
 		Label(const std::string& text, float x, float y, unsigned int color, float size, Font* font, float zindex = 0.0f);
-		~Label();
+		~Label() override;
 
 		inline const std::string& getText() const { return _text; }
 		inline Font* getFont() const { return _font; }

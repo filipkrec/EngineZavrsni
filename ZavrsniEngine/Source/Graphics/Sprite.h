@@ -29,7 +29,7 @@ namespace graphics {
 	public:
 
 		Sprite();
-		~Sprite();
+		virtual ~Sprite();
 		Sprite(const Sprite& sprite);
 		Sprite(unsigned int color, unsigned int zindex);
 		Sprite(float x, float y, float width, float height,  const unsigned int color, float zindex = 0.0f);
@@ -43,7 +43,7 @@ namespace graphics {
 
 		void setPosition(const math::Vector2& value);
 		void setOffset(const math::Vector2& value);
-		void move(const math::Vector2& value);
+		void movePosition(const math::Vector2& value);
 		void setScale(const math::Vector2& scale);
 		void rotate(float degrees);
 		void setRotation(float degrees);
@@ -67,6 +67,5 @@ namespace graphics {
 		void DoNotDestroySprite();
 		void DestroySprite();
 		bool toDestroySprite();
-		virtual void virtualDestructor();
 	};
 }

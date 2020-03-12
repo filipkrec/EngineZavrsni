@@ -4,7 +4,7 @@ namespace objects {
 	{
 	}
 
-	Ammo::Ammo(graphics::Sprite* sprite, float duration, unsigned int quantity)
+	Ammo::Ammo(const graphics::Sprite& sprite, float duration, unsigned int quantity)
 		:Pickup(sprite, duration), _quantity(quantity)
 	{
 	}

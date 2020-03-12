@@ -33,7 +33,7 @@ namespace objects {
 				if (!std::any_of(_sighted.begin(), _sighted.end(),  
 					[&](GameObject* x)
 					{
-						return x->getSprite() == _lookingAt;
+						return x == _lookingAt;
 					}))
 				{
 					_lookingAt = nullptr;
@@ -44,7 +44,7 @@ namespace objects {
 			if (!std::any_of(_sighted.begin(), _sighted.end(),
 				[&](GameObject* x)
 				{
-					return x->getSprite() == _lookingAt;
+					return x == _lookingAt;
 				}))
 			{
 				_lookingAt = nullptr;
@@ -58,8 +58,8 @@ namespace objects {
 						return x == sightedObject->getAllegiance();
 					}))
 				{
-					setLookingAt(sightedObject->getSprite());
-					setMoveToPoint(sightedObject->getSpritePosition());
+					setLookingAt(sightedObject);
+					setMoveToPoint(sightedObject->getPosition());
 					setAIState(AIState::AI_STATE_ALERT);
 				}
 			}
@@ -72,7 +72,7 @@ namespace objects {
 			if (_lookingAt != nullptr && (_sighted.empty() || !std::any_of(_sighted.begin(), _sighted.end(),
 				[&](GameObject* x)
 				{
-					return x->getSprite() == _lookingAt;
+					return x == _lookingAt;
 				})))
 			{
 				setMoveToPoint(_lookingAt->getPosition());
@@ -82,7 +82,7 @@ namespace objects {
 			//if weapon target
 			else if (_weapon != nullptr)
 			{
-				if (_lookingAt->getPosition().distanceFrom(getSpritePosition()) <= 0.8 * _weapon->getRange())
+				if (_lookingAt->getPosition().distanceFrom(getPosition()) <= 0.8 * _weapon->getRange())
 				{
 					setAIState(AIState::AI_STATE_TARGETING);
 				}
@@ -92,7 +92,7 @@ namespace objects {
 			if (_pointReached && !std::any_of(_sighted.begin(), _sighted.end(),
 				[&](GameObject* x)
 				{
-					return x->getSprite() == _lookingAt;
+					return x == _lookingAt;
 				}))
 			{
 				if (_NPCTimer.elapsed() >= 20.0f)
@@ -110,12 +110,12 @@ namespace objects {
 				{
 					if (_rotationGoal <= -5.0f)
 					{
-						_boundSprite->rotate(-5.0f);
+						rotate(-5.0f);
 						_rotationGoal += 5.0f;
 					}
 					else
 					{
-						_boundSprite->rotate(_rotationGoal);
+						rotate(_rotationGoal);
 						_rotationGoal = 0;
 					}
 
@@ -124,12 +124,12 @@ namespace objects {
 				{
 					if (_rotationGoal >= 5.0f)
 					{
-						_boundSprite->rotate(5.0f);
+						rotate(5.0f);
 						_rotationGoal -= 5.0f;
 					}
 					else
 					{
-						_boundSprite->rotate(_rotationGoal);
+						rotate(_rotationGoal);
 						_rotationGoal == 0;
 					}
 				}
@@ -143,7 +143,7 @@ namespace objects {
 						return x == sightedObject->getAllegiance();
 					}))
 				{
-					setLookingAt(sightedObject->getSprite());
+					setLookingAt(sightedObject);
 				}
 			}
 			break;
@@ -151,7 +151,7 @@ namespace objects {
 			std::vector<GameObject*>::iterator it = std::find_if(_sighted.begin(), _sighted.end(),
 				[&](GameObject* x)
 				{
-					return x->getSprite() == _lookingAt;
+					return x == _lookingAt;
 				});
 
 			if (it == _sighted.end())
@@ -161,15 +161,15 @@ namespace objects {
 			}
 			else
 			{
-				setMoveToPoint(getSpritePosition());
+				setMoveToPoint(getPosition());
 			}
 
 			//ako vidi metu pucaj
 			if (_weapon != nullptr)
 			{
 				GameObject* temp = *it;
-				rotateToPoint(temp->getSpritePosition());
-				if (math::Vector2::getAngleBetween(getSprite()->getRotation(), getSprite()->getPosition() - temp->getSpritePosition())
+				rotateToPoint(temp->getPosition());
+				if (math::Vector2::getAngleBetween(getRotation(), getPosition() - temp->getPosition())
 					<= _weapon->getSpread() / 2 * 0.5)
 				{
 					_weapon->shoot();
@@ -180,7 +180,6 @@ namespace objects {
 
 		}
 	}
-
 
 	void NPC::moveInDirection()
 	{
@@ -195,7 +194,7 @@ namespace objects {
 		if (_state != ActorState::STATE_DEAD)
 		{
 			if (_lookingAt != nullptr && !_lookingAt->toDestroySprite())
-				rotateToPoint(_lookingAt->getPosition() - _boundSprite->getPosition()); //vektor udaljenosti
+				rotateToPoint(_lookingAt->getPosition() - getPosition()); //vektor udaljenosti
 		}
 	}
 	 

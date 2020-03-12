@@ -19,7 +19,5 @@ namespace graphics {
 		inline const unsigned int getDuration() const { return _duration; }
 		bool isNew();
 		void tick();
-		void destroyLine();
-		void virtualDestructor() override;
 	};
 }

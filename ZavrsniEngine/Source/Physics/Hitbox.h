@@ -15,33 +15,19 @@ namespace objects {
 		CUSTOM = 3
 	};
 
-	class Hitbox {
+	class Hitbox : public graphics::Sprite {
 	protected:
 		Shape _shape;
 		math::Vector2 _collisionRange;
-		graphics::Sprite* _boundSprite;
-		math::Vector2 _location;
-		bool _spriteless;
 	public:
 		Hitbox();
 		~Hitbox();
-
-		Hitbox(const Hitbox& other);
 		Hitbox(const math::Vector2 location, const math::Vector2 collisionRange);
-		Hitbox(graphics::Sprite* sprite);
-		Hitbox(graphics::Sprite* sprite, Shape shape, float width, float height = 0);
-		Hitbox(graphics::Sprite* sprite, Shape shape, math::Vector2 collisionRange);
+		Hitbox(const graphics::Sprite& sprite);
+		Hitbox(const graphics::Sprite& sprite, Shape shape, float width, float height = 0);
+		Hitbox(const graphics::Sprite& sprite, Shape shape, math::Vector2 collisionRange);
 
-		inline const math::Vector2& getSpritePosition() const 
-		{	
-			if (!_spriteless) 
-				return _boundSprite->getPosition(); 
-			else return _location; 
-		}
-		inline const math::Vector2& getSpriteSize() const { return _boundSprite->getSize(); }
-		inline graphics::Sprite* getSprite() { return _boundSprite; }
 		inline const math::Vector2& getCollisionRange() const { return _collisionRange; }
-		inline const bool isSpriteless() const { return _spriteless; }
 
 		bool isHit(const Hitbox& other) const;
 		bool isHit(const math::Vector2& point) const;

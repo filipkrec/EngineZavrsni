@@ -99,14 +99,14 @@ namespace objects {
 		Actor::move();
 
 		if (Camera::getInstance()->doFollowPlayer())
-			Camera::getInstance()->setLocation(getSpritePosition());
+			Camera::getInstance()->setLocation(getPosition());
 	}
 
 	void Player::setCameraFollow()
 	{
 		Camera::getInstance()->recenter();
 		Camera::getInstance()->followPlayer();
-		Camera::getInstance()->move(getSpritePosition());
+		Camera::getInstance()->move(getPosition());
 	}
 
 	void setCameraUnfollow(math::Vector2 newPosition = math::Vector2(0, 0))
@@ -119,8 +119,8 @@ namespace objects {
 	{
 		math::Vector2 vector;
 		window.getMousePosition(vector);
-		vector.x -= _boundSprite->getPosition().x;
-		vector.y -= _boundSprite->getPosition().y;
+		vector.x -= getPosition().x;
+		vector.y -= getPosition().y;
 
 		return vector;
 	}
