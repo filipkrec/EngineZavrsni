@@ -157,9 +157,10 @@ namespace lam {
 
 			if (!npc->isPointReached())
 			{
+				
 				if (!npc->seekCheckpoint() && abs(npc->getPosition().distanceFrom(npc->getMoveToCheckPoint())) <= ASTEPDISTANCE)
 					npc->toggleSeekCheckpoint();
-
+				
 				if (npc->seekCheckpoint())
 				{
 					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(), npc);
@@ -587,13 +588,16 @@ namespace lam {
 		{
 			if (endpoints.empty())
 				return math::Vector2(0, 0);
-			std::vector<math::Vector2> directions;
+
 			//get endpoint least distance from end with least steps
 			std::vector<math::Vector3>::iterator it = min_element(endpoints.begin(), endpoints.end(),
 				[&](const math::Vector3& x, const math::Vector3& y)
 				{
-					return math::Vector2(x.x, x.y).distanceFrom(goal) < math::Vector2(y.x, y.y).distanceFrom(goal)
-						&& x.z < y.z;
+					float distx = math::Vector2(x.x, x.y).distanceFrom(goal);
+					float disty = math::Vector2(y.x, y.y).distanceFrom(goal);
+					if (distx == disty)
+						return x.z < y.z;
+					else return distx < disty;
 				});
 			math::Vector3& endpointCurrent = *it; //get endpoint
 			passed.push_back(endpointCurrent);
@@ -655,50 +659,41 @@ namespace lam {
 
 			passed.back().z = endpointCurrent.z;
 
-			//only directions to unpassed and unblocked points
+			//only unpassed points
+			std::vector<math::Vector2> availablePoints;
 			for (math::Vector2 direction : directionsAll)
 			{
 				math::Vector2 nextPositionTemp = currentPosition + direction * ASTEPDISTANCE;
-				if (!pathBlocked(nextPositionTemp, currentPosition,npc) && !std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x)
+				if (!std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x)
 					{return x.x == nextPositionTemp.x && x.y == nextPositionTemp.y; }))
-					directions.push_back(direction);
+					availablePoints.push_back(nextPositionTemp);
 			}
+			//!pathBlocked(nextPositionTemp, currentPosition, npc)
 
 			//get smallest distance from available directions
 			bool multipleEndpoints = false;
-			for (math::Vector2 direction : directions)
-			{
-				math::Vector2 nextPositionTemp = currentPosition + direction * ASTEPDISTANCE;
-				float distance = nextPositionTemp.distanceFrom(goal);
-				if (distance < smallestDistance || direction == directions.front())
+			std::sort(availablePoints.begin(), availablePoints.end(), [&](const math::Vector2& x, const math::Vector2& y)
 				{
-					smallestDistance = distance;
+					return x.distanceFrom(goal) < y.distanceFrom(goal);
+				});
+
+			bool end = false;
+			for (math::Vector2 point : availablePoints)
+			{
+				if (end == true)
+				{
+					if (point.distanceFrom(goal) != math::Vector2(endpoints.back().x, endpoints.back().y).distanceFrom(goal))
+						break;
+				}
+
+				if (!pathBlocked(point, currentPosition, npc))
+				{
+					endpoints.push_back(math::Vector3(point.x, point.y, endpointCurrent.z + 1));
+					end = true;
 				}
 			}
 
-			//move endpoint to next, if more than 1 create additional
-
-			for (math::Vector2 direction : directions)
-			{
-				math::Vector2 nextPositionTemp = currentPosition + direction * ASTEPDISTANCE;
-				float distance = nextPositionTemp.distanceFrom(goal);
-				if (distance == smallestDistance)
-				{
-					if (!multipleEndpoints)
-					{
-						multipleEndpoints = true;
-						endpointCurrent.x = nextPositionTemp.x;
-						endpointCurrent.y = nextPositionTemp.y;
-						endpointCurrent.z++;
-					}
-					else
-					{
-						endpoints.push_back(math::Vector3(nextPositionTemp.x, nextPositionTemp.y, endpointCurrent.z));
-					}
-				}
-			}
-
-			directions.clear();
+			availablePoints.clear();
 		}
 	}
 
