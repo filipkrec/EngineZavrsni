@@ -17,12 +17,14 @@ class Game : public engine::Engine
 	void init() //First level on init - MAIN MENU
 	{
 		window->toggleCursor();
+		//window->toggleVsync();
 		lam::LevelAssetManager::init(layer);
 		swapLevel(&Game::levelMenuInit, &Game::levelMenu);
 	}
 	// jednom svake sekunde
 	void tick() 
 	{
+		std::cout << mousePosition.x << "," << mousePosition.y << std::endl;
 		lam::LevelAssetManager::getLabel("FPS")->setText(std::to_string(_FPS));
 	}
 	// 60 puta u sekundi
@@ -186,7 +188,7 @@ class Game : public engine::Engine
 
 		for (x = 25; x < 35; x += 2)
 		{
-			for (y = -35; y < 35; y += 2)
+			for (y = -30; y < 30; y += 2)
 			{
 				if(rand()%10 == 0)
 					lam::LevelAssetManager::add(new objects::GameObject(new graphics::Sprite(x, y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
@@ -196,7 +198,7 @@ class Game : public engine::Engine
 			}
 		}
 
-		for (y = 25; y < 35; y += 2)
+		for (y = 20; y < 30; y += 2)
 		{
 			for (x = -35; x < 35; x += 2)
 			{
@@ -226,6 +228,7 @@ class Game : public engine::Engine
 		lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->setSight(1.0f, 1.0f);
 		lam::LevelAssetManager::getPlayer()->setWeaponOffset(math::Vector2(0.5f, -0.4f));
+
 
 		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));
 		lam::LevelAssetManager::getPlayer()->setWeapon(weapons.at(0));
