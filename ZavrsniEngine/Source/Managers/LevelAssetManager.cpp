@@ -157,13 +157,13 @@ namespace lam {
 
 			if (!npc->isPointReached())
 			{
-				
 				if (!npc->seekCheckpoint() && abs(npc->getPosition().distanceFrom(npc->getMoveToCheckPoint())) <= ASTEPDISTANCE)
 					npc->toggleSeekCheckpoint();
 				
 				if (npc->seekCheckpoint())
 				{
 					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(), npc);
+					math::Vector2 temp = math::Vector2::calculateUnitVector(nextStep - npc->getPosition());
 					npc->setMoveToCheckPoint(nextStep);
 					npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getPosition()));
 					npc->toggleSeekCheckpoint();
@@ -208,7 +208,7 @@ namespace lam {
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
 
-			if (gameObject1->isCollsionOn() || gameObject1->getAllegiance() != objects::Allegiance::ENVIROMENT) //ne racunaj koliziju za enviroment
+			if (!gameObject1->isCollsionOn() || gameObject1->getAllegiance() == objects::Allegiance::ENVIROMENT) //ne racunaj koliziju za enviroment
 				continue; 
 
 			for (activeObject gameObjectOther : _allObjects)
@@ -222,8 +222,8 @@ namespace lam {
 					{
 						gameObject1->collide(*gameObject2);
 
-						if(gameObject2->getAllegiance() == objects::Allegiance::ENVIROMENT) //ako je enviroment racunaj povratnu silu
-							gameObject2->collide(*gameObject1); 
+						//if(gameObject2->getAllegiance() == objects::Allegiance::ENVIROMENT) //ako je enviroment racunaj povratnu silu
+							//gameObject2->collide(*gameObject1); 
 					}
 				}
 			}
@@ -678,6 +678,7 @@ namespace lam {
 				});
 
 			bool end = false;
+
 			for (math::Vector2 point : availablePoints)
 			{
 				if (end == true)
@@ -707,6 +708,10 @@ namespace lam {
 		{
 			const objects::GameObject& gameObject1 = *(objects::GameObject*) gameObject._object;
 			float gameObjectCollisionRange = gameObject1.getCollisionRange().length();
+
+			if (current.distanceFrom(gameObject1.getPosition()) + distanceVector.length()
+					>= temp.getCollisionRange().length() * 2 + gameObject1.getCollisionRange().length() * 2)
+				continue;
 
 			if (
 				(gameObject1.getAllegiance() == objects::Allegiance::ENVIROMENT || gameObject1.getWeight() >= npc->getWeight() * 4)

@@ -102,14 +102,20 @@ namespace objects {
 
 	bool Hitbox::willBeHit(const Hitbox & other, const math::Vector2 nextMove) const
 	{
+		float calc1 = other.getPosition().distanceFrom(getPosition()) + nextMove.length();
+		float calc2 = other.getCollisionRange().length() + getCollisionRange().length();
+
 		if (other.getPosition().distanceFrom(getPosition()) + nextMove.length()
-			> other.getCollisionRange().length() + getCollisionRange().length())
+			> other.getCollisionRange().length() * 2 + getCollisionRange().length() * 2)
 			return false;
 
 		math::Vector2 A = other.getPosition() - other.getCollisionRange();
 		math::Vector2 B = other.getPosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y);
 		math::Vector2 C = other.getPosition() + other.getCollisionRange();
 		math::Vector2 D = other.getPosition() + math::Vector2(-other.getCollisionRange().x, other.getCollisionRange().y);
+
+		calc1 = other.getPosition().distanceFrom(getPosition()) + nextMove.length();
+		calc2 = other.getCollisionRange().length() + getCollisionRange().length();
 
 		math::Vector2 E = other.getPosition() - other.getCollisionRange() + nextMove;
 		math::Vector2 F = other.getPosition() + math::Vector2(other.getCollisionRange().x, -other.getCollisionRange().y) + nextMove;

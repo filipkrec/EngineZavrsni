@@ -111,6 +111,8 @@ namespace graphics {
 				posx += glyph->advance_x / scale.x;
 			}
 		}
+
+		delete spriteLabel;
 	}
 
 	void Layer::render() {
@@ -145,6 +147,7 @@ namespace graphics {
 		}
 		_renderer->end();
 		_renderer->flush();
+
 		//brišu se 'novonastali' spriteovi labele
 		for (it = _labelSprites.begin(); it != _labelSprites.end();) {
 			delete *it;
