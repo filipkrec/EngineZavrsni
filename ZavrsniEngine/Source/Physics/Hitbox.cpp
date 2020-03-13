@@ -105,8 +105,8 @@ namespace objects {
 		float calc1 = other.getPosition().distanceFrom(getPosition()) + nextMove.length();
 		float calc2 = other.getCollisionRange().length() + getCollisionRange().length();
 
-		if (other.getPosition().distanceFrom(getPosition()) + nextMove.length()
-			> other.getCollisionRange().length() * 2 + getCollisionRange().length() * 2)
+		if (other.getPosition().distanceFrom(getPosition())
+			> other.getCollisionRange().length() + getCollisionRange().length() + nextMove.length())
 			return false;
 
 		math::Vector2 A = other.getPosition() - other.getCollisionRange();

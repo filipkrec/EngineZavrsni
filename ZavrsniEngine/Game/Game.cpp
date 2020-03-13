@@ -31,15 +31,15 @@ class Game : public engine::Engine
 	}
 	// 60 puta u sekundi
 	void update() {
-	}
-	// Svaki loop !mora se implementirati!
-	void render() 
-	{
 		lam::LevelAssetManager::processBegin(*window);
 
 		(this->*level)();
 
 		lam::LevelAssetManager::processEnd(*window);
+	}
+	// Svaki loop !mora se implementirati!
+	void render() 
+	{
 
 		layer->render();
 	};

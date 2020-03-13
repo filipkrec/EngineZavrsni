@@ -80,7 +80,7 @@ namespace objects {
 			if (_previousForce.z == 0 && other._previousForce.z == 0)
 			{
 				math::Vector2 vector = getPosition() - other.getPosition();
-				float multiplier = getPosition().distanceFrom(_collisionRange) / getPosition().distanceFrom(other.getPosition());
+				float multiplier = getCollisionRange().length() / getPosition().distanceFrom(other.getPosition());
 				vector = math::Vector2::calculateUnitVector(vector);
 				if (_weight / other._weight <= 2)
 				{

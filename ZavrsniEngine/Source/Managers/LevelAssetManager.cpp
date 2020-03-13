@@ -1,6 +1,6 @@
 #include "LevelAssetManager.h"
 #define ASTEPDISTANCE 1.5f
-#define AFIDELITY 100
+#define AFIDELITY 15
 
 
 namespace lam {
@@ -21,8 +21,6 @@ namespace lam {
 
 	void LevelAssetManager::processBegin(engine::Window& window)
 	{
-		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
-		{
 			processPathfinding();
 			processSight();
 			refreshWeapons();
@@ -32,7 +30,6 @@ namespace lam {
 			processHitDetection();
 			processMovement();
 			processUI();
-		}
 	}
 
 	void LevelAssetManager::fillObjects()
@@ -157,17 +154,17 @@ namespace lam {
 
 			if (!npc->isPointReached())
 			{
-				if (!npc->seekCheckpoint() && abs(npc->getPosition().distanceFrom(npc->getMoveToCheckPoint())) <= ASTEPDISTANCE)
-					npc->toggleSeekCheckpoint();
+				//if (!npc->seekCheckpoint() && abs(npc->getPosition().distanceFrom(npc->getMoveToCheckPoint())) <= ASTEPDISTANCE)
+					//npc->toggleSeekCheckpoint();
 				
-				if (npc->seekCheckpoint())
-				{
+			//	if (npc->seekCheckpoint())
+				//{
 					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(), npc);
 					math::Vector2 temp = math::Vector2::calculateUnitVector(nextStep - npc->getPosition());
 					npc->setMoveToCheckPoint(nextStep);
 					npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getPosition()));
 					npc->toggleSeekCheckpoint();
-				}
+				//}
 			}
 			else
 			{
@@ -197,11 +194,11 @@ namespace lam {
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
 
-			if (gameObject1->getAllegiance() == objects::Allegiance::ENVIROMENT)
-				continue;
-
-			gameObject1->savePreviousForce();
-			gameObject1->calculateNextMove();
+			if (gameObject1->getAllegiance() != objects::Allegiance::ENVIROMENT)
+			{
+				gameObject1->calculateNextMove();
+				gameObject1->savePreviousForce();
+			}
 		}
 
 		for (activeObject gameObject : _allObjects)
@@ -222,8 +219,8 @@ namespace lam {
 					{
 						gameObject1->collide(*gameObject2);
 
-						//if(gameObject2->getAllegiance() == objects::Allegiance::ENVIROMENT) //ako je enviroment racunaj povratnu silu
-							//gameObject2->collide(*gameObject1); 
+						if(gameObject2->getAllegiance() == objects::Allegiance::ENVIROMENT) //ako je enviroment racunaj povratnu silu
+							gameObject2->collide(*gameObject1); 
 					}
 				}
 			}
@@ -313,8 +310,6 @@ namespace lam {
 
 	void LevelAssetManager::processEnd(engine::Window& window)
 	{
-		if (_timer->elapsed() >= 1.0f / PROCESSING_INTERVAL)
-		{
 			for (graphics::Line* shot : _shots)
 			{
 				if (shot->isNew())
@@ -366,10 +361,8 @@ namespace lam {
 				_pickups.end());
 
 			cleanUI();
-
 			window.clearInput();
 			_timer->reset();
-		}
 	}
 
 	void LevelAssetManager::init(graphics::Layer* layer)
@@ -583,7 +576,6 @@ namespace lam {
 
 		endpoints.push_back(math::Vector3(npc->getPosition().x, npc->getPosition().y, 0));
 		// vector3 - X,Y,STEPS
-		//pathBlocked(nextPositionTemp, npc)
 		while (true)
 		{
 			if (endpoints.empty())
@@ -685,11 +677,14 @@ namespace lam {
 				{
 					if (point.distanceFrom(goal) != math::Vector2(endpoints.back().x, endpoints.back().y).distanceFrom(goal))
 						break;
+					else if (!pathBlocked(point, currentPosition, npc))
+						endpoints.push_back(math::Vector3(point.x, point.y, endpointCurrent.z + 1));
 				}
-
-				if (!pathBlocked(point, currentPosition, npc))
+				else if (!pathBlocked(point, currentPosition, npc))
 				{
-					endpoints.push_back(math::Vector3(point.x, point.y, endpointCurrent.z + 1));
+					endpointCurrent.x = point.x;
+					endpointCurrent.y = point.y;
+					endpointCurrent.z++;
 					end = true;
 				}
 			}
@@ -707,11 +702,11 @@ namespace lam {
 		for (activeObject gameObject : _allObjects)
 		{
 			const objects::GameObject& gameObject1 = *(objects::GameObject*) gameObject._object;
-			float gameObjectCollisionRange = gameObject1.getCollisionRange().length();
 
-			if (current.distanceFrom(gameObject1.getPosition()) + distanceVector.length()
-					>= temp.getCollisionRange().length() * 2 + gameObject1.getCollisionRange().length() * 2)
-				continue;
+			if(gameObject1.getPosition().y == -26)
+			std::string name = gameObject._name;
+
+			float gameObjectCollisionRange = gameObject1.getCollisionRange().length();
 
 			if (
 				(gameObject1.getAllegiance() == objects::Allegiance::ENVIROMENT || gameObject1.getWeight() >= npc->getWeight() * 4)

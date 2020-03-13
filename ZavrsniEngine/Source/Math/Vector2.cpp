@@ -68,7 +68,7 @@ namespace math {
 
 	float Vector2::length() const
 	{
-		return sqrt((x * x + y + y));
+		return sqrt((x * x + y * y));
 	}
 
 	Vector2 operator+(Vector2 left, const Vector2& right)
