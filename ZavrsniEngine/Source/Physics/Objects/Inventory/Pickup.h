@@ -10,7 +10,8 @@ namespace objects {
 
 			bool _destroyPickup;
 		public:
-			Pickup() : GameObject() {}
+			Pickup() {};
+			~Pickup() override {};
 			Pickup(const graphics::Sprite& sprite, float duration) : GameObject(sprite), _duration(duration), _timer(engine::Timer()),_destroyPickup(false) {};
 			void move() override {};
 			virtual void onPickup (Actor& actor) = 0;

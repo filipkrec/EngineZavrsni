@@ -1,5 +1,7 @@
+
 #if 0
 #include <windows.system.h>
+#include <thread>
 #include "Source/Math/Math.h"
 #include "Source/window.h"
 #include "Source/Graphics/Layer.h"
@@ -129,5 +131,55 @@ int main()
 		layer->render();
 		display->update();
 	}
+}
+#endif
+
+#if 0
+struct test
+{
+	int x = 0;
+	bool processed = false;
+};
+
+void funkcija(bool &finished, engine::Timer& x)
+{
+	while (true)
+	{
+		if(finished)
+		std::cout << "threading" << std::endl;
+
+		if (x.elapsed() >= 5.0f)
+			finished = true;
+	}
+}
+
+int main()
+{
+	using namespace engine;
+	using namespace graphics;
+	using namespace objects;
+	using namespace math;
+	using namespace audio;
+	Window* display = new Window("Display", 800, 600);
+	Layer* layer = new Layer();
+
+	Timer timer1;
+	bool finished = false;
+	std::thread t1(funkcija, std::ref(finished), std::ref(timer1));
+	//,std::ref(x),std::ref(finished)
+
+	while (true)
+	{
+		if (finished)
+		{
+			t1.join();
+			break;
+		}
+
+		std::cout << "main" << std::endl;
+	}
+
+
+
 }
 #endif

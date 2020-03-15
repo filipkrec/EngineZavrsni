@@ -7,16 +7,14 @@ Spawner::Spawner(const objects::NPC& prototype, const math::Vector2& spawnLocati
 
 objects::NPC* Spawner::Spawn()
 {
-	if (_timer.elapsed() >= _spawnTime && _currentId < 1)
+	if (_timer.elapsed() >= _spawnTime &&  _currentId < 5)
 	{
-		float A = _timer.elapsed();
 		objects::NPC* temp = new objects::NPC(_prototype);
 		temp->setPosition(_spawnLocation);
 		temp->setMoveToPoint(_destination);
 		temp->DoNotDestroySprite();
 		_timer.reset();
 		_currentId++;
-		float B = _timer.elapsed();
 		return temp;
 	}
 	else return nullptr;

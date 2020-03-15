@@ -5,6 +5,7 @@
 #include "../Physics/Objects/Player.h"
 #include "../Physics/Objects/NPC.h"
 #include "../Graphics/Line.h"
+#include "../Util/NPCThread.h"
 #include <algorithm>
 
 namespace lam {
@@ -45,6 +46,8 @@ namespace lam {
 		static graphics::Layer* _layer;
 		static engine::Timer* _timer;
 
+		static std::vector<engine::NPCThread> _threads;
+
 		static std::vector<activeObject> _sprites;
 		static std::vector<activeObject> _gameObjects;
 		static std::vector<activeObject> _NPCs;
@@ -69,6 +72,8 @@ namespace lam {
 		static void processHitDetection(); //process shots and consequences FORCE CALCULATION
 		static void processMovement(); //move in final FORCE direction
 		static void processUI(); //move UI to camera position
+
+		static void threadFunction(objects::NPC* npc, bool& finished, math::Vector2& returnValue);
 	public:
 		static void init(graphics::Layer* layer);
 

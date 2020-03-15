@@ -38,6 +38,7 @@ namespace objects {
 
 		inline const math::Vector3& getPreviousForce() const { return _previousForce; }
 		void savePreviousForce();
+		inline const math::Vector3& getCurrentForce() const { return _currentForce; }
 
 		void setAllegiance(Allegiance allegiance);
 		inline const Allegiance getAllegiance() const { return _allegiance; }

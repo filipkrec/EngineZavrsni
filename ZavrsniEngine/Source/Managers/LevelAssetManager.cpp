@@ -7,6 +7,8 @@ namespace lam {
 	graphics::Layer* LevelAssetManager::_layer;
 	engine::Timer* LevelAssetManager::_timer = new engine::Timer();
 
+	std::vector<engine::NPCThread> LevelAssetManager::_threads;
+
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_sprites;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_gameObjects;
 	std::vector<LevelAssetManager::activeObject> LevelAssetManager::_NPCs;
@@ -152,22 +154,59 @@ namespace lam {
 					npc->togglePointReached();
 			}
 
+			if (!npc->seekCheckpoint() && abs(npc->getPosition().distanceFrom(npc->getMoveToCheckPoint())) <= ASTEPDISTANCE)
+				npc->toggleSeekCheckpoint();
+
 			if (!npc->isPointReached())
 			{
-				//if (!npc->seekCheckpoint() && abs(npc->getPosition().distanceFrom(npc->getMoveToCheckPoint())) <= ASTEPDISTANCE)
-					//npc->toggleSeekCheckpoint();
-				
-			//	if (npc->seekCheckpoint())
-				//{
-					const math::Vector2 nextStep = calculatePath(npc->getMoveToPoint(), npc);
-					math::Vector2 temp = math::Vector2::calculateUnitVector(nextStep - npc->getPosition());
-					npc->setMoveToCheckPoint(nextStep);
-					npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getPosition()));
-					npc->toggleSeekCheckpoint();
-				//}
+				if (npc->seekCheckpoint())
+				{
+					std::vector<engine::NPCThread>::iterator it =
+						std::find_if(_threads.begin(), _threads.end(), [&](const engine::NPCThread& x) { return x._npc == npc; });
+
+					if(it == _threads.end())
+					for (engine::NPCThread& thread : _threads)
+					{
+						if (thread._npc == nullptr)
+						{
+							thread._npc = npc;
+							thread._thread = new std::thread(LevelAssetManager::threadFunction, npc,
+								std::ref(thread._isFinished), std::ref(thread._returnValue));
+							npc->toggleSeekCheckpoint();
+							break;
+						}
+					}
+					else
+					{
+						if ((*it)._isFinished == true)
+						{
+							const math::Vector2 nextStep = (*it)._returnValue;
+							math::Vector2 temp = math::Vector2::calculateUnitVector(nextStep - npc->getPosition());
+							npc->setMoveToCheckPoint(nextStep);
+							npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getPosition()));
+
+							(*it)._thread->join();
+							delete (*it)._thread;
+							(*it)._npc = nullptr;
+							(*it)._isFinished = false;
+						}
+					}
+				}
 			}
 			else
 			{
+				std::vector<engine::NPCThread>::iterator it =
+					std::find_if(_threads.begin(), _threads.end(), [&](const engine::NPCThread& x) { return x._npc == npc; });
+
+				if (it != _threads.end())
+				{
+					(*it)._thread->join();
+					delete (*it)._thread;
+					(*it)._thread = nullptr;
+					(*it)._npc = nullptr;
+					(*it)._isFinished = false;
+				}
+
 				npc->setMoveDirection(math::Vector2(0.0f, 0.0f));
 				if (npc->isPatroling())
 				{
@@ -286,14 +325,14 @@ namespace lam {
 			gameObject1->move();
 
 			//clear clipping
-			if(gameObject1->isCollsionOn())
+			if(gameObject1->isCollsionOn() && gameObject1->getCurrentForce().z != 0)
 			for (activeObject gameObjectOther : _allObjects)
 			{
 				gameObject2 = (objects::GameObject*)gameObjectOther._object;
 				if (gameObject2->isCollsionOn() && gameObject1 != gameObject2)
-					while (gameObject1->isHit((objects::Hitbox) * gameObject2))
+					while (gameObject1->isHit((objects::Hitbox) *gameObject2))
 					{
-						gameObject1->movePosition(math::Vector2::calculateUnitVector(gameObject1->getPosition() - gameObject2->getPosition()) * 0.001);
+						gameObject1->movePosition(math::Vector2::calculateUnitVector(gameObject1->getPosition() - gameObject2->getPosition()) * 0.01);
 					}
 			}
 		}
@@ -305,6 +344,15 @@ namespace lam {
 		{
 				element._sprite->setPosition(math::Vector2(0,0) - Camera::getInstance()->getOffset() + element._UIPosition);
 		}
+	}
+
+
+	void LevelAssetManager::threadFunction(objects::NPC* npc, bool& finished, math::Vector2& returnValue)
+	{
+		finished = false;
+		returnValue = calculatePath(npc->getMoveToPoint(),npc);
+		finished = true;
+		npc->toggleSeekCheckpoint();
 	}
 
 
@@ -367,6 +415,10 @@ namespace lam {
 
 	void LevelAssetManager::init(graphics::Layer* layer)
 	{
+		while (_threads.size() <= std::thread::hardware_concurrency())
+		{
+			_threads.push_back(engine::NPCThread());
+		}
 			_layer = layer;
 	}
 

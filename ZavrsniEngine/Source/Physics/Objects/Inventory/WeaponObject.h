@@ -14,7 +14,7 @@ namespace objects {
 			destroy();
 		}
 	public:
-		WeaponObject(graphics::Sprite* sprite, Weapon* weapon)
+		WeaponObject(const graphics::Sprite& sprite, Weapon* weapon)
 			:Pickup(sprite,0),_weapon(weapon)
 		{
 		}
