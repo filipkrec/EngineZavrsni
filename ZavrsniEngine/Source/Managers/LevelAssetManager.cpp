@@ -57,9 +57,11 @@ namespace lam {
 	void LevelAssetManager::refreshWeapons()
 	{
 		objects::Actor* actor;
-		for (activeObject currentActor : _allActors)
+		for (activeObject& currentActor : _allActors)
 		{
 			actor = (objects::Actor*)currentActor._object;
+			if (!actor->hasSwitchedWeapon())
+				continue;
 
 			std::vector<activeObject>::iterator it = std::find_if(_sprites.begin(), _sprites.end(), [&](const activeObject& x)
 				{
@@ -95,12 +97,12 @@ namespace lam {
 
 	void LevelAssetManager::processSight()
 	{
-		for (activeObject actor : _allActors)
+		for (activeObject& actor : _allActors)
 		{
 			objects::Actor* actor1 = (objects::Actor*) actor._object;
 			if (actor1 != nullptr)
 			{
-				for (activeObject gameObject : _allObjects)
+				for (activeObject& gameObject : _allObjects)
 				{
 					objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
 					if (actor1 != gameObject1)
@@ -133,7 +135,7 @@ namespace lam {
 
 	void LevelAssetManager::processPathfinding()
 	{
-		for (activeObject NPC : _NPCs)
+		for (activeObject& NPC : _NPCs)
 		{
 			objects::NPC* npc = (objects::NPC*)NPC._object;
 
@@ -218,7 +220,7 @@ namespace lam {
 
 	void LevelAssetManager::processNPCs(engine::Window& window)
 	{
-		for (activeObject npc : _NPCs)
+		for (activeObject& npc : _NPCs)
 		{
 			((objects::NPC*)npc._object)->process(window);
 		}
@@ -229,7 +231,7 @@ namespace lam {
 		//colission
 		objects::GameObject* gameObject1;
 		objects::GameObject* gameObject2;
-		for (activeObject gameObject : _allObjects)
+		for (activeObject& gameObject : _allObjects)
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
 
@@ -240,14 +242,14 @@ namespace lam {
 			}
 		}
 
-		for (activeObject gameObject : _allObjects)
+		for (activeObject& gameObject : _allObjects)
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
 
 			if (!gameObject1->isCollsionOn() || gameObject1->getAllegiance() == objects::Allegiance::ENVIROMENT) //ne racunaj koliziju za enviroment
 				continue; 
 
-			for (activeObject gameObjectOther : _allObjects)
+			for (activeObject& gameObjectOther : _allObjects)
 			{
 				gameObject2 = (objects::GameObject*)gameObjectOther._object;
 
@@ -268,7 +270,7 @@ namespace lam {
 
 	void LevelAssetManager::processHitDetection()
 	{
-		for (activeObject actor : _allActors)
+		for (activeObject& actor : _allActors)
 		{
 			objects::Actor* currentActor = (objects::Actor*)actor._object;
 			if (currentActor->getWeapon() != nullptr)
@@ -276,7 +278,7 @@ namespace lam {
 				for (math::Vector2 firedShot : currentActor->getWeapon()->_firedShots)
 				{
 					std::vector<std::pair<objects::GameObject*, math::Vector2>> shotObjects;
-					for (activeObject gameObject : _allObjects)
+					for (activeObject& gameObject : _allObjects)
 					{
 						objects::GameObject* gameObject1 = (objects::GameObject*)gameObject._object;
 						if (gameObject1->isCollsionOn() && gameObject1 != currentActor && gameObject1->getLineIntersection(currentActor->getWeapon()->getShotPosition(), firedShot) != math::Vector4(0, 0, 0, 0))
@@ -315,7 +317,7 @@ namespace lam {
 	{
 		objects::GameObject* gameObject1;
 		objects::GameObject* gameObject2;
-		for (activeObject gameObject : _allObjects)
+		for (activeObject& gameObject : _allObjects)
 		{
 			gameObject1 = (objects::GameObject*)gameObject._object;
 
@@ -326,11 +328,11 @@ namespace lam {
 
 			//clear clipping
 			if(gameObject1->isCollsionOn() && gameObject1->getCurrentForce().z != 0)
-			for (activeObject gameObjectOther : _allObjects)
+			for (activeObject& gameObjectOther : _allObjects)
 			{
 				gameObject2 = (objects::GameObject*)gameObjectOther._object;
 				if (gameObject2->isCollsionOn() && gameObject1 != gameObject2)
-					while (gameObject1->isHit((objects::Hitbox) *gameObject2))
+					while (gameObject1->isHit((objects::Hitbox&) *gameObject2))
 					{
 						gameObject1->movePosition(math::Vector2::calculateUnitVector(gameObject1->getPosition() - gameObject2->getPosition()) * 0.01);
 					}
@@ -366,7 +368,7 @@ namespace lam {
 
 			//cleanup
 
-			for (activeObject pickup : _pickups)
+			for (activeObject& pickup : _pickups)
 			{
 				objects::Pickup* temp = (objects::Pickup*)pickup._object;
 				temp->processTime();
@@ -377,7 +379,7 @@ namespace lam {
 				line->tick();
 			}
 
-			for (activeObject npc : _NPCs)
+			for (activeObject& npc : _NPCs)
 			{
 				objects::NPC* temp = (objects::NPC*)npc._object;
 				if (temp->getActorTimer() >= 1.0f)
@@ -472,7 +474,7 @@ namespace lam {
 
 	void LevelAssetManager::cleanSprites()
 	{
-		for (activeObject sprite : _sprites)
+		for (activeObject& sprite : _sprites)
 			delete (graphics::Sprite*)sprite._object;
 
 		_UIElements.clear();
@@ -481,7 +483,7 @@ namespace lam {
 
 	graphics::Sprite* LevelAssetManager::getSprite(const std::string& name)
 	{
-		for (activeObject sprite : _sprites)
+		for (activeObject& sprite : _sprites)
 		{
 			if (sprite._name == name)
 				return (graphics::Sprite*)sprite._object;
@@ -497,7 +499,7 @@ namespace lam {
 
 	void LevelAssetManager::cleanLabels()
 	{
-		for (activeObject label : _labels)
+		for (activeObject& label : _labels)
 			delete (graphics::Label*)label._object;
 
 		_labels.clear();
@@ -505,7 +507,7 @@ namespace lam {
 
 	graphics::Label* LevelAssetManager::getLabel(const std::string& name)
 	{
-		for (activeObject label : _labels)
+		for (activeObject& label : _labels)
 		{
 			if (label._name == name)
 				return (graphics::Label*)label._object;
@@ -522,7 +524,7 @@ namespace lam {
 
 	void LevelAssetManager::cleanGameObjects()
 	{
-		for (activeObject gameObject : _gameObjects)
+		for (activeObject& gameObject : _gameObjects)
 			delete (objects::GameObject*)gameObject._object;
 
 		_gameObjects.clear();
@@ -531,7 +533,7 @@ namespace lam {
 
 	objects::GameObject* LevelAssetManager::getGameObject(const std::string& name)
 	{
-		for (activeObject gameObject : _gameObjects)
+		for (activeObject& gameObject : _gameObjects)
 		{
 			if (gameObject._name == name)
 				return (objects::GameObject*)gameObject._object;
@@ -549,7 +551,7 @@ namespace lam {
 
 	void LevelAssetManager::cleanNPCs()
 	{
-		for (activeObject NPC : _NPCs)
+		for (activeObject& NPC : _NPCs)
 			delete (objects::NPC*)NPC._object;
 
 		_NPCs.clear();
@@ -558,7 +560,7 @@ namespace lam {
 
 	objects::NPC* LevelAssetManager::getNPC(const std::string& name)
 	{
-		for (activeObject npc : _NPCs)
+		for (activeObject& npc : _NPCs)
 		{
 			if (npc._name == name)
 			{
@@ -584,7 +586,7 @@ namespace lam {
 
 	objects::Pickup* LevelAssetManager::getPickup(const std::string& name)
 	{
-		for (activeObject pickup : _pickups)
+		for (activeObject& pickup : _pickups)
 		{
 			if (pickup._name == name)
 				return (objects::Pickup*)pickup._object;
@@ -651,18 +653,12 @@ namespace lam {
 			//if endpoint near end return first step;
 			float smallestDistance = currentPosition.distanceFrom(goal);
 
-			if (passed.size() > AFIDELITY)
-			{
-				math::Vector2 to(passed.at(1).x, passed.at(1).y);
-				return to;
-			}
-
-			if (smallestDistance < ASTEPDISTANCE)
+			if (passed.size() > AFIDELITY || smallestDistance < ASTEPDISTANCE)
 			{
 				std::sort(passed.begin(), passed.end(), [](const math::Vector3& x, const math::Vector3& y) {return x.z > y.z;}); //order most steps to least
 				math::Vector3 currentPath = endpointCurrent;
 				path.push_back(currentPath);
-				for (math::Vector3 point : passed)
+				for (math::Vector3& point : passed)
 				{
 					if (point.z == currentPath.z - 1)
 					{
@@ -680,10 +676,27 @@ namespace lam {
 				{
 					path.pop_back();
 				}
-				math::Vector3 to;
+				math::Vector3 to = path.back();
+				math::Vector2 previousMove = math::Vector2(0,0);
 				if (!path.empty())
 				{
-					 to = path.back();
+					std::vector<math::Vector3>::reverse_iterator temp = path.rbegin();
+					for (std::vector<math::Vector3>::reverse_iterator it = path.rbegin(); it != path.rend(); ++it)
+					{
+						if (*it == *temp)
+							continue;
+
+						if ((previousMove.x != 0 && previousMove.y != 0)
+							&& (math::Vector2((*it).x, (*it).y) - math::Vector2((*temp).x, (*temp).y) != previousMove
+							|| *it == path.front()))
+						{
+							to = *temp;
+							break;
+						}
+
+						previousMove = math::Vector2((*it).x, (*it).y) - math::Vector2((*temp).x, (*temp).y);
+						temp++;
+					}
 				}
 				else to = endpointCurrent;
 					return math::Vector2(to.x,to.y);
@@ -691,7 +704,7 @@ namespace lam {
 
 
 			//if shorter path_from exists, lower endpoint steps
-			for (math::Vector2 direction : directionsAll)
+			for (math::Vector2& direction : directionsAll)
 			{
 				math::Vector2 nextPositionTemp = currentPosition + direction * ASTEPDISTANCE;
 				for (math::Vector3& pathPoint : passed)
@@ -705,7 +718,7 @@ namespace lam {
 
 			//only unpassed points
 			std::vector<math::Vector2> availablePoints;
-			for (math::Vector2 direction : directionsAll)
+			for (math::Vector2& direction : directionsAll)
 			{
 				math::Vector2 nextPositionTemp = currentPosition + direction * ASTEPDISTANCE;
 				if (!std::any_of(passed.begin(), passed.end(), [&](const math::Vector3& x)
@@ -723,7 +736,7 @@ namespace lam {
 
 			bool end = false;
 
-			for (math::Vector2 point : availablePoints)
+			for (math::Vector2& point : availablePoints)
 			{
 				if (end == true)
 				{
@@ -751,7 +764,7 @@ namespace lam {
 		objects::Hitbox temp(current, npc->getCollisionRange());
 		float npcCollisionRange = npc->getCollisionRange().length();
 
-		for (activeObject gameObject : _allObjects)
+		for (activeObject& gameObject : _allObjects)
 		{
 			const objects::GameObject& gameObject1 = *(objects::GameObject*) gameObject._object;
 

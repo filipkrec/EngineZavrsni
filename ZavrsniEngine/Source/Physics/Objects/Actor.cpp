@@ -7,7 +7,7 @@ namespace objects {
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const ActorState& state)
 			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
-		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0),_animationTimer(0)
+		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0),_animationTimer(0), _switchedWeapon(false)
 		{
 			_allTextures.push_back((std::make_pair(gameObject.getTexture(), state)));
 			setState(state);
@@ -152,6 +152,7 @@ namespace objects {
 		void Actor::setWeapon(Weapon* weapon)
 		{
 			_weapon = weapon;
+			_switchedWeapon = true;
 		}
 
 		void Actor::addPickupable(Pickup* pickupable)
@@ -203,6 +204,9 @@ namespace objects {
 			{
 				if (_sightAngle == 0 && _sightRange == 0)
 					return true;
+
+				if (gameObject.getPosition().distanceFrom(getPosition()) + gameObject.getCollisionRange().length() > _sightRange)
+					return false;
 
 				math::Vector2 objectPosition = gameObject.getPosition();
 				float objectWidth = gameObject.getSize().x;
@@ -348,5 +352,9 @@ namespace objects {
 		void Actor::togglePatroling()
 		{
 			_patroling = !_patroling;
+		}
+		void Actor::toggleSwitchedWeapon()
+		{
+			_switchedWeapon = !_switchedWeapon;
 		}
 }

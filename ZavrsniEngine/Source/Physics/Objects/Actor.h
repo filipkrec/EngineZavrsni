@@ -53,6 +53,7 @@ namespace objects {
 
 		ActorState _state;
 		Weapon* _weapon;
+		bool _switchedWeapon;
 		math::Vector2 _weaponOffset;
 	protected:
 		Actor();
@@ -116,10 +117,12 @@ namespace objects {
 		void togglePointReached();
 		void togglePatrol();
 		void togglePatroling();
+		void toggleSwitchedWeapon();
 
 		inline const bool  isPointReached() const { return _state != ActorState::STATE_DEAD ? _pointReached : true; }
 		inline const bool  seekCheckpoint() const { return _state != ActorState::STATE_DEAD ? _seekCheckpoint : false; }
 		inline const bool  isPatrol() const { return _state != ActorState::STATE_DEAD ? _patrol : false; }
 		inline const bool  isPatroling() const { return _state != ActorState::STATE_DEAD ? _patroling : false; }
+		inline const bool  hasSwitchedWeapon() const { return _switchedWeapon; }
 	};
 }
