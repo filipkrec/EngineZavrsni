@@ -8,7 +8,7 @@ namespace objects {
 	}
 
 	NPC::NPC(GameObject gameObject, unsigned int health, float movementSpeed)
-		:Actor(gameObject, health, movementSpeed, ActorState::STATE_STILL),_lookingAt(nullptr),_AIState(AIState::AI_STATE_PASSIVE),_NPCTimer(engine::Timer())
+		:Actor(gameObject, health, movementSpeed, ActorState::STATE_STILL),_lookingAt(nullptr),_AIState(AIState::AI_STATE_PASSIVE),_NPCTimer(engine::Timer()),_rotationGoal(0)
 	{
 	}
 
@@ -186,6 +186,9 @@ namespace objects {
 		if (_moveDirection != math::Vector2(0.0f, 0.0f) && _state != ActorState::STATE_DEAD)
 		{
 			calculateColission(math::Vector3(_moveDirection.x, _moveDirection.y, (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight));
+
+			if(_rotationGoal == 0 && _lookingAt == nullptr)
+			rotateToPoint(_moveDirection);
 		}
 	}
 

@@ -1,6 +1,6 @@
 #include "LevelAssetManager.h"
 #define ASTEPDISTANCE 0.5f
-#define AFIDELITY 15
+#define AFIDELITY 400
 
 
 namespace lam {
@@ -155,16 +155,45 @@ namespace lam {
 			if (npc->getPosition().distanceFrom(npc->getMoveToPoint()) <= ASTEPDISTANCE)
 			{
 				if (!npc->isPointReached())
+				{
 					npc->togglePointReached();
+				}
 			}
-			else if (!npc->seekCheckpoint() && npc->getPosition().distanceFrom(npc->getMoveToCheckPoint()) <= ASTEPDISTANCE)
-				npc->toggleSeekCheckpoint();
 
 			if (!npc->isPointReached())
 			{
-				if (npc->seekCheckpoint())
+				if (npc->isPathFinished())
 				{
-					npc->toggleSeekCheckpoint();
+					math::Vector2 nextPath = npc->getCheckpoint();
+					if (npc->getPosition().distanceFrom(nextPath) <= ASTEPDISTANCE)
+					{
+						if (npc->getPosition().distanceFrom(nextPath) <= 0.1)
+						{
+							npc->popPath();
+						}
+						nextPath = npc->getCheckpoint();
+					}
+					math::Vector2 temp = npc->getPosition();
+					if (abs(temp.x) < 0.02)
+					{
+						temp.x = (temp.x > 0) - (temp.x < 0) * 0.02;
+						//sign func  (temp.x > 0) - (temp.x < 0)
+					}
+					if (abs(temp.y) < 0.02)
+					{
+						temp.y = (temp.y > 0) - (temp.y < 0) * 0.02;
+						//sign func  (temp.x > 0) - (temp.x < 0)
+					}
+					math::Vector2 direction = math::Vector2::calculateUnitVector(nextPath - npc->getPosition());
+					direction = nextPath.x == 0 && nextPath.y < 0 || nextPath.y == 0 && nextPath.x < 0 ? math::Vector2(0, 0) - direction : direction;
+					if (direction == math::Vector2(0, 0) && npc->getPosition().distanceFrom(npc->getMoveToPoint()) >= ASTEPDISTANCE)
+						direction = math::Vector2::calculateUnitVector(npc->getMoveToPoint() - npc->getPosition());
+					
+					npc->setMoveDirection(direction);
+				}
+
+				if (npc->seekPath())
+				{
 					std::vector<engine::NPCThread>::iterator it =
 						std::find_if(_threads.begin(), _threads.end(), [&](const engine::NPCThread& x) { return x._npc == npc; });
 
@@ -175,7 +204,8 @@ namespace lam {
 						{
 							thread._npc = npc;
 							thread._thread = new std::thread(LevelAssetManager::threadFunction, npc,
-								std::ref(thread._isFinished), std::ref(thread._returnValue));
+								std::ref(thread._isFinished));
+							npc->toggleSeekPath();
 							break;
 						}
 					}
@@ -183,12 +213,6 @@ namespace lam {
 					{
 						if ((*it)._isFinished == true)
 						{
-							const math::Vector2 nextStep = (*it)._returnValue;
-							npc->setMoveToCheckPoint(nextStep);
-							math::Vector2 temp = math::Vector2::calculateUnitVector(nextStep - npc->getPosition());
-							temp = nextStep.x == 0 && nextStep.y < 0 || nextStep.y == 0 && nextStep.x < 0 ? math::Vector2(0,0) - temp : temp;
-							npc->setMoveDirection(temp);
-
 							(*it)._thread->join();
 							delete (*it)._thread;
 							(*it)._npc = nullptr;
@@ -351,12 +375,11 @@ namespace lam {
 	}
 
 
-	void LevelAssetManager::threadFunction(objects::NPC* npc, bool& finished, math::Vector2& returnValue)
+	void LevelAssetManager::threadFunction(objects::NPC* npc, bool& finished)
 	{
 		finished = false;
-		returnValue = calculatePath(npc->getMoveToPoint(),npc);
+		calculatePath(npc->getMoveToPoint(),npc);
 		finished = true;
-		npc->toggleSeekCheckpoint();
 	}
 
 
@@ -613,7 +636,7 @@ namespace lam {
 	}
 
 
-	math::Vector2 LevelAssetManager::calculatePath(const math::Vector2& goal,const objects::NPC* npc)
+	bool LevelAssetManager::calculatePath(const math::Vector2& goal,objects::NPC* npc)
 	{
 		//varijacija A* algoritma
 		std::vector<math::Vector3> endpoints;
@@ -628,14 +651,14 @@ namespace lam {
 		std::vector<math::Vector2> splits;
 
 		if (goal.distanceFrom(npc->getPosition()) < ASTEPDISTANCE)
-			return math::Vector2(0, 0);
+			return true;
 
 		endpoints.push_back(math::Vector3(npc->getPosition().x, npc->getPosition().y, 0));
 		// vector3 - X,Y,STEPS
 		while (true)
 		{
 			if (endpoints.empty())
-				return math::Vector2(0, 0);
+				return true;
 
 			//get endpoint least distance from end with least steps
 			std::vector<math::Vector3>::iterator it = min_element(endpoints.begin(), endpoints.end(),
@@ -660,53 +683,30 @@ namespace lam {
 				std::sort(passed.begin(), passed.end(), [](const math::Vector3& x, const math::Vector3& y) {return x.z > y.z;}); //order most steps to least
 				math::Vector3 currentPath = endpointCurrent;
 				path.push_back(currentPath);
+
+				if (npc->isPathFinished())
+					npc->togglePathFinished();
+
 				for (math::Vector3& point : passed)
 				{
 					if (point.z == currentPath.z - 1)
 					{
+						//if within vector distance trace back path to origin
 						math::Vector2 vectorDistance = math::Vector2(point.x, point.y) - math::Vector2(currentPath.x, currentPath.y);
 						vectorDistance.x = abs(vectorDistance.x);
 						vectorDistance.y = abs(vectorDistance.y);
 						if (vectorDistance.x <= ASTEPDISTANCE && vectorDistance.y <= ASTEPDISTANCE)
 						{
 							currentPath = point;
-							path.push_back(currentPath);
+							npc->pushPath(math::Vector2(currentPath.x, currentPath.y));
 						}
 					}
 				}
 
-				
+				if (!npc->isPathFinished())
+					npc->togglePathFinished();
 
-				math::Vector3 to = path.back();
-				math::Vector2 previousMove = math::Vector2(0,0);
-
-				if (path.size() == 2)
-				{
-					return math::Vector2(to.x, to.y);
-				}
-				else if (!path.empty())
-				{
-					std::vector<math::Vector3>::reverse_iterator temp = path.rbegin();
-					for (std::vector<math::Vector3>::reverse_iterator it = path.rbegin(); it != path.rend(); ++it)
-					{
-						if (*it == *temp)
-							continue;
-
-						if ((previousMove.x != 0 || previousMove.y != 0)
-							&& (math::Vector2((*it).x, (*it).y) - math::Vector2((*temp).x, (*temp).y) != previousMove
-							|| *it == path.front()))
-						{
-							to = *temp;
-							break;
-						}
-
-						previousMove = math::Vector2((*it).x, (*it).y) - math::Vector2((*temp).x, (*temp).y);
-						temp++;
-					}
-				}
-				else to = endpointCurrent;
-
-				return math::Vector2(to.x,to.y);
+				return true;
 			}
 
 

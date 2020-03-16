@@ -59,7 +59,7 @@ namespace lam {
 		static std::vector<UIElement> _UIElements;
 		static objects::Player* _player;
 
-		static math::Vector2 calculatePath(const math::Vector2& goal, const objects::NPC* npc);
+		static bool calculatePath(const math::Vector2& goal, objects::NPC* npc);
 		static bool pathBlocked(const math::Vector2& positionTo, const math::Vector2& current, const objects::NPC* npc);
 
 		static void fillObjects(); //fill allObjects allActors
@@ -73,7 +73,7 @@ namespace lam {
 		static void processMovement(); //move in final FORCE direction
 		static void processUI(); //move UI to camera position
 
-		static void threadFunction(objects::NPC* npc, bool& finished, math::Vector2& returnValue);
+		static void threadFunction(objects::NPC* npc, bool& finished);
 	public:
 		static void init(graphics::Layer* layer);
 

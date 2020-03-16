@@ -9,8 +9,8 @@ namespace engine {
 		std::thread* _thread;
 		objects::NPC* _npc;
 		bool _isFinished;
-		math::Vector2 _returnValue;
+		bool _returnValue;
 
-		NPCThread() : _thread(nullptr), _npc(nullptr), _isFinished(false), _returnValue(math::Vector2(0, 0)) {};
+		NPCThread() : _thread(nullptr), _npc(nullptr), _isFinished(false), _returnValue(false) {};
 	};
 }

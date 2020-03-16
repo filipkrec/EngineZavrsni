@@ -7,7 +7,7 @@ namespace objects {
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const ActorState& state)
 			: GameObject(gameObject), _health(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
-		_pointReached(false), _seekCheckpoint(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0),_animationTimer(0), _switchedWeapon(false)
+		_pointReached(false), _seekPath(false), _pathFinished(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0),_animationTimer(0), _switchedWeapon(false)
 		{
 			_allTextures.push_back((std::make_pair(gameObject.getTexture(), state)));
 			setState(state);
@@ -278,7 +278,7 @@ namespace objects {
 
 				if (obstructed == true)
 				{
-					_sighted.erase(std::remove_if(_sighted.begin(), _sighted.end(), [&](GameObject* x) {return x == sighted; }));
+					//_sighted.erase(std::remove_if(_sighted.begin(), _sighted.end(), [&](GameObject* x) {return x == sighted; }));
 				}
 			}
 		}
@@ -307,8 +307,8 @@ namespace objects {
 			{
 				GameObject::collide(other);
 
-				if (_seekCheckpoint == false)
-					toggleSeekCheckpoint();
+				if (_seekPath == false)
+					toggleSeekPath();
 			}
 		}
 
@@ -319,15 +319,10 @@ namespace objects {
 			if (_pointReached == true)
 				togglePointReached();
 
-			if (_seekCheckpoint == false)
-				toggleSeekCheckpoint();
+			if (_seekPath == false)
+				toggleSeekPath();
 		}
 
-
-		void Actor::setMoveToCheckPoint(const math::Vector2& point)
-		{
-			_moveToCheckPoint = point;
-		}
 
 		void Actor::setPatrolOriginPoint(const math::Vector2& point)
 		{
@@ -344,10 +339,41 @@ namespace objects {
 			_actorTimer.reset();
 		}
 
-		void Actor::toggleSeekCheckpoint()
+		void Actor::clearPath()
 		{
-			_seekCheckpoint = !_seekCheckpoint;
+			_path.clear();
 		}
+
+		void Actor::pushPath(const math::Vector2& pathPoint)
+		{
+			_path.push_back(pathPoint);
+		}
+
+
+		void Actor::popPath()
+		{
+			if (!_path.empty())
+			{
+				_path.pop_back();
+				if (_path.empty() && !seekPath())
+					toggleSeekPath();
+			}
+
+
+		}
+
+		void Actor::toggleSeekPath()
+		{
+			_seekPath = !_seekPath;
+			if (_seekPath == true)
+				clearPath();
+		}
+
+		void Actor::togglePathFinished()
+		{
+			_pathFinished = !_pathFinished;
+		}
+
 		void Actor::togglePointReached()
 		{
 			_pointReached = !_pointReached;

@@ -43,8 +43,10 @@ namespace objects {
 		math::Vector2 _moveToPoint;
 		math::Vector2 _patrolOriginPoint;
 		math::Vector2 _patrolEndPoint;
-		math::Vector2 _moveToCheckPoint;
-		bool _seekCheckpoint;
+		std::vector<math::Vector2> _path;
+		bool _seekPath;
+		bool _pathFinished;
+
 		bool _pointReached;
 		bool _patrol;
 		bool _patroling;
@@ -101,9 +103,6 @@ namespace objects {
 		inline const math::Vector2& getMoveToPoint() const { return _moveToPoint; }
 		void setMoveToPoint(const math::Vector2& point);
 
-		inline const math::Vector2& getMoveToCheckPoint() const { return _moveToCheckPoint; }
-		void setMoveToCheckPoint(const math::Vector2& point);
-
 		inline const math::Vector2& getPatrolOriginPoint() const { return _patrolOriginPoint; }
 		void setPatrolOriginPoint(const math::Vector2& point);
 
@@ -113,14 +112,22 @@ namespace objects {
 		inline const float getActorTimer() { return _actorTimer.elapsed(); }
 		void resetActorTimer();
 
-		void toggleSeekCheckpoint();
+		void clearPath();
+		void pushPath(const math::Vector2& pathPoint);
+		void popPath();
+		inline const math::Vector2& getCheckpoint() const { if (!_path.empty()) return _path.back(); 
+																		 else return _position; }
+
+		void toggleSeekPath();
+		void togglePathFinished();
 		void togglePointReached();
 		void togglePatrol();
 		void togglePatroling();
 		void toggleSwitchedWeapon();
 
+		inline const bool  isPathFinished() const { return _pathFinished; }
 		inline const bool  isPointReached() const { return _state != ActorState::STATE_DEAD ? _pointReached : true; }
-		inline const bool  seekCheckpoint() const { return _state != ActorState::STATE_DEAD ? _seekCheckpoint : false; }
+		inline const bool  seekPath() const { return _state != ActorState::STATE_DEAD ? _seekPath : false; }
 		inline const bool  isPatrol() const { return _state != ActorState::STATE_DEAD ? _patrol : false; }
 		inline const bool  isPatroling() const { return _state != ActorState::STATE_DEAD ? _patroling : false; }
 		inline const bool  hasSwitchedWeapon() const { return _switchedWeapon; }

@@ -7,7 +7,7 @@ Spawner::Spawner(const objects::NPC& prototype, const math::Vector2& spawnLocati
 
 objects::NPC* Spawner::Spawn()
 {
-	if (_timer.elapsed() >= _spawnTime &&  _currentId < 5)
+	if (_timer.elapsed() >= _spawnTime &&  _currentId < 20)
 	{
 		objects::NPC* temp = new objects::NPC(_prototype);
 		temp->setPosition(_spawnLocation);
