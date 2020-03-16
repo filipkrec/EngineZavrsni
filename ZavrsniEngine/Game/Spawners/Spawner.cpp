@@ -25,3 +25,14 @@ std::string Spawner::getSpawnName()
 {
 	return std::to_string(_spawnerId) + ':' + std::to_string(_currentId - 1);
 }
+
+
+void Spawner::setSpawnLocation(const math::Vector2& spawnLocation)
+{
+	_spawnLocation = spawnLocation;
+}
+
+void Spawner::setDestination(const math::Vector2& destination)
+{
+	_destination = destination;
+}

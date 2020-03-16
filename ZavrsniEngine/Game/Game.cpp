@@ -12,6 +12,7 @@ class Game : public engine::Engine
 	math::Vector2 mousePosition;
 	std::vector<objects::Weapon*> weapons;
 	std::vector<Spawner*> spawners;
+	std::vector<math::Vector2> spawnerLocations;
 
 	void (Game::*level)();
 	bool skipRender = false;
@@ -143,7 +144,6 @@ class Game : public engine::Engine
 			}
 		}
 
-
 		//WALLS BEGIN
 		int x;
 		int y;
@@ -235,10 +235,12 @@ class Game : public engine::Engine
 		objects::NPC prototype(objects::GameObject(graphics::Sprite(-8.0f, -8.0f, 1.0f, 1.0f, graphics::TextureManager::get("Enemy_idle"), 2), 100), 50, 50);
 		prototype.setSight(45.0f, 6.0f);
 
-		math::Vector2 destination(rand() % 500 * 0.01, rand() % 500 * 0.01);
-		math::Vector2 spawnerLocation(-31, -40);
+		spawnerLocations.push_back(math::Vector2(-31, -40));
+		spawnerLocations.push_back(math::Vector2(31, -41));
+		spawnerLocations.push_back(math::Vector2(31, 32));
+		spawnerLocations.push_back(math::Vector2(-41, 32));
 
-		Spawner* spawner = new Spawner(prototype,spawnerLocation,destination,5.0f,1);
+		Spawner* spawner = new Spawner(prototype,spawnerLocations.at(0), lam::LevelAssetManager::getPlayer()->getPosition(), 1.0f,1);
 		spawners.push_back(spawner);
 
 		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));
@@ -251,9 +253,17 @@ class Game : public engine::Engine
 		graphics::Sprite* cursor = lam::LevelAssetManager::getSprite("crosshairCursor");
 		for (Spawner* spawner : spawners)
 		{
+			spawner->setSpawnLocation(spawnerLocations.at(rand() % 4));
+			spawner->setDestination(lam::LevelAssetManager::getPlayer()->getPosition());
 			objects::NPC* npc = spawner->Spawn();
-			if(npc != nullptr)
-			lam::LevelAssetManager::add(npc,spawner->getSpawnName());
+			if (npc != nullptr)
+			{
+				lam::LevelAssetManager::add(npc, spawner->getSpawnName());
+				//objects::Weapon* weapon = (weapons.at(0));
+				//weapon = weapon->clone();
+				//weapons.push_back(weapon);
+				//npc->setWeapon(weapon);
+			}
 		}
 
 		cursor->setPosition(mousePosition);

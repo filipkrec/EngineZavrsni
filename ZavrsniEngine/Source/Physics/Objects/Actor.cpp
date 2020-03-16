@@ -120,7 +120,13 @@ namespace objects {
 			//textures
 			_stateTextures.clear();
 			if (state == ActorState::STATE_DEAD)
+			{
 				_colissionOn = false;
+				if (_weapon != nullptr)
+				{
+					_weapon->DestroySprite();
+				}
+			}
 
 			for (std::pair<const graphics::Texture*, ActorState> texture : _allTextures)
 			{
@@ -300,6 +306,7 @@ namespace objects {
 			if (_state != ActorState::STATE_DEAD)
 			{
 				GameObject::collide(other);
+
 				if (_seekCheckpoint == false)
 					toggleSeekCheckpoint();
 			}

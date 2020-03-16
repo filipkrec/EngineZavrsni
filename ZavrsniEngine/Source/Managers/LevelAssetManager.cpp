@@ -1,5 +1,5 @@
 #include "LevelAssetManager.h"
-#define ASTEPDISTANCE 1.5f
+#define ASTEPDISTANCE 0.5f
 #define AFIDELITY 15
 
 
@@ -62,6 +62,8 @@ namespace lam {
 			actor = (objects::Actor*)currentActor._object;
 			if (!actor->hasSwitchedWeapon())
 				continue;
+
+			actor->toggleSwitchedWeapon();
 
 			std::vector<activeObject>::iterator it = std::find_if(_sprites.begin(), _sprites.end(), [&](const activeObject& x)
 				{
@@ -155,14 +157,14 @@ namespace lam {
 				if (!npc->isPointReached())
 					npc->togglePointReached();
 			}
-
-			if (!npc->seekCheckpoint() && abs(npc->getPosition().distanceFrom(npc->getMoveToCheckPoint())) <= ASTEPDISTANCE)
+			else if (!npc->seekCheckpoint() && npc->getPosition().distanceFrom(npc->getMoveToCheckPoint()) <= ASTEPDISTANCE)
 				npc->toggleSeekCheckpoint();
 
 			if (!npc->isPointReached())
 			{
 				if (npc->seekCheckpoint())
 				{
+					npc->toggleSeekCheckpoint();
 					std::vector<engine::NPCThread>::iterator it =
 						std::find_if(_threads.begin(), _threads.end(), [&](const engine::NPCThread& x) { return x._npc == npc; });
 
@@ -174,7 +176,6 @@ namespace lam {
 							thread._npc = npc;
 							thread._thread = new std::thread(LevelAssetManager::threadFunction, npc,
 								std::ref(thread._isFinished), std::ref(thread._returnValue));
-							npc->toggleSeekCheckpoint();
 							break;
 						}
 					}
@@ -183,9 +184,10 @@ namespace lam {
 						if ((*it)._isFinished == true)
 						{
 							const math::Vector2 nextStep = (*it)._returnValue;
-							math::Vector2 temp = math::Vector2::calculateUnitVector(nextStep - npc->getPosition());
 							npc->setMoveToCheckPoint(nextStep);
-							npc->setMoveDirection(math::Vector2::calculateUnitVector(nextStep - npc->getPosition()));
+							math::Vector2 temp = math::Vector2::calculateUnitVector(nextStep - npc->getPosition());
+							temp = nextStep.x == 0 && nextStep.y < 0 || nextStep.y == 0 && nextStep.x < 0 ? math::Vector2(0,0) - temp : temp;
+							npc->setMoveDirection(temp);
 
 							(*it)._thread->join();
 							delete (*it)._thread;
@@ -672,13 +674,17 @@ namespace lam {
 						}
 					}
 				}
-				if (path.size() > 1)
-				{
-					path.pop_back();
-				}
+
+				
+
 				math::Vector3 to = path.back();
 				math::Vector2 previousMove = math::Vector2(0,0);
-				if (!path.empty())
+
+				if (path.size() == 2)
+				{
+					return math::Vector2(to.x, to.y);
+				}
+				else if (!path.empty())
 				{
 					std::vector<math::Vector3>::reverse_iterator temp = path.rbegin();
 					for (std::vector<math::Vector3>::reverse_iterator it = path.rbegin(); it != path.rend(); ++it)
@@ -686,7 +692,7 @@ namespace lam {
 						if (*it == *temp)
 							continue;
 
-						if ((previousMove.x != 0 && previousMove.y != 0)
+						if ((previousMove.x != 0 || previousMove.y != 0)
 							&& (math::Vector2((*it).x, (*it).y) - math::Vector2((*temp).x, (*temp).y) != previousMove
 							|| *it == path.front()))
 						{
@@ -699,7 +705,8 @@ namespace lam {
 					}
 				}
 				else to = endpointCurrent;
-					return math::Vector2(to.x,to.y);
+
+				return math::Vector2(to.x,to.y);
 			}
 
 
