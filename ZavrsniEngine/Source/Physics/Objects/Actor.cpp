@@ -125,6 +125,7 @@ namespace objects {
 				if (_weapon != nullptr)
 				{
 					_weapon->DestroySprite();
+					_weapon = nullptr;
 				}
 			}
 
@@ -278,7 +279,7 @@ namespace objects {
 
 				if (obstructed == true)
 				{
-					//_sighted.erase(std::remove_if(_sighted.begin(), _sighted.end(), [&](GameObject* x) {return x == sighted; }));
+					_sighted.erase(std::remove_if(_sighted.begin(), _sighted.end() - 1, [&](GameObject* x) {return x == sighted; }));
 				}
 			}
 		}

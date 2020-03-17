@@ -8,7 +8,7 @@ namespace objects {
 	}
 
 	NPC::NPC(GameObject gameObject, unsigned int health, float movementSpeed)
-		:Actor(gameObject, health, movementSpeed, ActorState::STATE_STILL),_lookingAt(nullptr),_AIState(AIState::AI_STATE_PASSIVE),_NPCTimer(engine::Timer()),_rotationGoal(0)
+		:Actor(gameObject, health, movementSpeed, ActorState::STATE_STILL),_lookingAt(nullptr),_AIState(AIState::AI_STATE_PASSIVE),_NPCTimer(engine::Timer()),_rotationGoal(0),_reactionDelay(0.1f)
 	{
 	}
 

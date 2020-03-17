@@ -25,13 +25,13 @@ namespace lam {
 	{
 			processPathfinding();
 			processSight();
-			refreshWeapons();
 			processPlayer(window); 
 			processNPCs(window);
 			processCollision();
 			processHitDetection();
 			processMovement();
 			processUI();
+			refreshWeapons();
 	}
 
 	void LevelAssetManager::fillObjects()
@@ -75,7 +75,6 @@ namespace lam {
 				if (it == _sprites.end())
 				{
 					add(actor->getWeapon(), currentActor._name + "Weapon" + std::to_string(actor->getWeapon()->getID()));
-					_layer->add(actor->getWeapon());
 				}
 				else
 				{
@@ -84,7 +83,7 @@ namespace lam {
 						graphics::Sprite* sprite = (graphics::Sprite*)(*it)._object;
 						sprite->DestroySprite();
 						(*it)._object = actor->getWeapon();
-						_layer->add(actor->getWeapon());
+						add(actor->getWeapon(), currentActor._name + "Weapon" + std::to_string(actor->getWeapon()->getID()));
 					}
 				}
 			}

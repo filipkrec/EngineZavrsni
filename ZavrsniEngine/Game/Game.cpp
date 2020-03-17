@@ -264,10 +264,10 @@ class Game : public engine::Engine
 				if (npc != nullptr)
 				{
 					lam::LevelAssetManager::add(npc, spawner->getSpawnName());
-					//objects::Weapon* weapon = (weapons.at(0));
-					//weapon = weapon->clone();
-					//weapons.push_back(weapon);
-					//npc->setWeapon(weapon);
+					objects::Weapon* weapon = (weapons.at(0));
+					weapon = weapon->clone();
+					weapons.push_back(weapon);
+					npc->setWeapon(weapon);
 				}
 			}
 		}
