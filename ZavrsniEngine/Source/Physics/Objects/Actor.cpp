@@ -307,7 +307,7 @@ namespace objects {
 			{
 				GameObject::collide(other);
 
-				if (_seekPath == false)
+				if (other.getAllegiance() != Allegiance::ENVIROMENT && _seekPath == false)
 					toggleSeekPath();
 			}
 		}

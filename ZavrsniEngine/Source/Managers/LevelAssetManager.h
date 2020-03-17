@@ -102,6 +102,7 @@ namespace lam {
 		static void add(objects::NPC* NPC, const std::string& name);
 		static void cleanNPCs();
 		static objects::NPC* getNPC(const std::string& name);
+		static bool checkForNpcs(const math::Vector2& point);
 
 		static void add(objects::Pickup* pickup, const std::string& name);
 		static void cleanPickups();

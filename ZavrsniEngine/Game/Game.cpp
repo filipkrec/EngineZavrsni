@@ -235,10 +235,10 @@ class Game : public engine::Engine
 		objects::NPC prototype(objects::GameObject(graphics::Sprite(-8.0f, -8.0f, 1.0f, 1.0f, graphics::TextureManager::get("Enemy_idle"), 2), 100), 50, 50);
 		prototype.setSight(45.0f, 6.0f);
 
-		spawnerLocations.push_back(math::Vector2(-31, -40));
-		spawnerLocations.push_back(math::Vector2(31, -41));
-		spawnerLocations.push_back(math::Vector2(31, 32));
-		spawnerLocations.push_back(math::Vector2(-41, 32));
+		spawnerLocations.push_back(math::Vector2(-31, -40)); //dolje ljevo
+		spawnerLocations.push_back(math::Vector2(31, -41)); //dolje desno
+		spawnerLocations.push_back(math::Vector2(31, 32)); //gore desno
+		spawnerLocations.push_back(math::Vector2(-41, 32)); //gore ljevo
 
 		Spawner* spawner = new Spawner(prototype,spawnerLocations.at(0), lam::LevelAssetManager::getPlayer()->getPosition(), 1.0f,1);
 		spawners.push_back(spawner);
@@ -253,16 +253,22 @@ class Game : public engine::Engine
 		graphics::Sprite* cursor = lam::LevelAssetManager::getSprite("crosshairCursor");
 		for (Spawner* spawner : spawners)
 		{
-			spawner->setSpawnLocation(spawnerLocations.at(rand() % 4));
-			spawner->setDestination(lam::LevelAssetManager::getPlayer()->getPosition());
-			objects::NPC* npc = spawner->Spawn();
-			if (npc != nullptr)
+			math::Vector2& spawnerLoc = spawnerLocations.at(rand() % 4);
+			if (!lam::LevelAssetManager::checkForNpcs(spawnerLoc))
 			{
-				lam::LevelAssetManager::add(npc, spawner->getSpawnName());
-				//objects::Weapon* weapon = (weapons.at(0));
-				//weapon = weapon->clone();
-				//weapons.push_back(weapon);
-				//npc->setWeapon(weapon);
+				spawner->setSpawnLocation(spawnerLoc);
+				spawner->setDestination(lam::LevelAssetManager::getPlayer()->getPosition());
+
+
+				objects::NPC* npc = spawner->Spawn();
+				if (npc != nullptr)
+				{
+					lam::LevelAssetManager::add(npc, spawner->getSpawnName());
+					//objects::Weapon* weapon = (weapons.at(0));
+					//weapon = weapon->clone();
+					//weapons.push_back(weapon);
+					//npc->setWeapon(weapon);
+				}
 			}
 		}
 

@@ -162,10 +162,12 @@ namespace math {
 
 		float length = sqrtf((vec.x * vec.x) + (vec.y * vec.y));
 		float retX = vec.x;
+		if (abs(retX) < 0.001f) retX = 0;
 		float retY = vec.y;
+		if (abs(retY) < 0.001f) retY = 0;
 
-		if(length > 0)
-			return math::Vector2(retX / length, retY / length);
+		if(length > 0.001)
+			return math::Vector2(retX == 0 ? 0 : retX / length, retY == 0 ? 0 : retY / length);
 		else 
 			return math::Vector2(0, 0);
 	}

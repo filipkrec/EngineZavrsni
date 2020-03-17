@@ -167,7 +167,7 @@ namespace lam {
 					math::Vector2 nextPath = npc->getCheckpoint();
 					if (npc->getPosition().distanceFrom(nextPath) <= ASTEPDISTANCE)
 					{
-						if (npc->getPosition().distanceFrom(nextPath) <= 0.1)
+						if (npc->getPosition().distanceFrom(nextPath) <= ASTEPDISTANCE)
 						{
 							npc->popPath();
 						}
@@ -176,16 +176,16 @@ namespace lam {
 					math::Vector2 temp = npc->getPosition();
 					if (abs(temp.x) < 0.02)
 					{
-						temp.x = (temp.x > 0) - (temp.x < 0) * 0.02;
+						temp.x = ((temp.x > 0) - (temp.x < 0)) * 0.02;
 						//sign func  (temp.x > 0) - (temp.x < 0)
 					}
 					if (abs(temp.y) < 0.02)
 					{
-						temp.y = (temp.y > 0) - (temp.y < 0) * 0.02;
+						temp.y = ((temp.y > 0) - (temp.y < 0)) * 0.02;
 						//sign func  (temp.x > 0) - (temp.x < 0)
 					}
 					math::Vector2 direction = math::Vector2::calculateUnitVector(nextPath - npc->getPosition());
-					direction = nextPath.x == 0 && nextPath.y < 0 || nextPath.y == 0 && nextPath.x < 0 ? math::Vector2(0, 0) - direction : direction;
+
 					if (direction == math::Vector2(0, 0) && npc->getPosition().distanceFrom(npc->getMoveToPoint()) >= ASTEPDISTANCE)
 						direction = math::Vector2::calculateUnitVector(npc->getMoveToPoint() - npc->getPosition());
 					
@@ -596,6 +596,18 @@ namespace lam {
 		return nullptr;
 	}
 
+
+	bool LevelAssetManager::checkForNpcs(const math::Vector2& point)
+	{
+		objects::NPC* npcp;
+		for (activeObject& npc : _NPCs)
+		{
+			npcp = (objects::NPC*)npc._object;
+			if (npcp->isHit(point)) return true;
+		}
+		return false;
+	}
+
 	void LevelAssetManager::add(objects::Pickup* pickup, const std::string& name)
 	{
 		_pickups.push_back(activeObject((void*)pickup, name));
@@ -780,9 +792,7 @@ namespace lam {
 
 			float gameObjectCollisionRange = gameObject1.getCollisionRange().length();
 
-			if (
-				(gameObject1.getAllegiance() == objects::Allegiance::ENVIROMENT || gameObject1.getWeight() >= npc->getWeight() * 4)
-				&& 
+			if ((gameObject1.getAllegiance() == objects::Allegiance::ENVIROMENT || gameObject1.getWeight() >= npc->getWeight() * 4) &&
 				gameObject1.willBeHit(temp, distanceVector)
 				)
 				return true;
