@@ -41,6 +41,7 @@ namespace graphics {
 
 	void Renderer::begin()
 	{
+		_count = 0;
 		glBindVertexArray(_VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,_IBO);
@@ -138,19 +139,19 @@ namespace graphics {
 
 		temp.Position = Camera::getInstance()->getViewMatrix() * modelMatrix * (math::Vector2(-size.x / 2, -size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[0];
-		const unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
+		unsigned int indexA = setIndex(temp); //postavljanje vrha tocke A kvadrata (ljevo dolje)
 
 		temp.Position = Camera::getInstance()->getViewMatrix() * modelMatrix * (math::Vector2(-size.x / 2, size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[1];
-		const unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
+		unsigned int indexB = setIndex(temp); //postavljanje vrha tocke B kvadrata (ljevo gore)
 
 		temp.Position = Camera::getInstance()->getViewMatrix() * modelMatrix * (math::Vector2(size.x / 2, size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[2];
-		const unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
+		unsigned int indexC = setIndex(temp); //postavljanje vrha tocke C kvadrata (desno gore)
 
 		temp.Position = Camera::getInstance()->getViewMatrix() * modelMatrix * (math::Vector2(size.x / 2, -size.y / 2) + offset);
 		temp.TextureCoordinate = textureCoordinates[3];
-		const unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
+		unsigned int indexD = setIndex(temp); //postavljanje vrha tocke D kvadrata (desno dolje)
 
 		//Rasporedivanje odgovarajucih indexa u 2 polovice(trokuta) za crtanje
 		*_indices = indexA;
@@ -205,7 +206,7 @@ namespace graphics {
 
 	//PRIVATES
 
-	const unsigned int& Renderer::setIndex(VertexData& current)
+	unsigned int Renderer::setIndex(VertexData& current)
 	{
 			*_vertexBufferData = current;
 			_vertexBufferData++;

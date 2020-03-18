@@ -55,7 +55,7 @@ namespace graphics {
 		void end();
 		void flush();
 	private:
-		const unsigned int& setIndex(VertexData& current);
+		unsigned int setIndex(VertexData& current);
 	};
 
 }
