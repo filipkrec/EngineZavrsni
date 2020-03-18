@@ -14,18 +14,61 @@ namespace objects {
 
 	void NPC::process(const engine::Window& window)
 	{
-		moveInDirection();
-		lookAt();
+		if (_weapon != nullptr)
+		{
+			_weapon->clearShots();
+		}
+		if (getState() != ActorState::STATE_DEAD)
+		{
+			moveInDirection();
+			lookAt();
+			processAI();
+			processSight();
+		}
 		animate();
-		processAI();
-		processSight();
 	}
 
 	void NPC::processAI()
 	{
+		if (_rotationGoal < 0)
+		{
+			if (_rotationGoal <= -5.0f)
+			{
+				rotate(-5.0f);
+				_rotationGoal += 5.0f;
+			}
+			else
+			{
+				rotate(_rotationGoal);
+				_rotationGoal = 0;
+			}
+
+		}
+		else if (_rotationGoal > 0)
+		{
+			if (_rotationGoal >= 5.0f)
+			{
+				rotate(5.0f);
+				_rotationGoal -= 5.0f;
+			}
+			else
+			{
+				rotate(_rotationGoal);
+				_rotationGoal == 0;
+			}
+		}
+
 		if (_NPCTimer.elapsed() <= _reactionDelay)
 		{
 			return;
+		}
+		_NPCTimer.reset();
+
+
+		if (_weapon != nullptr)
+		{
+			if (_weapon->getClipCurrent() == 0 && _weapon->getAmmoCurrent() >= 0)
+				_weapon->reload();
 		}
 
 		switch (_AIState) {
@@ -66,9 +109,6 @@ namespace objects {
 			break;
 		case (AIState::AI_STATE_ALERT):
 			//if enemy escapes sight move to its last position
-			if(_lookingAt != nullptr)
-				setMoveToPoint(_lookingAt->getPosition());
-
 			if (_lookingAt != nullptr && (_sighted.empty() || !std::any_of(_sighted.begin(), _sighted.end(),
 				[&](GameObject* x)
 				{
@@ -78,11 +118,10 @@ namespace objects {
 				setMoveToPoint(_lookingAt->getPosition());
 				_lookingAt = nullptr;
 			}
-
 			//if weapon target
-			else if (_weapon != nullptr)
+			else if (_weapon != nullptr && _lookingAt != nullptr)
 			{
-				if (_lookingAt->getPosition().distanceFrom(getPosition()) <= 0.8 * _weapon->getRange())
+				if (getPosition().distanceFrom(_lookingAt->getPosition()) <= 0.7 * _weapon->getRange() && getPosition().distanceFrom(_lookingAt->getPosition()) <= 0.7 * _sightRange);
 				{
 					setAIState(AIState::AI_STATE_TARGETING);
 				}
@@ -106,33 +145,6 @@ namespace objects {
 					_rotationGoal = rand() % 360;
 					_rotationGoal -= 180;
 				}
-				if (_rotationGoal < 0)
-				{
-					if (_rotationGoal <= -5.0f)
-					{
-						rotate(-5.0f);
-						_rotationGoal += 5.0f;
-					}
-					else
-					{
-						rotate(_rotationGoal);
-						_rotationGoal = 0;
-					}
-
-				}
-				else if (_rotationGoal > 0)
-				{
-					if (_rotationGoal >= 5.0f)
-					{
-						rotate(5.0f);
-						_rotationGoal -= 5.0f;
-					}
-					else
-					{
-						rotate(_rotationGoal);
-						_rotationGoal == 0;
-					}
-				}
 			}
 
 				//if enemy seen target 
@@ -154,7 +166,7 @@ namespace objects {
 					return x == _lookingAt;
 				});
 
-			if (it == _sighted.end())
+			if (it == _sighted.end() || getPosition().distanceFrom(_lookingAt->getPosition()) <= 0.7 * _weapon->getRange() && getPosition().distanceFrom(_lookingAt->getPosition()) <= 0.7 * _sightRange)
 			{
 				setAIState(AIState::AI_STATE_ALERT);
 				break;
@@ -169,8 +181,8 @@ namespace objects {
 			{
 				GameObject* temp = *it;
 				rotateToPoint(temp->getPosition());
-				if (math::Vector2::getAngleBetween(getRotation(), getPosition() - temp->getPosition())
-					<= _weapon->getSpread() / 2 * 0.5)
+				if (abs(math::Vector2::getAngleBetween(getRotation(), temp->getPosition() - getPosition()))
+					<= _weapon->getSpread() && temp->getState() != objects::ActorState::STATE_DEAD)
 				{
 					_weapon->shoot();
 				}
@@ -187,7 +199,7 @@ namespace objects {
 		{
 			calculateColission(math::Vector3(_moveDirection.x, _moveDirection.y, (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight));
 
-			if(_rotationGoal == 0 && _lookingAt == nullptr)
+			if(_rotationGoal == 0 || _lookingAt == nullptr)
 			rotateToPoint(_moveDirection);
 		}
 	}
@@ -225,7 +237,14 @@ namespace objects {
 		}
 	}
 
-
+	void NPC::onHit(const Weapon* weapon)
+	{
+		Actor::onHit(weapon);
+		if (_AIState == AIState::AI_STATE_DEFENSIVE)
+			setAIState(AIState::AI_STATE_ALERT);
+		setMoveToPoint(getPosition());
+		_rotationGoal = math::Vector2::getAngleBetween(_rotation,weapon->getPosition());
+	}
 	void NPC::addEnemyAllegiance(Allegiance allegiance)
 	{
 		_enemyAllegiances.push_back(allegiance);

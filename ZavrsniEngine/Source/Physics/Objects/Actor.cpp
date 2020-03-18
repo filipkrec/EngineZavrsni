@@ -212,7 +212,7 @@ namespace objects {
 				if (_sightAngle == 0 && _sightRange == 0)
 					return true;
 
-				if (gameObject.getPosition().distanceFrom(getPosition()) + gameObject.getCollisionRange().length() > _sightRange)
+				if (gameObject.getPosition().distanceFrom(getPosition()) - gameObject.getCollisionRange().length() > _sightRange)
 					return false;
 
 				math::Vector2 objectPosition = gameObject.getPosition();

@@ -21,64 +21,66 @@ namespace objects {
 	void Player::processInput(const engine::Window& window)
 	{
 
-		float force = (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight;
-
-		//movement
-		if (window.getKeyPressed(_keyUp))
+		if (_state != ActorState::STATE_DEAD)
 		{
-			if (window.getKeyPressed(_keyLeft) != window.getKeyPressed(_keyRight))
+			float force = (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight;
+
+			//movement
+			if (window.getKeyPressed(_keyUp))
 			{
-				force = force / 1.6;
+				if (window.getKeyPressed(_keyLeft) != window.getKeyPressed(_keyRight))
+				{
+					force = force / 1.6;
+				}
+				calculateColission(math::Vector3(0.0f, 1.0f, force));
 			}
-			calculateColission(math::Vector3(0.0f, 1.0f, force));
-		}
 
-		if (window.getKeyPressed(_keyDown))
-		{
-			if (window.getKeyPressed(_keyLeft) != window.getKeyPressed(_keyRight))
+			if (window.getKeyPressed(_keyDown))
 			{
-				force = force / 1.6;
+				if (window.getKeyPressed(_keyLeft) != window.getKeyPressed(_keyRight))
+				{
+					force = force / 1.6;
+				}
+				calculateColission(math::Vector3(0.0f, -1.0f, force));
 			}
-			calculateColission(math::Vector3(0.0f, -1.0f, force));
-		}
 
-		if (window.getKeyPressed(_keyLeft))
-		{
-			calculateColission(math::Vector3(-1.0f, 0.0f, force));
-		}
-		
-		if (window.getKeyPressed(_keyRight))
-		{
-			calculateColission(math::Vector3(1.0f, 0.0f, force));
-		}
-
-		//rotation
-		math::Vector2 mouseVector = getVectorToMouse(window);
-		rotateToPoint(mouseVector);
-
-		//pickup
-		if (_keyPickup == 0 || window.getKey(_keyPickup))
-		{
-			if (!_pickUpable.empty())
+			if (window.getKeyPressed(_keyLeft))
 			{
-				pickup(*_pickUpable.back());
+				calculateColission(math::Vector3(-1.0f, 0.0f, force));
+			}
+
+			if (window.getKeyPressed(_keyRight))
+			{
+				calculateColission(math::Vector3(1.0f, 0.0f, force));
+			}
+
+			//rotation
+			math::Vector2 mouseVector = getVectorToMouse(window);
+			rotateToPoint(mouseVector);
+
+			//pickup
+			if (_keyPickup == 0 || window.getKey(_keyPickup))
+			{
+				if (!_pickUpable.empty())
+				{
+					pickup(*_pickUpable.back());
+				}
+			}
+
+			//shoot 
+			if (window.getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
+			{
+				if (_weapon != nullptr)
+					_weapon->shoot();
+			}
+
+			//reload 
+			if (window.getKeyPressed(GLFW_KEY_R))
+			{
+				if (_weapon != nullptr)
+					_weapon->reload();
 			}
 		}
-
-		//shoot 
-		if (window.getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
-		{
-			if(_weapon != nullptr)
-			_weapon->shoot();
-		}
-
-		//reload 
-		if (window.getKeyPressed(GLFW_KEY_R))
-		{
-			if (_weapon != nullptr)
-				_weapon->reload();
-		}
-
 	}
 
 	void Player::process(const engine::Window& window)
@@ -86,7 +88,6 @@ namespace objects {
 		if (_weapon != nullptr)
 		{
 			_weapon->clearShots();
-			moveWeapon();
 		}
 		processInput(window);
 		processSight();

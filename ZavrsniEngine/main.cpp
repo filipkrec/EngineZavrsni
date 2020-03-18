@@ -27,6 +27,7 @@ int main()
 	using namespace audio;
 	Window* display = new Window("Display", 800, 600);
 	Layer* layer = new Layer();
+	layer->add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, 0xffff0f0f, 0));
 	TextureManager::add(new Texture("Assets/test2.png"), "Planet");
 	TextureManager::add(new Texture("Assets/test3.png"), "Space");
 	TextureManager::add(new Texture("Assets/test.png"), "!!");
@@ -47,25 +48,18 @@ int main()
 	font->setScale(16, 9);
 
 	lam::LevelAssetManager::init(layer);
-	lam::LevelAssetManager::setPlayer(new Player(GameObject(new Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Main_idle"), 2), 100), 100, 150));
-	lam::LevelAssetManager::add(new NPC(GameObject(new Sprite(-8.0f, -8.0f, 1.0f, 1.0f, TextureManager::get("Enemy_idle"), 2),100),50,50),"NPC");
+	lam::LevelAssetManager::setPlayer(new Player(GameObject(Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Main_idle"), 2), 100), 100, 150));
+	lam::LevelAssetManager::add(new NPC(GameObject(Sprite(-8.0f, -8.0f, 1.0f, 1.0f, TextureManager::get("Enemy_idle"), 2),100),50,50),"NPC");
 	lam::LevelAssetManager::add(new Label("100/100", -10.0f, 6.0f, 0xff00ff00, 0.5f, font, 16), "AmmoLabel");
 	Weapon* weapon = new Weapon(Sprite(0.0f, 0.0f, 2.0f, 2.0f, TextureManager::get("Rifle"), 999), 0, 10, 10, 200.0f, 20.0f, 1, 100, 50, math::Vector2(1.0f, 0.0f));
 	lam::LevelAssetManager::getPlayer()->setWeaponOffset(math::Vector2(0.5f, -0.4f));
-	lam::LevelAssetManager::add((Pickup*)(new Ammo(new Sprite(-4.0f, -4.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), 0, 20)),"Ammo");
-	lam::LevelAssetManager::add((Pickup*)(new WeaponObject(new Sprite(-5.0f, -5.0f, 1.0f, 1.0f, TextureManager::get("Ammo"), 1), weapon)),"WeaponObject");
 	lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 32.0f, 18.0f, 0xffffffff,0), "Space");
 	//lam::LevelAssetManager::add(new Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), "Player");
 	//lam::LevelAssetManager::add(new GameObject(Sprite(0.0f, 0.0f, 6.0f, 2.0f, TextureManager::get("Player"), 1), 100), "Player");
-	lam::LevelAssetManager::add(new GameObject(&Sprite(9.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet");
-	lam::LevelAssetManager::add(new GameObject(&Sprite(3.0f, -3.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet2");
+	lam::LevelAssetManager::add(new GameObject(Sprite(9.0f, 5.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet");
+	lam::LevelAssetManager::add(new GameObject(Sprite(3.0f, -3.0f, 2.0f, 2.0f, TextureManager::get("Planet"), 2), 300), "Planet2");
 
 	lam::LevelAssetManager::getPlayer()->setSight(45.0f,10.0f);
-	lam::LevelAssetManager::getPlayer()->setOnSightFunction([](GameObject* x)
-		{
-			std::cout << x->getSpritePosition().x << std::endl;
-		}
-	);
 	lam::LevelAssetManager::getPlayer()->setAllegiance(Allegiance::GOOD);
 
 	lam::LevelAssetManager::getPlayer()->addTexture(TextureManager::get("Main_walking1"), ActorState::STATE_MOVING);
@@ -73,8 +67,6 @@ int main()
 	lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, ActorState::STATE_MOVING);
 
 	Sprite* sprite = new Sprite(8.0f, 8.0f, 1.0f, 1.0f, 0xff00ff00, 0);
-	lam::LevelAssetManager::add(sprite,"Hitbox");
-	Hitbox hitbox = Hitbox(sprite);
 	
 	lam::LevelAssetManager::getNPC("NPC")->setMoveToPoint(math::Vector2(8.0f,8.0f));
 	/*
@@ -84,7 +76,6 @@ int main()
 	lam::LevelAssetManager::getNPC("NPC")->addEnemyAllegiance(Allegiance::GOOD);
 	*/
 
-	lam::LevelAssetManager::addToLayer(layer);
 	Timer* timer = new Timer();
 	Timer* timerTick = new Timer();
 	int fps = 0;
@@ -181,5 +172,59 @@ int main()
 
 
 
+}
+#endif
+
+#if 0
+#include "gorilla/ga.h"
+#include "gorilla/gau.h"
+
+#include <stdio.h>
+
+static void setFlagAndDestroyOnFinish(ga_Handle* in_handle, void* in_context)
+{
+	gc_int32* flag = (gc_int32*)(in_context);
+	*flag = 1;
+	ga_handle_destroy(in_handle);
+}
+int main(int argc, char** argv)
+{
+	gau_Manager* mgr;
+	ga_Mixer* mixer;
+	ga_Sound* sound;
+	ga_Handle* handle;
+	gau_SampleSourceLoop* loopSrc = 0;
+	gau_SampleSourceLoop** pLoopSrc = &loopSrc;
+	gc_int32 loop = 0;
+	gc_int32 quit = 0;
+
+	/* Initialize library + manager */
+	gc_initialize(0);
+	mgr = gau_manager_create();
+	mixer = gau_manager_mixer(mgr);
+
+	/* Create and play shared sound */
+	if (!loop)
+		pLoopSrc = 0;
+	sound = gau_load_sound_file("Assets/Test.wav", "wav");
+	handle = gau_create_handle_sound(mixer, sound, &setFlagAndDestroyOnFinish, &quit, pLoopSrc);
+	ga_handle_play(handle);
+
+	/* Bounded mix/queue/dispatch loop */
+	while (!quit)
+	{
+		gau_manager_update(mgr);
+		printf("%d / %d\n", ga_handle_tell(handle, GA_TELL_PARAM_CURRENT), ga_handle_tell(handle, GA_TELL_PARAM_TOTAL));
+		gc_thread_sleep(1);
+	}
+
+	/* Clean up sound */
+	ga_sound_release(sound);
+
+	/* Clean up library + manager */
+	gau_manager_destroy(mgr);
+	gc_shutdown();
+
+	return 0;
 }
 #endif

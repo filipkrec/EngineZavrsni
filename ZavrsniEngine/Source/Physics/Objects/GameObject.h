@@ -9,6 +9,13 @@
 namespace objects {
 	class Weapon;
 
+	enum class ActorState
+	{
+		STATE_MOVING,
+		STATE_DEAD,
+		STATE_STILL
+	};
+
 	enum class Allegiance {
 		GOOD,
 		BAD,
@@ -43,6 +50,7 @@ namespace objects {
 		void setAllegiance(Allegiance allegiance);
 		inline const Allegiance getAllegiance() const { return _allegiance; }
 
+
 		inline const bool isCollsionOn() const { return _colissionOn; }
 		void toggleColission();
 
@@ -54,6 +62,8 @@ namespace objects {
 		virtual void collide(GameObject& other);
 		void calculateNextMove();
 		virtual void move();
+
+		virtual const ActorState& getState() const  { return ActorState::STATE_STILL; }
 
 	};
 }

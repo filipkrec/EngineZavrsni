@@ -30,6 +30,8 @@ namespace objects
 		virtual void processAI();
 		virtual void init();
 
+		void onHit(const Weapon* weapon) override;
+
 		void moveInDirection();
 		void lookAt();
 		void process(const engine::Window& window);

@@ -10,7 +10,7 @@ namespace objects
 	}
 
 	Weapon::Weapon(const graphics::Sprite& sprite)
-		: Sprite(sprite), _id(_idCurrent)
+		: Sprite(sprite), _id(_idCurrent), _shotOriginOffset(math::Vector2(0,0))
 	{
 		_idCurrent++;
 		_destroySprite = false;

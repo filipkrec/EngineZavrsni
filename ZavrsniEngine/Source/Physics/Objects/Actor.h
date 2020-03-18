@@ -10,12 +10,6 @@
 #define MOVEMENT_SPEED_COEFFICIENT 0.05
 
 namespace objects {
-	enum class ActorState
-	{
-		STATE_MOVING,
-		STATE_DEAD,
-		STATE_STILL
-	};
 
 	class Actor : public GameObject
 	{
@@ -77,7 +71,7 @@ namespace objects {
 
 		inline const unsigned int& getHealth() const { return _health; }
 		inline const float& getMovementSpeed() const { return _movementSpeed; }
-		inline const ActorState& getState() const { return _state; }
+		const ActorState& getState() const override { return _state; }
 		Weapon* getWeapon();
 
 		void setHealth(int value);

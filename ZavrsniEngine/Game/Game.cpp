@@ -22,6 +22,7 @@ class Game : public engine::Engine
 		window->toggleCursor();
 		//window->toggleVsync();
 		lam::LevelAssetManager::init(layer);
+		//audio::AudioManager::init();
 		swapLevel(&Game::levelMenuInit, &Game::levelMenu);
 	}
 	// jednom svake sekunde
@@ -35,13 +36,13 @@ class Game : public engine::Engine
 		lam::LevelAssetManager::processBegin(*window);
 
 		(this->*level)();
+		//audio::AudioManager::update();
 
 		lam::LevelAssetManager::processEnd(*window);
 	}
 	// Svaki loop !mora se implementirati!
 	void render() 
 	{
-
 		layer->render();
 	};
 
@@ -70,6 +71,7 @@ class Game : public engine::Engine
 		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(0.0f, 0.0f, 8.0f, 2.0f, graphics::TextureManager::get("menuScore"), 2), 0), "menuScore");
 		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(0.0f, -3.0f, 6.0f, 2.0f, graphics::TextureManager::get("menuQuit"), 3), 0), "menuQuit");
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, graphics::TextureManager::get("menuCursor"), 100), "menuCursor");
+		//audio::AudioManager::add(new audio::Audio("MenuMusic","../Assets/Test.wav"));
 	}
 
 	void levelMenu()
@@ -223,7 +225,8 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/rifle.png"), "Rifle");
 
 		//PLAYER SETUP
-		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 5), 100), 100, 150));
+		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 5), 100,
+			objects::Shape::SQUARE,1.5f), 999999, 150));
 		lam::LevelAssetManager::getPlayer()->setAllegiance(objects::Allegiance::GOOD);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking1"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_MOVING);
@@ -233,7 +236,10 @@ class Game : public engine::Engine
 
 		//NPC SETUP
 		objects::NPC prototype(objects::GameObject(graphics::Sprite(-8.0f, -8.0f, 1.0f, 1.0f, graphics::TextureManager::get("Enemy_idle"), 2), 100), 50, 50);
-		prototype.setSight(45.0f, 6.0f);
+		prototype.setAllegiance(objects::Allegiance::BAD);
+		prototype.addEnemyAllegiance(objects::Allegiance::GOOD);
+		prototype.setAIState(objects::AIState::AI_STATE_DEFENSIVE);
+		prototype.setSight(60.0f, 7.0f);
 
 		spawnerLocations.push_back(math::Vector2(-31, -40)); //dolje ljevo
 		spawnerLocations.push_back(math::Vector2(31, -41)); //dolje desno

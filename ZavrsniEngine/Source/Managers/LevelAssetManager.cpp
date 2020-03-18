@@ -54,48 +54,6 @@ namespace lam {
 
 	}
 
-	void LevelAssetManager::refreshWeapons()
-	{
-		objects::Actor* actor;
-		for (activeObject& currentActor : _allActors)
-		{
-			actor = (objects::Actor*)currentActor._object;
-			if (!actor->hasSwitchedWeapon())
-				continue;
-
-			actor->toggleSwitchedWeapon();
-
-			std::vector<activeObject>::iterator it = std::find_if(_sprites.begin(), _sprites.end(), [&](const activeObject& x)
-				{
-					return x._name.find(currentActor._name + "Weapon") != std::string::npos;
-				});
-
-			if (actor->getWeapon() != nullptr)
-			{
-				if (it == _sprites.end())
-				{
-					add(actor->getWeapon(), currentActor._name + "Weapon" + std::to_string(actor->getWeapon()->getID()));
-				}
-				else
-				{
-					if ((*it)._name != currentActor._name + "Weapon" + std::to_string(actor->getWeapon()->getID()))
-					{
-						graphics::Sprite* sprite = (graphics::Sprite*)(*it)._object;
-						sprite->DestroySprite();
-						(*it)._object = actor->getWeapon();
-						add(actor->getWeapon(), currentActor._name + "Weapon" + std::to_string(actor->getWeapon()->getID()));
-					}
-				}
-			}
-			else if(it != _sprites.end())
-			{
-				graphics::Sprite* sprite = (graphics::Sprite*)(*it)._object;
-				sprite->DestroySprite();
-				_sprites.erase(it);
-			}
-		}
-	}
-
 	void LevelAssetManager::processSight()
 	{
 		for (activeObject& actor : _allActors)
@@ -330,7 +288,7 @@ namespace lam {
 					}
 					else
 					{
-						graphics::Line* lineSprite = new graphics::Line(math::Vector2(_player->getWeapon()->getShotPosition()), firedShot);
+						graphics::Line* lineSprite = new graphics::Line(math::Vector2(currentActor->getWeapon()->getShotPosition()), firedShot);
 						_shots.push_back(lineSprite);
 					}
 				}
@@ -373,6 +331,49 @@ namespace lam {
 		}
 	}
 
+
+
+	void LevelAssetManager::refreshWeapons()
+	{
+		objects::Actor* actor;
+		for (activeObject& currentActor : _allActors)
+		{
+			actor = (objects::Actor*)currentActor._object;
+			if (!actor->hasSwitchedWeapon())
+				continue;
+
+			actor->toggleSwitchedWeapon();
+
+			std::vector<activeObject>::iterator it = std::find_if(_sprites.begin(), _sprites.end(), [&](const activeObject& x)
+				{
+					return x._name.find(currentActor._name + "Weapon") != std::string::npos;
+				});
+
+			if (actor->getWeapon() != nullptr)
+			{
+				if (it == _sprites.end())
+				{
+					add(actor->getWeapon(), currentActor._name + "Weapon" + std::to_string(actor->getWeapon()->getID()));
+				}
+				else
+				{
+					if ((*it)._name != currentActor._name + "Weapon" + std::to_string(actor->getWeapon()->getID()))
+					{
+						graphics::Sprite* sprite = (graphics::Sprite*)(*it)._object;
+						sprite->DestroySprite();
+						(*it)._object = actor->getWeapon();
+						add(actor->getWeapon(), currentActor._name + "Weapon" + std::to_string(actor->getWeapon()->getID()));
+					}
+				}
+			}
+			else if (it != _sprites.end())
+			{
+				graphics::Sprite* sprite = (graphics::Sprite*)(*it)._object;
+				sprite->DestroySprite();
+				_sprites.erase(it);
+			}
+		}
+	}
 
 	void LevelAssetManager::threadFunction(objects::NPC* npc, bool& finished)
 	{
@@ -441,7 +442,7 @@ namespace lam {
 
 	void LevelAssetManager::init(graphics::Layer* layer)
 	{
-		while (_threads.size() <= std::thread::hardware_concurrency())
+		while (_threads.size() <= 0 ) // std::thread::hardware_concurrency()
 		{
 			_threads.push_back(engine::NPCThread());
 		}
