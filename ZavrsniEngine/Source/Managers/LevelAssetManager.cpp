@@ -424,16 +424,19 @@ namespace lam {
 
 			_pickups.erase(
 				std::remove_if(_pickups.begin(), _pickups.end(),
-					[](activeObject x) {
+					[](activeObject& x) {
 						objects::Pickup* temp = (objects::Pickup*)x._object;
-						bool destroy = temp->toDestroy();
-						if (destroy)
-						{
-							delete temp;
-						}
-						return destroy;
+						return temp->toDestroy();
 					}),
 				_pickups.end());
+
+			_sprites.erase(
+				std::remove_if(_sprites.begin(), _sprites.end(),
+					[](activeObject& x) {
+						graphics::Sprite* temp = (graphics::Sprite*)x._object;
+						return temp->toDestroySprite();
+					}),
+				_sprites.end());
 
 			cleanUI();
 			window.clearInput();
@@ -477,10 +480,11 @@ namespace lam {
 
 	void LevelAssetManager::cleanUI()
 	{
+		_UIElements.erase(
 		std::remove_if(_UIElements.begin(), _UIElements.end(), [](UIElement x)
 			{
 					return x._sprite->toDestroySprite();
-			});
+			}),_UIElements.end());
 	}
 
 	void LevelAssetManager::changeUIElementPosition(const std::string& name, const math::Vector2& UIPosition)

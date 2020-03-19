@@ -242,7 +242,7 @@ namespace objects {
 		Actor::onHit(weapon);
 		if (_AIState == AIState::AI_STATE_DEFENSIVE)
 			setAIState(AIState::AI_STATE_ALERT);
-		setMoveToPoint(getPosition());
+		setMoveToPoint(weapon->getPosition());
 		_rotationGoal = math::Vector2::getAngleBetween(_rotation,weapon->getPosition());
 	}
 	void NPC::addEnemyAllegiance(Allegiance allegiance)

@@ -20,6 +20,7 @@ namespace objects {
 
 
 		int _health;
+		unsigned int _maxHealth;
 		float _movementSpeed;
 		float _sightAngle;
 		float _sightRange; 
@@ -70,6 +71,7 @@ namespace objects {
 		void setAnimationTimerForState(float interval, ActorState state); //first for state = default texture
 
 		inline const unsigned int& getHealth() const { return _health; }
+		inline const unsigned int& getMaxHealth() const { return _maxHealth; }
 		inline const float& getMovementSpeed() const { return _movementSpeed; }
 		const ActorState& getState() const override { return _state; }
 		Weapon* getWeapon();

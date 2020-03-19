@@ -73,7 +73,6 @@ namespace lam {
 		static void processHitDetection(); //process shots and consequences FORCE CALCULATION
 		static void processMovement(); //move in final FORCE direction
 		static void processUI(); //move UI to camera position
-		static void playAudio(); //playAudio
 
 		static void threadFunction(objects::NPC* npc, bool& finished);
 	public:

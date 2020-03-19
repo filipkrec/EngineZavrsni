@@ -90,6 +90,11 @@ namespace graphics {
 		applyTransformations();
 	}
 
+	void Sprite::setWidth(float number)
+	{
+		_size.x = number;
+	}
+
 	void Sprite::setScale(const math::Vector2& scale)
 	{
 		_scale = scale;

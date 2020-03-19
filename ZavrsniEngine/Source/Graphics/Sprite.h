@@ -47,6 +47,7 @@ namespace graphics {
 		void setScale(const math::Vector2& scale);
 		void rotate(float degrees);
 		void setRotation(float degrees);
+		void setWidth(float number);
 		const Texture* swapTexture(const Texture* texture);
 
 		void applyTransformations();

@@ -128,9 +128,6 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/crosshair.png"), "crosshairCursor");
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, graphics::TextureManager::get("crosshairCursor"), 100), "crosshairCursor");
 
-		lam::LevelAssetManager::add(new graphics::Label("0", 0.0f, 0.0f, 0xff00ff00, 0.3f, font, 101), "FPS");
-		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("FPS"), "FPS", math::Vector2(-14.0f, 8.0f));
-
 		graphics::TextureManager::add(new graphics::Texture("Assets/Ground.png"), "floorTexture");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Wall.png"), "wallTexture");
 
@@ -217,19 +214,26 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_idle.png"), "Main_idle");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_walking1.png"), "Main_walking1");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_walking2.png"), "Main_walking2");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_dead.png"), "Main_dead");
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_idle.png"), "Enemy_idle");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_walking1.png"), "Enemy_walking1");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_walking2.png"), "Enemy_walking2");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_dead.png"), "Enemy_dead");
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/rifle.png"), "Rifle");
 
+		graphics::TextureManager::add(new graphics::Texture("Assets/HPBar.png"), "HPBar");
+		graphics::TextureManager::add(new graphics::Texture("Assets/UIAmmo.png"), "UIAmmo");
+		graphics::TextureManager::add(new graphics::Texture("Assets/iconReload.png"), "iconReload");
+
 		//PLAYER SETUP
 		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 5), 100,
-			objects::Shape::SQUARE,1.5f), 999999, 150));
+			objects::Shape::SQUARE,1.5f), 450, 150));
 		lam::LevelAssetManager::getPlayer()->setAllegiance(objects::Allegiance::GOOD);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking1"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_MOVING);
+		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_DEAD);
 		lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->setSight(0.01f, 0.01f);
 		lam::LevelAssetManager::getPlayer()->setWeaponOffset(math::Vector2(0.5f, -0.4f));
@@ -240,6 +244,9 @@ class Game : public engine::Engine
 		prototype.addEnemyAllegiance(objects::Allegiance::GOOD);
 		prototype.setAIState(objects::AIState::AI_STATE_DEFENSIVE);
 		prototype.setSight(60.0f, 7.0f);
+		prototype.addTexture(graphics::TextureManager::get("Enemy_walking1"), objects::ActorState::STATE_MOVING);
+		prototype.addTexture(graphics::TextureManager::get("Enemy_walking2"), objects::ActorState::STATE_MOVING);
+		prototype.addTexture(graphics::TextureManager::get("Enemy_dead"), objects::ActorState::STATE_DEAD);
 
 		spawnerLocations.push_back(math::Vector2(-31, -40)); //dolje ljevo
 		spawnerLocations.push_back(math::Vector2(31, -41)); //dolje desno
@@ -251,12 +258,38 @@ class Game : public engine::Engine
 
 		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));
 		lam::LevelAssetManager::getPlayer()->setWeapon(weapons.at(0));
+
+		//UI
+
+		lam::LevelAssetManager::add(new graphics::Label("0", 0.0f, 0.0f, 0xff00ff00, 0.3f, font, 102), "FPS");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("FPS"), "FPS", math::Vector2(-14.0f, 8.0f));
+
+		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 4.5f, 1.5f, graphics::TextureManager::get("HPBar"), 101), "HPBar");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getSprite("HPBar"), "HPBar", math::Vector2(10.0f, 7.0f));
+
+		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 3.50f, 0.745f, 0xff0000ff,100),"Health");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getSprite("Health"), "Health", math::Vector2(8.4f, 6.6975f));
+
+		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 0.75f, graphics::TextureManager::get("UIAmmo"), 101),"UIAmmo");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getSprite("UIAmmo"), "UIAmmo", math::Vector2(10.8f, -7.0f));
+
+		lam::LevelAssetManager::add(new graphics::Label("0 / 0", 0.0f, 0.0f, 0xff00a5ff, 0.35f, font, 102), "AmmoClip");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("AmmoClip"), "AmmoClip", math::Vector2(8.0f, -7.05f));
+		lam::LevelAssetManager::add(new graphics::Label("0", 0.0f, 0.0f, 0xff00a5ff, 0.35f, font, 102), "AmmoMax");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("AmmoMax"), "AmmoMax", math::Vector2(8.0f, -7.45f));
+
+		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 2.0f, 1.2f, graphics::TextureManager::get("iconReload"), 101), "iconReload");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getSprite("iconReload"), "iconReload", math::Vector2(13.0f, -7.0f));
 	}
 
 	void LevelDemo()
 	{
+		//CURSOR
 		window->getMousePosition(mousePosition);
 		graphics::Sprite* cursor = lam::LevelAssetManager::getSprite("crosshairCursor");
+		cursor->setPosition(mousePosition);
+
+		//SPAWNERI
 		for (Spawner* spawner : spawners)
 		{
 			math::Vector2& spawnerLoc = spawnerLocations.at(rand() % 4);
@@ -278,9 +311,26 @@ class Game : public engine::Engine
 			}
 		}
 
-		cursor->setPosition(mousePosition);
-	}
+		//UI 
 
+		double healthPercentage = (double)lam::LevelAssetManager::getPlayer()->getHealth() / (double)lam::LevelAssetManager::getPlayer()->getMaxHealth();
+		if (healthPercentage < 100)
+		{
+			math::Vector2 originalHPPosition(10.15f, 7.07f);
+			if (healthPercentage > 0)
+			{
+				lam::LevelAssetManager::getSprite("Health")->setWidth(3.50f * healthPercentage);
+			}
+		}
+		lam::LevelAssetManager::getSprite("Health")->setOffset(math::Vector2(lam::LevelAssetManager::getSprite("Health")->getSize().x / 2, lam::LevelAssetManager::getSprite("Health")->getSize().y / 2));
+
+		lam::LevelAssetManager::getLabel("AmmoClip")
+			->setText(std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getClipCurrent()) + "/" + std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getClipMax()));
+		lam::LevelAssetManager::getLabel("AmmoMax")
+			->setText(std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getAmmoCurrent()));
+
+		lam::LevelAssetManager::getSprite("iconReload")->setColor(lam::LevelAssetManager::getPlayer()->getWeapon()->isReloading() ? 0xffffffff : 0x00ffffff);
+	}
 public:
 	~Game() {
 		delete layer;

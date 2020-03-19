@@ -148,12 +148,15 @@ namespace graphics {
 		_renderer->end();
 		_renderer->flush();
 
-		//brišu se 'novonastali' spriteovi labele
-		for (it = _labelSprites.begin(); it != _labelSprites.end();) {
-			delete *it;
-			it = _labelSprites.erase(it);
-		}
+		_labelSprites.erase(
+			std::remove_if(_labelSprites.begin(), _labelSprites.end(),
+				[](Sprite* x) {
+					return true;
+				}),
+			_labelSprites.end());
 
+		//brišu se 'novonastali' spriteovi labele
+		
 		_labelSprites.clear();
 		_renderingSprites.clear();
 	}

@@ -42,6 +42,8 @@ namespace objects {
 			inline const float getShotCooldownTime() const { return _shotCooldownTime; }
 			inline const unsigned int getClipMax() const { return _clipMax; }
 			inline const unsigned int getClipCurrent() const { return _clipCurrent; }
+			inline const bool isReloading() { return _reloadTimer.elapsed() <= _reloadTime; }
+			inline const bool isShotCooldown() { return _shotCooldownTimer.elapsed() <= _shotCooldownTime; }
 			inline const float getForce() const { return _force; }
 			const math::Vector2 getShotPosition() const;
 
