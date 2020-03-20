@@ -5,9 +5,9 @@
 namespace objects {
 		class Weapon :public graphics::Sprite
 		{
+		protected:
 			engine::Timer _reloadTimer;
 			engine::Timer _shotCooldownTimer;
-		protected:
 			static unsigned int _idCurrent;
 			unsigned int _id;
 			float _reloadTime;

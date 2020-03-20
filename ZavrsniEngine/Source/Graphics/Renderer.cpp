@@ -231,8 +231,10 @@ namespace graphics {
 		{
 			end();
 			flush();
+			_textures.clear();
 			begin();
 		}
+
 		_textures.push_back(textureId);
 		return _textures.size() - 1;
 	}

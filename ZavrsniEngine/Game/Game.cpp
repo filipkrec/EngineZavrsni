@@ -33,12 +33,23 @@ class Game : public engine::Engine
 	}
 	// 60 puta u sekundi
 	void update() {
-		lam::LevelAssetManager::processBegin(*window);
+		if (window->getKey(GLFW_KEY_P) && engine::Timer::isPaused())
+			{
+				window->clearInput();
+				engine::Timer::unpause();
+			}
+		
+		if (!engine::Timer::isPaused())
+			lam::LevelAssetManager::processBegin(*window);
 
-		(this->*level)();
-		//audio::AudioManager::update();
+			(this->*level)();
 
-		lam::LevelAssetManager::processEnd(*window);
+			//audio::AudioManager::update();+
+
+		if (!engine::Timer::isPaused())
+			lam::LevelAssetManager::processEnd(*window);
+
+		window->clearInput();
 	}
 	// Svaki loop !mora se implementirati!
 	void render() 
@@ -50,10 +61,29 @@ class Game : public engine::Engine
 	{
 		lam::LevelAssetManager::clean();
 		graphics::TextureManager::clean();
+		Camera::getInstance()->recenter();
+
+		//clearSpawners
+		spawnerLocations.clear();
+
+		//clearWeapons
+		weapons.clear();
+
+		//clearSpawners
+		spawners.erase(
+			std::remove_if(spawners.begin(), spawners.end(),
+				[](Spawner* x) {
+					delete x;
+					return true;
+				}),
+			spawners.end());
+
 		layer->clear();
 		level = newLevel;
 		(this->*newLevelInit)();
 		skipRender = true;
+
+		engine::Timer::unpause();
 	}
 
 	//MENU CODE
@@ -229,17 +259,17 @@ class Game : public engine::Engine
 
 		//PLAYER SETUP
 		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 5), 100,
-			objects::Shape::SQUARE,1.5f), 450, 150));
+			objects::Shape::SQUARE,1.5f), 100, 150));
 		lam::LevelAssetManager::getPlayer()->setAllegiance(objects::Allegiance::GOOD);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking1"), objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_MOVING);
-		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking2"), objects::ActorState::STATE_DEAD);
+		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_dead"), objects::ActorState::STATE_DEAD);
 		lam::LevelAssetManager::getPlayer()->setAnimationTimerForState(0.3f, objects::ActorState::STATE_MOVING);
 		lam::LevelAssetManager::getPlayer()->setSight(0.01f, 0.01f);
 		lam::LevelAssetManager::getPlayer()->setWeaponOffset(math::Vector2(0.5f, -0.4f));
 
 		//NPC SETUP
-		objects::NPC prototype(objects::GameObject(graphics::Sprite(-8.0f, -8.0f, 1.0f, 1.0f, graphics::TextureManager::get("Enemy_idle"), 2), 100), 50, 50);
+		objects::NPC prototype(objects::GameObject(graphics::Sprite(-8.0f, -8.0f, 1.0f, 1.0f, graphics::TextureManager::get("Enemy_idle"), 3), 100), 50, 50);
 		prototype.setAllegiance(objects::Allegiance::BAD);
 		prototype.addEnemyAllegiance(objects::Allegiance::GOOD);
 		prototype.setAIState(objects::AIState::AI_STATE_DEFENSIVE);
@@ -280,6 +310,12 @@ class Game : public engine::Engine
 
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 2.0f, 1.2f, graphics::TextureManager::get("iconReload"), 101), "iconReload");
 		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getSprite("iconReload"), "iconReload", math::Vector2(13.0f, -7.0f));
+
+		lam::LevelAssetManager::add(new graphics::Label("PAUSED", 0.0f, 0.0f, 0x00696969, 2.0f, font, 102), "PAUSED");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("PAUSED"), "PAUSED", math::Vector2(-8.0f, 0.0f));
+
+		lam::LevelAssetManager::add(new graphics::Label("PRESS Q TO QU1T", 0.0f, 0.0f, 0x00696969, 0.5f, font, 102), "QUIT");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("QUIT"), "QUIT", math::Vector2(-8.0f, -4.0f));
 	}
 
 	void LevelDemo()
@@ -289,47 +325,100 @@ class Game : public engine::Engine
 		graphics::Sprite* cursor = lam::LevelAssetManager::getSprite("crosshairCursor");
 		cursor->setPosition(mousePosition);
 
-		//SPAWNERI
-		for (Spawner* spawner : spawners)
+		if (!engine::Timer::isPaused())
 		{
-			math::Vector2& spawnerLoc = spawnerLocations.at(rand() % 4);
-			if (!lam::LevelAssetManager::checkForNpcs(spawnerLoc))
+			//SPAWNERI
+			for (Spawner* spawner : spawners)
 			{
-				spawner->setSpawnLocation(spawnerLoc);
-				spawner->setDestination(lam::LevelAssetManager::getPlayer()->getPosition());
-
-
-				objects::NPC* npc = spawner->Spawn();
-				if (npc != nullptr)
+				math::Vector2& spawnerLoc = spawnerLocations.at(rand() % 4);
+				if (!lam::LevelAssetManager::checkForNpcs(spawnerLoc))
 				{
-					lam::LevelAssetManager::add(npc, spawner->getSpawnName());
-					objects::Weapon* weapon = (weapons.at(0));
-					weapon = weapon->clone();
-					weapons.push_back(weapon);
-					npc->setWeapon(weapon);
+					spawner->setSpawnLocation(spawnerLoc);
+					spawner->setDestination(lam::LevelAssetManager::getPlayer()->getPosition());
+
+
+					objects::NPC* npc = spawner->Spawn();
+					if (npc != nullptr)
+					{
+						lam::LevelAssetManager::add(npc, spawner->getSpawnName());
+						objects::Weapon* weapon = (weapons.at(0));
+						weapon = weapon->clone();
+						weapons.push_back(weapon);
+						npc->setWeapon(weapon);
+					}
 				}
 			}
-		}
 
-		//UI 
+			//UI 
 
-		double healthPercentage = (double)lam::LevelAssetManager::getPlayer()->getHealth() / (double)lam::LevelAssetManager::getPlayer()->getMaxHealth();
-		if (healthPercentage < 100)
-		{
-			math::Vector2 originalHPPosition(10.15f, 7.07f);
-			if (healthPercentage > 0)
+			double healthPercentage = (double)lam::LevelAssetManager::getPlayer()->getHealth() / (double)lam::LevelAssetManager::getPlayer()->getMaxHealth();
+			if (healthPercentage < 100)
 			{
-				lam::LevelAssetManager::getSprite("Health")->setWidth(3.50f * healthPercentage);
+				math::Vector2 originalHPPosition(10.15f, 7.07f);
+				if (healthPercentage > 0)
+				{
+					lam::LevelAssetManager::getSprite("Health")->setWidth(3.50f * healthPercentage);
+				}
+			}
+			lam::LevelAssetManager::getSprite("Health")->setOffset(math::Vector2(lam::LevelAssetManager::getSprite("Health")->getSize().x / 2, lam::LevelAssetManager::getSprite("Health")->getSize().y / 2));
+
+			if (lam::LevelAssetManager::getPlayer()->getWeapon() != nullptr)
+			{
+				lam::LevelAssetManager::getLabel("AmmoClip")
+					->setText(std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getClipCurrent()) + "/" + std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getClipMax()));
+				lam::LevelAssetManager::getLabel("AmmoMax")
+					->setText(std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getAmmoCurrent()));
+				lam::LevelAssetManager::getSprite("iconReload")->setColor(lam::LevelAssetManager::getPlayer()->getWeapon()->isReloading() ? 0xffffffff : 0x00ffffff);
+			}
+
+			lam::LevelAssetManager::getLabel("PAUSED")->setColor(0x00696969);
+
+			//PLAYER
+			if (lam::LevelAssetManager::getPlayer()->isDead())
+			{
+				lam::LevelAssetManager::getPlayer()->setZindex(2);
+				lam::LevelAssetManager::getPlayer()->setScale(math::Vector2(1.4f, 0.8f));
+				lam::LevelAssetManager::getLabel("QUIT")->setColor(0xff696969);
+				if (window->getKeyPressed(GLFW_KEY_Q))
+				{
+					swapLevel(&Game::levelMenuInit, &Game::levelMenu);
+				}
+			}
+			else
+			{
+				lam::LevelAssetManager::getLabel("QUIT")->setColor(0x00696969);
+
+				if (window->getKey(GLFW_KEY_P))
+				{
+					engine::Timer::pause();
+				}
+			}
+
+			//NPCS
+			objects::NPC* npc;
+			int i = 0;
+			while (true)
+			{
+				npc = lam::LevelAssetManager::getNPC(i);
+				if (npc == nullptr)
+					break;
+				if (npc->isDead())
+				{
+					npc->setScale(math::Vector2(1.6f, 1.0f));
+				}
+				++i;
 			}
 		}
-		lam::LevelAssetManager::getSprite("Health")->setOffset(math::Vector2(lam::LevelAssetManager::getSprite("Health")->getSize().x / 2, lam::LevelAssetManager::getSprite("Health")->getSize().y / 2));
+		else
+		{
+			lam::LevelAssetManager::getLabel("PAUSED")->setColor(0xff696969);
+			lam::LevelAssetManager::getLabel("QUIT")->setColor(0xff696969);
 
-		lam::LevelAssetManager::getLabel("AmmoClip")
-			->setText(std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getClipCurrent()) + "/" + std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getClipMax()));
-		lam::LevelAssetManager::getLabel("AmmoMax")
-			->setText(std::to_string(lam::LevelAssetManager::getPlayer()->getWeapon()->getAmmoCurrent()));
-
-		lam::LevelAssetManager::getSprite("iconReload")->setColor(lam::LevelAssetManager::getPlayer()->getWeapon()->isReloading() ? 0xffffffff : 0x00ffffff);
+			if (window->getKeyPressed(GLFW_KEY_Q))
+			{
+				swapLevel(&Game::levelMenuInit,&Game::levelMenu);
+			}
+		}
 	}
 public:
 	~Game() {

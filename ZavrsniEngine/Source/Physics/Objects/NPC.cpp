@@ -30,6 +30,11 @@ namespace objects {
 
 	void NPC::processAI()
 	{
+		if (_lookingAt != nullptr)
+		{
+			_rotationGoal = 0;
+		}
+
 		if (_rotationGoal < 0)
 		{
 			if (_rotationGoal <= -5.0f)
@@ -121,7 +126,7 @@ namespace objects {
 			//if weapon target
 			else if (_weapon != nullptr && _lookingAt != nullptr)
 			{
-				if (getPosition().distanceFrom(_lookingAt->getPosition()) <= 0.7 * _weapon->getRange() && getPosition().distanceFrom(_lookingAt->getPosition()) <= 0.7 * _sightRange);
+				if (getPosition().distanceFrom(_lookingAt->getPosition()) < 0.8 * _weapon->getRange() && getPosition().distanceFrom(_lookingAt->getPosition()) < 0.8 * _sightRange);
 				{
 					setAIState(AIState::AI_STATE_TARGETING);
 				}
@@ -166,14 +171,11 @@ namespace objects {
 					return x == _lookingAt;
 				});
 
-			if (it == _sighted.end() || getPosition().distanceFrom(_lookingAt->getPosition()) <= 0.7 * _weapon->getRange() && getPosition().distanceFrom(_lookingAt->getPosition()) <= 0.7 * _sightRange)
+			if (it == _sighted.end() || getPosition().distanceFrom(_lookingAt->getPosition()) >  _weapon->getRange() * 0.8 || getPosition().distanceFrom(_lookingAt->getPosition()) >  _sightRange * 0.8)
 			{
 				setAIState(AIState::AI_STATE_ALERT);
+				setMoveToPoint(_lookingAt->getPosition());
 				break;
-			}
-			else
-			{
-				setMoveToPoint(getPosition());
 			}
 
 			//ako vidi metu pucaj
@@ -199,7 +201,7 @@ namespace objects {
 		{
 			calculateColission(math::Vector3(_moveDirection.x, _moveDirection.y, (_movementSpeed * MOVEMENT_SPEED_COEFFICIENT) * _weight));
 
-			if(_rotationGoal == 0 || _lookingAt == nullptr)
+			if(_rotationGoal == 0 && _lookingAt == nullptr)
 			rotateToPoint(_moveDirection);
 		}
 	}

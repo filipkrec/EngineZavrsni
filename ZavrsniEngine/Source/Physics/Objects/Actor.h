@@ -122,6 +122,7 @@ namespace objects {
 		void toggleSwitchedWeapon();
 
 		inline const bool  isPathFinished() const { return _pathFinished; }
+		inline const bool  isDead() const { return _state == ActorState::STATE_DEAD; }
 		inline const bool  isPointReached() const { return _state != ActorState::STATE_DEAD ? _pointReached : true; }
 		inline const bool  seekPath() const { return _state != ActorState::STATE_DEAD ? _seekPath : false; }
 		inline const bool  isPatrol() const { return _state != ActorState::STATE_DEAD ? _patrol : false; }

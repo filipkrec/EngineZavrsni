@@ -4,7 +4,9 @@ Rifle::Rifle() //float zindex
 	:Weapon(Sprite(0.0f, 0.0f, 0.0f, 0.0f, nullptr, 2), 0, 0, 0, 0, 0, 0, 0, 0, math::Vector2(0.0f, 0.0f))
 {
 	_reloadTime = 1.5f;
+	_reloadTimer = engine::Timer(_reloadTime);
 	_shotCooldownTime = 0.4f;
+	_shotCooldownTimer = engine::Timer(_shotCooldownTime);
 	_dmgMin = 15.0f;
 	_dmgMax = 20.0f; 
 	_force = 200.0f;

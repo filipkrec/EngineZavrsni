@@ -52,7 +52,7 @@ namespace engine {
 		// 60 puta u sekundi
 		virtual void update() {}
 		// Svaki loop !mora se implementirati!
-		virtual void render() = 0; 
+		virtual void render() = 0;
 
 		const unsigned int getFPS() const { return _FPS; }
 		const unsigned int getUPS() const { return _UPS; }
@@ -60,6 +60,7 @@ namespace engine {
 		void run()
 		{
 			_Timer = new Timer();
+			_Timer->setUnpausable();
 			float timer = 0.0f;
 			float updateTimer = 0.0f;
 			float updateTick = 1.0f / PROCESSING_INTERVAL;
@@ -68,15 +69,17 @@ namespace engine {
 			while (!_Window->closed())
 			{
 				_Window->clear();
+
 				if (_Timer->elapsed() - updateTimer > updateTick)
 				{
-					update();
 					updates++;
 					updateTimer += updateTick;
+					update();
 				}
 				render();
 				frames++;
 				_Window->update();
+
 				if (_Timer->elapsed() - timer > 1.0f)
 				{
 					timer += 1.0f;
@@ -86,6 +89,7 @@ namespace engine {
 					updates = 0;
 					tick();
 				}
+
 			}
 		}
 	};

@@ -25,7 +25,7 @@ namespace lam {
 	{
 			processPathfinding();
 			processSight();
-			processPlayer(window); 
+			processPlayer(window);
 			processNPCs(window);
 			processCollision();
 			processHitDetection();
@@ -439,7 +439,6 @@ namespace lam {
 				_sprites.end());
 
 			cleanUI();
-			window.clearInput();
 			_timer->reset();
 	}
 
@@ -452,6 +451,19 @@ namespace lam {
 			_layer = layer;
 	}
 
+	void LevelAssetManager::clean()
+	{
+		if (_player != nullptr)
+		{
+			_player->DestroySprite();
+			_player = nullptr;
+		}
+		cleanGameObjects();
+		cleanNPCs();
+		cleanSprites();
+		cleanLabels();
+		cleanUI();
+	}
 
 	void LevelAssetManager::setPlayer(objects::Player* player)
 	{
@@ -504,7 +516,10 @@ namespace lam {
 	void LevelAssetManager::cleanSprites()
 	{
 		for (activeObject& sprite : _sprites)
-			delete (graphics::Sprite*)sprite._object;
+		{
+			graphics::Sprite* temp = (graphics::Sprite*)sprite._object;
+			temp->DestroySprite();
+		}
 
 		_UIElements.clear();
 		_sprites.clear();
@@ -529,7 +544,10 @@ namespace lam {
 	void LevelAssetManager::cleanLabels()
 	{
 		for (activeObject& label : _labels)
-			delete (graphics::Label*)label._object;
+		{
+			graphics::Label* temp = (graphics::Label*)label._object;
+			temp->DestroySprite();
+		}
 
 		_labels.clear();
 	}
@@ -554,7 +572,10 @@ namespace lam {
 	void LevelAssetManager::cleanGameObjects()
 	{
 		for (activeObject& gameObject : _gameObjects)
-			delete (objects::GameObject*)gameObject._object;
+		{
+			objects::GameObject* temp = (objects::GameObject*)gameObject._object;
+			temp->DestroySprite();
+		}
 
 		_gameObjects.clear();
 		fillObjects();
@@ -581,7 +602,10 @@ namespace lam {
 	void LevelAssetManager::cleanNPCs()
 	{
 		for (activeObject& NPC : _NPCs)
-			delete (objects::NPC*)NPC._object;
+		{
+			objects::NPC* temp = (objects::NPC*)NPC._object;
+			temp->DestroySprite();
+		}
 
 		_NPCs.clear();
 		fillObjects();
@@ -598,6 +622,18 @@ namespace lam {
 			}
 		}
 		return nullptr;
+	}
+
+
+	objects::NPC* LevelAssetManager::getNPC(const unsigned int id)
+	{
+		if (id >= _NPCs.size())
+			return nullptr;
+		else 
+		{
+				objects::NPC* npcreturn = (objects::NPC*)_NPCs.at(id)._object;
+				return npcreturn;
+		}
 	}
 
 
@@ -620,7 +656,10 @@ namespace lam {
 	void LevelAssetManager::cleanPickups()
 	{
 		for (activeObject pickup : _pickups)
-			delete (objects::Pickup*)pickup._object;
+		{
+			objects::Pickup* temp = (objects::Pickup*)pickup._object;
+			temp->DestroySprite();
+		}
 
 		_pickups.clear();
 	}
@@ -642,15 +681,6 @@ namespace lam {
 
 		return nullptr;
 	}
-
-	void LevelAssetManager::clean()
-	{
-		cleanGameObjects();
-		cleanNPCs();
-		cleanSprites();
-		cleanLabels();
-	}
-
 
 	bool LevelAssetManager::calculatePath(const math::Vector2& goal,objects::NPC* npc)
 	{
@@ -748,7 +778,6 @@ namespace lam {
 					{return x.x == nextPositionTemp.x && x.y == nextPositionTemp.y; }))
 					availablePoints.push_back(nextPositionTemp);
 			}
-			//!pathBlocked(nextPositionTemp, currentPosition, npc)
 
 			//get smallest distance from available directions
 			bool multipleEndpoints = false;

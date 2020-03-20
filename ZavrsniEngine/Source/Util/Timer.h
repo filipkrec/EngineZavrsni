@@ -6,30 +6,23 @@ namespace engine {
 	class Timer
 	{
 	private:
+		bool _dontPause;
 		typedef std::chrono::high_resolution_clock HighResolutionClock;
 		typedef std::chrono::duration<float, std::milli> milisecondsType;
-		std::chrono::time_point<HighResolutionClock> _Start;
+		std::chrono::time_point<HighResolutionClock> _start;
+
+		static std::chrono::time_point<HighResolutionClock> _pauseStart;
+		static float _pauseTime;
+		static bool _paused;
 	public:
-		Timer()
-		{
-			reset();
-		}
-
-		Timer(float startingTime)
-		{
-			int roundedUp = ceil(startingTime);
-			_Start = HighResolutionClock::now();
-			_Start -= std::chrono::seconds(roundedUp);
-		}
-
-		void reset()
-		{
-			_Start = HighResolutionClock::now();
-		}
-
-		float elapsed()
-		{
-			return std::chrono::duration_cast<milisecondsType>(HighResolutionClock::now() - _Start).count() / 1000.0f;
-		}
+		Timer();
+		Timer(float startingTime);
+		void reset();
+		float elapsed();
+		void setUnpausable();
+		static void pause();
+		static bool isPaused();
+		static float getPauseTime();
+		static void unpause();
 	};
 }

@@ -46,12 +46,44 @@ namespace graphics {
 
 	void Layer::clear()
 	{
+
+		_sprites.erase(
+			std::remove_if(_sprites.begin(), _sprites.end(),
+				[](Sprite* x) {
+					delete x;
+					return true;
+				}),
+			_sprites.end());
 		_sprites.clear();
 
+
+		_labels.erase(
+			std::remove_if(_labels.begin(), _labels.end(),
+				[](Sprite* x) {
+					delete x;
+					return true;
+				}),
+			_labels.end());
 		_labels.clear();
 
+
+		_labelSprites.erase(
+			std::remove_if(_labelSprites.begin(), _labelSprites.end(),
+				[](Sprite* x) {
+					delete x;
+					return true;
+				}),
+			_labelSprites.end());
 		_labelSprites.clear();
 
+
+		_renderingSprites.erase(
+			std::remove_if(_renderingSprites.begin(), _renderingSprites.end(),
+				[](Sprite* x) {
+					delete x;
+					return true;
+				}),
+			_renderingSprites.end());
 		_renderingSprites.clear();
 	}
 
@@ -151,6 +183,7 @@ namespace graphics {
 		_labelSprites.erase(
 			std::remove_if(_labelSprites.begin(), _labelSprites.end(),
 				[](Sprite* x) {
+					delete x;
 					return true;
 				}),
 			_labelSprites.end());

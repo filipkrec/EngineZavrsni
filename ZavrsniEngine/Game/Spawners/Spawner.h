@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Source/Engine.h"
-#define MAXSPAWN 1
+#define MAXSPAWN 2
 
 class Spawner
 {

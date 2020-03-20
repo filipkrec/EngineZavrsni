@@ -7,7 +7,7 @@ namespace objects {
 
 		Actor::Actor(GameObject& gameObject, unsigned int health, float movementSpeed, const ActorState& state)
 			: GameObject(gameObject), _health(health), _maxHealth(health), _movementSpeed(movementSpeed), _state(state), _weapon(nullptr),_actorTimer(engine::Timer()),
-		_pointReached(false), _seekPath(false), _pathFinished(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0),_animationTimer(0), _switchedWeapon(false)
+		_pointReached(false), _seekPath(false), _pathFinished(false), _patrol(false), _patroling(false), _onSight(nullptr),_sightAngle(0),_sightRange(0),_animationTimer(), _switchedWeapon(false)
 		{
 			_allTextures.push_back((std::make_pair(gameObject.getTexture(), state)));
 			setState(state);
