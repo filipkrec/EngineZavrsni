@@ -444,7 +444,7 @@ namespace lam {
 
 	void LevelAssetManager::init(graphics::Layer* layer)
 	{
-		while (_threads.size() <= 0 ) // std::thread::hardware_concurrency()
+		while (_threads.size() <= std::thread::hardware_concurrency()) 
 		{
 			_threads.push_back(engine::NPCThread());
 		}

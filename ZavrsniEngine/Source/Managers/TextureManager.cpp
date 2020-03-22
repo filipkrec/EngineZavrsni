@@ -22,6 +22,18 @@ namespace graphics {
 
 	void TextureManager::clean()
 	{
+		
+		int n = _textures.size();
+		GLuint* array = new GLuint[n];
+
+		int i = 0;
+		for (activeTexture texture : _textures)
+		{
+			array[i] = texture._texture->getId();
+			++i;
+		}
+
+		glDeleteTextures(_textures.size(), array);
 		for (activeTexture texture : _textures)
 			delete texture._texture;
 

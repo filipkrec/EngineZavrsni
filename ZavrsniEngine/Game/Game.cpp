@@ -351,7 +351,10 @@ class Game : public engine::Engine
 
 			//UI 
 
-			double healthPercentage = (double)lam::LevelAssetManager::getPlayer()->getHealth() / (double)lam::LevelAssetManager::getPlayer()->getMaxHealth();
+			objects::Player* pl = lam::LevelAssetManager::getPlayer();
+			double tempHp = pl->getHealth();
+			double maxHp = pl->getMaxHealth();
+			double healthPercentage = tempHp / maxHp;
 			if (healthPercentage < 100)
 			{
 				math::Vector2 originalHPPosition(10.15f, 7.07f);

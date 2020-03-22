@@ -1,9 +1,113 @@
 ﻿  Game.cpp
-  main.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(7,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(12,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(40,50): warning C4244: 'return': conversion from 'const unsigned int' to 'const float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(52,19): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(53,34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(56,25): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(57,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(172,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(172,55): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(182,78): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(182,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(183,79): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(183,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(189,79): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(189,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(190,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(190,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(211,78): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(216,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(224,78): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(224,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(227,79): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(227,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(236,78): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(236,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(239,78): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(239,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Game.cpp(363,66): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Ammo.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(7,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(12,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(40,50): warning C4244: 'return': conversion from 'const unsigned int' to 'const float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(52,19): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(53,34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(56,25): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(57,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Spawner.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(7,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(12,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(40,50): warning C4244: 'return': conversion from 'const unsigned int' to 'const float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(52,19): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(53,34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(56,25): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(57,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Rifle.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(7,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(12,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(40,50): warning C4244: 'return': conversion from 'const unsigned int' to 'const float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(52,19): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(53,34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(56,25): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(57,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Weapons\Rifle.cpp(10,12): warning C4244: '=': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Weapons\Rifle.cpp(11,12): warning C4244: '=': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Weapons\Rifle.cpp(14,12): warning C4244: '=': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Weapons\Rifle.cpp(15,13): warning C4244: '=': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Weapons\Rifle.cpp(16,17): warning C4244: '=': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Weapons\Rifle.cpp(17,13): warning C4244: '=': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Game\Weapons\Rifle.cpp(18,17): warning C4244: '=': conversion from 'float' to 'unsigned int', possible loss of data
+  LevelAssetManager.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(7,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(12,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(40,50): warning C4244: 'return': conversion from 'const unsigned int' to 'const float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(52,19): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(53,34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(56,25): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(57,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Managers\LevelAssetManager.cpp(136,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Managers\LevelAssetManager.cpp(141,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Managers\LevelAssetManager.cpp(320,131): warning C4305: 'argument': truncation from 'double' to 'const float'
+  Actor.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(7,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(12,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(40,50): warning C4244: 'return': conversion from 'const unsigned int' to 'const float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(52,19): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(53,34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(56,25): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(57,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  NPC.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(7,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(12,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(40,50): warning C4244: 'return': conversion from 'const unsigned int' to 'const float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(52,19): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(53,34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(56,25): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(57,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\NPC.cpp(62,19): warning C4553: '==': result of expression not used; did you intend '='?
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\NPC.cpp(150,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\NPC.cpp(129,168): warning C4390: ';': empty controlled statement found; is this the intent?
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\NPC.cpp(202,119): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+  Player.cpp
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(7,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Math\MathUtil.h(12,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(40,50): warning C4244: 'return': conversion from 'const unsigned int' to 'const float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(52,19): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(53,34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(56,25): warning C4244: '=': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Inventory\Weapon.h(57,40): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Player.cpp(26,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Player.cpp(33,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\Player.cpp(42,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Game.obj : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
 C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Objects\GameObject.h(66): warning C4172: returning address of local variable or temporary
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Util\Timer.cpp(36): warning C4715: 'engine::Timer::elapsed': not all control paths return a value
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Hitbox.cpp(105): warning C4715: 'objects::Hitbox::isHit': not all control paths return a value
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Graphics\Texture.cpp(82): warning C4715: 'graphics::Texture::load': not all control paths return a value
+C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\Source\Physics\Hitbox.cpp(245): warning C4715: 'objects::Hitbox::willBeHit': not all control paths return a value
   Finished generating code
 LINK : warning LNK4286: symbol '_fprintf' defined in 'texture-atlas.obj' is imported by 'gorilla.lib(analysis.obj)'
 LINK : warning LNK4286: symbol '_sprintf' defined in 'bdf.obj' is imported by 'gorilla.lib(analysis.obj)'

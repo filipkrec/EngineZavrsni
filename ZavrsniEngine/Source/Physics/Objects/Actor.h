@@ -70,7 +70,7 @@ namespace objects {
 		void addTexture(const graphics::Texture* texture, ActorState state); //first for state = default texture
 		void setAnimationTimerForState(float interval, ActorState state); //first for state = default texture
 
-		inline const unsigned int& getHealth() const { return _health; }
+		inline const int& getHealth() const { return _health; }
 		inline const unsigned int& getMaxHealth() const { return _maxHealth; }
 		inline const float& getMovementSpeed() const { return _movementSpeed; }
 		const ActorState& getState() const override { return _state; }
