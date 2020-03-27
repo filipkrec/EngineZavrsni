@@ -39,6 +39,18 @@ namespace audio {
 		gc_shutdown();
 	}
 
+
+	void AudioManager::clear()
+	{
+		for (int i = 0; i < _audios.size(); ++i)
+		{
+			_audios[i]->stop();
+			delete _audios[i];
+		}
+
+		_audios.clear();
+	}
+
 	void AudioManager::update()
 	{
 		if (!_paused) {

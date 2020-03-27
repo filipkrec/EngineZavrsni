@@ -63,11 +63,13 @@ namespace objects {
 			inline void setClipMax(unsigned int value) {  _clipMax = value; }
 			inline void setClipCurrent(unsigned int value) {  _clipCurrent = value; }
 
-			Weapon* clone();
+			virtual Weapon* clone();
 
 			void reload(bool infinite = false);
 			void shoot();
 			virtual void onShot(GameObject* target) const {};
+			virtual void onShoot();
+			virtual void onReload();
 			void clearShots();
 		};
 }

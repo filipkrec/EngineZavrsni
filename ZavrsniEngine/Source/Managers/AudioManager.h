@@ -18,6 +18,7 @@ namespace audio
 		static void init();
 		static void add(Audio* audio);
 		static void clean();
+		static void clear();
 		static void update();
 		static Audio* get(const std::string& name);
 		static void togglePause();

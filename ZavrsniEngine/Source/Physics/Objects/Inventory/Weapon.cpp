@@ -40,6 +40,7 @@ namespace objects
 	{
 		if (_reloadTimer.elapsed() >= _reloadTime)
 		{
+			onReload();
 			if (!infinite)
 			{
 				unsigned int clipDifference = _clipMax - _clipCurrent;
@@ -59,6 +60,7 @@ namespace objects
 	{
 		if (_clipCurrent > 0 && _reloadTimer.elapsed() >= _reloadTime && _shotCooldownTimer.elapsed() >= _shotCooldownTime)
 		{
+			onShoot();
 			_clipCurrent -= 1;
 			float rotation = getRotation() + (_spread != 0 ? fmod((float)rand(), _spread) - _spread / 2 : 0);
 			math::Vector2 destinationPoint = math::Matrix4::rotate2d(math::Vector2(_range, 0), _rotation); //vektor razlike od origina pucnjave do maksimalnog kraja
@@ -68,10 +70,10 @@ namespace objects
 	}
 
 
-	void onShot(GameObject* target)
-	{
-	}
+	void onShot(GameObject* target){}
 
+	void Weapon::onShoot() {}
+	void Weapon::onReload() {}
 	void Weapon::clearShots()
 	{
 		_firedShots.clear();

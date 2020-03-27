@@ -28,12 +28,19 @@ Rifle::Rifle(const math::Vector2& spriteSize, const math::Vector2& modelOffset, 
 	_texture = texture;
 }
 
-Rifle* Rifle::clone()
+objects::Weapon* Rifle::clone()
 {
 	return new Rifle(_size, _position, _shotOriginOffset, _texture);
 }
 
-void Rifle::onShot(objects::GameObject* target) const
+void Rifle::onShoot()
 {
+	if (audio::AudioManager::get("RifleShoot") != nullptr)
+		audio::AudioManager::get("RifleShoot")->play();
+}
 
+void Rifle::onReload()
+{
+	if (audio::AudioManager::get("RifleReload") != nullptr)
+		audio::AudioManager::get("RifleReload")->play();
 }

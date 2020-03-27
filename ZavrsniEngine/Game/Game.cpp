@@ -2,6 +2,7 @@
 #include "../Source/Engine.h"
 #include "Pickups/Ammo.h"
 #include "Weapons/Rifle.h"
+#include "Weapons/Laser.h"
 #include "Spawners/Spawner.h"
 
 class Game : public engine::Engine
@@ -22,7 +23,7 @@ class Game : public engine::Engine
 		window->toggleCursor();
 		//window->toggleVsync();
 		lam::LevelAssetManager::init(layer);
-		//audio::AudioManager::init();
+		audio::AudioManager::init();
 		swapLevel(&Game::levelMenuInit, &Game::levelMenu);
 	}
 	// jednom svake sekunde
@@ -44,7 +45,7 @@ class Game : public engine::Engine
 
 			(this->*level)();
 
-			//audio::AudioManager::update();+
+			audio::AudioManager::update();
 
 		if (!engine::Timer::isPaused())
 			lam::LevelAssetManager::processEnd(*window);
@@ -77,8 +78,13 @@ class Game : public engine::Engine
 					return true;
 				}),
 			spawners.end());
-
+		
+		//clear layer
 		layer->clear();
+
+		//clear audio
+		audio::AudioManager::clear();
+
 		level = newLevel;
 		(this->*newLevelInit)();
 		skipRender = true;
@@ -101,6 +107,10 @@ class Game : public engine::Engine
 		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(0.0f, 0.0f, 8.0f, 2.0f, graphics::TextureManager::get("menuScore"), 2), 0), "menuScore");
 		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(0.0f, -3.0f, 6.0f, 2.0f, graphics::TextureManager::get("menuQuit"), 3), 0), "menuQuit");
 		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, graphics::TextureManager::get("menuCursor"), 100), "menuCursor");
+
+		audio::AudioManager::add(new audio::Audio("MenuMusic","Assets/Sounds/MenuMusic.wav"));
+		audio::AudioManager::get("MenuMusic")->setLoopOnFinish(true);
+		audio::AudioManager::get("MenuMusic")->play();
 		//audio::AudioManager::add(new audio::Audio("MenuMusic","../Assets/Test.wav"));
 	}
 
@@ -286,7 +296,8 @@ class Game : public engine::Engine
 		Spawner* spawner = new Spawner(prototype,spawnerLocations.at(0), lam::LevelAssetManager::getPlayer()->getPosition(), 1.0f,1);
 		spawners.push_back(spawner);
 
-		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));
+		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));	
+		weapons.push_back(new Laser());
 		lam::LevelAssetManager::getPlayer()->setWeapon(weapons.at(0));
 
 		//UI
@@ -316,6 +327,17 @@ class Game : public engine::Engine
 
 		lam::LevelAssetManager::add(new graphics::Label("PRESS Q TO QU1T", 0.0f, 0.0f, 0x00696969, 0.5f, font, 102), "QUIT");
 		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("QUIT"), "QUIT", math::Vector2(-8.0f, -4.0f));
+
+		//SOUNDS
+
+
+		audio::AudioManager::add(new audio::Audio("DemoMusic", "Assets/Sounds/DemoMusic.wav"));
+		audio::AudioManager::add(new audio::Audio("Laser", "Assets/Sounds/EnemyLaser.wav"));
+		audio::AudioManager::add(new audio::Audio("RifleReload", "Assets/Sounds/SniperReload.wav"));
+		audio::AudioManager::add(new audio::Audio("RifleShoot", "Assets/Sounds/SniperShot.wav"));
+		audio::AudioManager::get("DemoMusic")->play();
+		audio::AudioManager::get("DemoMusic")->setLoopOnFinish(true);
+		audio::AudioManager::get("DemoMusic")->setGain(0.0);
 	}
 
 	void LevelDemo()
@@ -341,7 +363,7 @@ class Game : public engine::Engine
 					if (npc != nullptr)
 					{
 						lam::LevelAssetManager::add(npc, spawner->getSpawnName());
-						objects::Weapon* weapon = (weapons.at(0));
+						objects::Weapon* weapon = (weapons.at(1));
 						weapon = weapon->clone();
 						weapons.push_back(weapon);
 						npc->setWeapon(weapon);
