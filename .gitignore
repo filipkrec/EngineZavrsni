@@ -1,9 +1,3 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
-/Debug
-/.vs/ZavrsniEngine/v16
-/ZavrsniEngine/Debug
-/ZavrsniEngine/External
-/ZavrsniEngine/ZavrsniEngine.vcxproj

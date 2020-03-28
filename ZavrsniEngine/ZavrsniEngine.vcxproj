@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{ACBC4842-B8C2-4AF1-B2AB-77673C457B63}</ProjectGuid>
+    <RootNamespace>ZavrsniEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>${SolutionDir}Dependencies\GLFW\include;C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\External\freetype-gl;C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;C:\Users\ficom\source\repos\ZavrsniEngine\Dependencies\GorillaAudio\bin\win32\Debug;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\External\freetype-gl;${SolutionDir}Dependencies\GLFW\include;C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;C:\Users\ficom\source\repos\ZavrsniEngine\Dependencies\GorillaAudio\bin\win32\Release;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>GLEW_STATIC;FT2_BUILD_LIBRARY;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;FreeImage.lib;gorillaD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>GLEW_STATIC;FT2_BUILD_LIBRARY;WIN32;_LIB;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;FreeImage.lib;gorilla.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Game\Game.cpp" />
+    <ClCompile Include="Game\Pickups\Ammo.cpp" />
+    <ClCompile Include="Game\Spawners\Spawner.cpp" />
+    <ClCompile Include="Game\Weapons\Laser.cpp" />
+    <ClCompile Include="Game\Weapons\Rifle.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\Audio\Audio.cpp" />
+    <ClCompile Include="Source\Graphics\Camera.cpp" />
+    <ClCompile Include="Source\Graphics\Font.cpp" />
+    <ClCompile Include="Source\Graphics\Group.cpp" />
+    <ClCompile Include="Source\Graphics\Label.cpp" />
+    <ClCompile Include="Source\Graphics\Layer.cpp" />
+    <ClCompile Include="Source\Graphics\Line.cpp" />
+    <ClCompile Include="Source\Graphics\Shaders\Shader.cpp" />
+    <ClCompile Include="Source\Graphics\Sprite.cpp" />
+    <ClCompile Include="Source\Graphics\Texture.cpp" />
+    <ClCompile Include="Source\Managers\AudioManager.cpp" />
+    <ClCompile Include="Source\Managers\LevelAssetManager.cpp" />
+    <ClCompile Include="Source\Managers\TextureManager.cpp" />
+    <ClCompile Include="Source\Math\Matrix4.cpp" />
+    <ClCompile Include="Source\Math\Vector2.cpp" />
+    <ClCompile Include="Source\Math\Vector3.cpp" />
+    <ClCompile Include="Source\Math\Vector4.cpp" />
+    <ClCompile Include="Source\Graphics\Renderer.cpp" />
+    <ClCompile Include="Source\Physics\Hitbox.cpp" />
+    <ClCompile Include="Source\Physics\Objects\Actor.cpp" />
+    <ClCompile Include="Source\Physics\Objects\GameObject.cpp" />
+    <ClCompile Include="Source\Physics\Objects\Inventory\Weapon.cpp" />
+    <ClCompile Include="Source\Physics\Objects\NPC.cpp" />
+    <ClCompile Include="Source\Physics\Objects\Player.cpp" />
+    <ClCompile Include="Source\Util\Timer.cpp" />
+    <ClCompile Include="Source\Window.cpp" />
+    <ClCompile Include="External\freetype-gl\platform.c" />
+    <ClCompile Include="External\freetype-gl\texture-atlas.c" />
+    <ClCompile Include="External\freetype-gl\texture-font.c" />
+    <ClCompile Include="External\freetype-gl\vector.c" />
+    <ClCompile Include="External\freetype\src\autofit\autofit.c" />
+    <ClCompile Include="External\freetype\src\base\ftbase.c" />
+    <ClCompile Include="External\freetype\src\base\ftbbox.c" />
+    <ClCompile Include="External\freetype\src\base\ftbitmap.c" />
+    <ClCompile Include="External\freetype\src\base\ftdebug.c" />
+    <ClCompile Include="External\freetype\src\base\ftfstype.c" />
+    <ClCompile Include="External\freetype\src\base\ftgasp.c" />
+    <ClCompile Include="External\freetype\src\base\ftglyph.c" />
+    <ClCompile Include="External\freetype\src\base\ftgxval.c" />
+    <ClCompile Include="External\freetype\src\base\ftinit.c" />
+    <ClCompile Include="External\freetype\src\base\ftlcdfil.c" />
+    <ClCompile Include="External\freetype\src\base\ftmm.c" />
+    <ClCompile Include="External\freetype\src\base\ftotval.c" />
+    <ClCompile Include="External\freetype\src\base\ftpatent.c" />
+    <ClCompile Include="External\freetype\src\base\ftpfr.c" />
+    <ClCompile Include="External\freetype\src\base\ftstroke.c" />
+    <ClCompile Include="External\freetype\src\base\ftsynth.c" />
+    <ClCompile Include="External\freetype\src\base\ftsystem.c" />
+    <ClCompile Include="External\freetype\src\base\fttype1.c" />
+    <ClCompile Include="External\freetype\src\base\ftwinfnt.c" />
+    <ClCompile Include="External\freetype\src\base\ftxf86.c" />
+    <ClCompile Include="External\freetype\src\bdf\bdf.c" />
+    <ClCompile Include="External\freetype\src\cache\ftcache.c" />
+    <ClCompile Include="External\freetype\src\cff\cff.c" />
+    <ClCompile Include="External\freetype\src\cid\type1cid.c" />
+    <ClCompile Include="External\freetype\src\gzip\ftgzip.c" />
+    <ClCompile Include="External\freetype\src\lzw\ftlzw.c" />
+    <ClCompile Include="External\freetype\src\pcf\pcf.c" />
+    <ClCompile Include="External\freetype\src\pfr\pfr.c" />
+    <ClCompile Include="External\freetype\src\psaux\psaux.c" />
+    <ClCompile Include="External\freetype\src\pshinter\pshinter.c" />
+    <ClCompile Include="External\freetype\src\psnames\psmodule.c" />
+    <ClCompile Include="External\freetype\src\raster\raster.c" />
+    <ClCompile Include="External\freetype\src\sfnt\sfnt.c" />
+    <ClCompile Include="External\freetype\src\smooth\smooth.c" />
+    <ClCompile Include="External\freetype\src\truetype\truetype.c" />
+    <ClCompile Include="External\freetype\src\type1\type1.c" />
+    <ClCompile Include="External\freetype\src\type42\type42.c" />
+    <ClCompile Include="External\freetype\src\winfonts\winfnt.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game\Pickups\Ammo.h" />
+    <ClInclude Include="Game\Spawners\Spawner.h" />
+    <ClInclude Include="Game\Weapons\Laser.h" />
+    <ClInclude Include="Game\Weapons\Rifle.h" />
+    <ClInclude Include="Source\Audio\Audio.h" />
+    <ClInclude Include="Source\Engine.h" />
+    <ClInclude Include="Source\Graphics\Camera.h" />
+    <ClInclude Include="Source\Graphics\Font.h" />
+    <ClInclude Include="Source\Graphics\Group.h" />
+    <ClInclude Include="Source\Graphics\Label.h" />
+    <ClInclude Include="Source\Graphics\Layer.h" />
+    <ClInclude Include="Source\Graphics\Line.h" />
+    <ClInclude Include="Source\Graphics\Shaders\Shader.h" />
+    <ClInclude Include="Source\Graphics\Sprite.h" />
+    <ClInclude Include="Source\Graphics\Texture.h" />
+    <ClInclude Include="Source\Managers\AudioManager.h" />
+    <ClInclude Include="Source\Managers\LevelAssetManager.h" />
+    <ClInclude Include="Source\Managers\TextureManager.h" />
+    <ClInclude Include="Source\Math\Math.h" />
+    <ClInclude Include="Source\Math\MathUtil.h" />
+    <ClInclude Include="Source\Math\Matrix4.h" />
+    <ClInclude Include="Source\Math\Vector2.h" />
+    <ClInclude Include="Source\Math\Vector3.h" />
+    <ClInclude Include="Source\Math\Vector4.h" />
+    <ClInclude Include="Source\Math\Vectors.h" />
+    <ClInclude Include="Source\Graphics\Renderer.h" />
+    <ClInclude Include="Source\Physics\Hitbox.h" />
+    <ClInclude Include="Source\Physics\Objects\Actor.h" />
+    <ClInclude Include="Source\Physics\Objects\GameObject.h" />
+    <ClInclude Include="Source\Physics\Objects\Inventory\Pickup.h" />
+    <ClInclude Include="Source\Physics\Objects\Inventory\Weapon.h" />
+    <ClInclude Include="Source\Physics\Objects\Inventory\WeaponObject.h" />
+    <ClInclude Include="Source\Physics\Objects\NPC.h" />
+    <ClInclude Include="Source\Physics\Objects\Player.h" />
+    <ClInclude Include="Source\Util\FileUtils.h" />
+    <ClInclude Include="Source\Util\imageload.h" />
+    <ClInclude Include="Source\Util\NPCThread.h" />
+    <ClInclude Include="Source\Util\Timer.h" />
+    <ClInclude Include="Source\Window.h" />
+    <ClInclude Include="External\freetype-gl\freetype-gl.h" />
+    <ClInclude Include="External\freetype-gl\opengl.h" />
+    <ClInclude Include="External\freetype-gl\platform.h" />
+    <ClInclude Include="External\freetype-gl\texture-atlas.h" />
+    <ClInclude Include="External\freetype-gl\texture-font.h" />
+    <ClInclude Include="External\freetype-gl\vec234.h" />
+    <ClInclude Include="External\freetype-gl\vector.h" />
+    <ClInclude Include="External\freetype\include\config\ftconfig.h" />
+    <ClInclude Include="External\freetype\include\config\ftheader.h" />
+    <ClInclude Include="External\freetype\include\config\ftmodule.h" />
+    <ClInclude Include="External\freetype\include\config\ftoption.h" />
+    <ClInclude Include="External\freetype\include\config\ftstdlib.h" />
+    <ClInclude Include="External\freetype\include\ft2build.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Graphics\Shaders\Basic.frag" />
+    <None Include="Source\Graphics\Shaders\Basic.vert" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
