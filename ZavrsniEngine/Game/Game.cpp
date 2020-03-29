@@ -337,7 +337,7 @@ class Game : public engine::Engine
 		audio::AudioManager::add(new audio::Audio("RifleShoot", "Assets/Sounds/SniperShot.wav"));
 		audio::AudioManager::get("DemoMusic")->play();
 		audio::AudioManager::get("DemoMusic")->setLoopOnFinish(true);
-		audio::AudioManager::get("DemoMusic")->setGain(0.0);
+		audio::AudioManager::get("DemoMusic")->setGain(0.6);
 	}
 
 	void LevelDemo()
