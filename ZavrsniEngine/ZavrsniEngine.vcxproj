@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)External\freetype-gl;$(SolutionDir)External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)ZavrsniEngine\External\freetype-gl;$(SolutionDir)ZavrsniEngine\External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;$(SolutionDir)Dependencies\GorillaAudio\bin\win32\Debug;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\freetype-gl;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ZavrsniEngine\External\freetype-gl;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)ZavrsniEngine\External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;$(SolutionDir)Dependencies\GorillaAudio\bin\win32\Release;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
