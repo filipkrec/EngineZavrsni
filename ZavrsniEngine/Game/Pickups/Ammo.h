@@ -8,8 +8,8 @@ namespace objects {
 			unsigned int _currentQuantity;
 		public:
 			Ammo();
+			~Ammo() override;
 			Ammo(const graphics::Sprite& sprite, float duration, unsigned int quantity);
 			void onPickup(Actor& actor);
-			void destroy();
 		};
 }

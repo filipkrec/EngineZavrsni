@@ -426,7 +426,7 @@ namespace lam {
 				std::remove_if(_pickups.begin(), _pickups.end(),
 					[](activeObject& x) {
 						objects::Pickup* temp = (objects::Pickup*)x._object;
-						return temp->toDestroy();
+						return temp->toDestroySprite();
 					}),
 				_pickups.end());
 
@@ -438,6 +438,19 @@ namespace lam {
 					}),
 				_sprites.end());
 
+			bool fillObj = false;
+			_NPCs.erase(
+				std::remove_if(_NPCs.begin(), _NPCs.end(),
+					[&](activeObject& x) {
+						graphics::Sprite* temp = (graphics::Sprite*)x._object;
+						if (temp->toDestroySprite())
+							fillObj = true;
+						return temp->toDestroySprite();
+					}),
+				_NPCs.end());
+
+			if (fillObj)
+				fillObjects();
 			cleanUI();
 			_timer->reset();
 	}
@@ -461,6 +474,7 @@ namespace lam {
 		cleanGameObjects();
 		cleanNPCs();
 		cleanSprites();
+		cleanPickups();
 		cleanLabels();
 		cleanUI();
 	}
@@ -651,6 +665,7 @@ namespace lam {
 	void LevelAssetManager::add(objects::Pickup* pickup, const std::string& name)
 	{
 		_pickups.push_back(activeObject((void*)pickup, name));
+		_layer->add(pickup);
 	}
 
 	void LevelAssetManager::cleanPickups()

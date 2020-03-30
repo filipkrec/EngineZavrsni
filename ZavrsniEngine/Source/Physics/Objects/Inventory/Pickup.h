@@ -12,18 +12,16 @@ namespace objects {
 		public:
 			Pickup() {};
 			~Pickup() override {};
-			Pickup(const graphics::Sprite& sprite, float duration) : GameObject(sprite), _duration(duration), _timer(engine::Timer()),_destroyPickup(false) {};
+			Pickup(const graphics::Sprite& sprite, float duration) : GameObject(sprite), _duration(duration), _timer(engine::Timer()) {};
 			void move() override {};
 			virtual void onPickup (Actor& actor) = 0;
-			virtual void destroy() { _destroyPickup = true; };
-			bool toDestroy() {return _destroyPickup;};
 			virtual void processTime()
 			{
 				if (_duration > 0)
 				{
 					if (_timer.elapsed() > _duration)
 					{
-						destroy();
+						DestroySprite();
 					}
 				}
 			}

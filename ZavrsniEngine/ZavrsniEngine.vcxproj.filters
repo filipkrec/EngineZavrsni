@@ -398,6 +398,9 @@
     <ClInclude Include="Game\Weapons\Laser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Score.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\Shaders\Basic.frag" />

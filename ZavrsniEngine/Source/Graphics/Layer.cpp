@@ -99,15 +99,31 @@ namespace graphics {
 		float posx = position.x;
 
 		Font* currentFont = label->getFont();
-		float fontSize = label->getSize();
-		const math::Vector2& scale = currentFont->getScale() / fontSize;
+		float fontSizeIn = label->getSize();
+		float fontSize;
+		const math::Vector2& scale = currentFont->getScale() / fontSizeIn;
 		texture_font_t* FTFont = currentFont->getFont();
 		std::string text = label->getText();
 		Sprite* spriteLabel = new Sprite(*label);
 
 		for (int i = 0; i < text.size(); ++i)
 		{
+			fontSize = fontSizeIn;
 			char c = text.at(i);
+			float scaleX = scale.x;
+			float scaleY = scale.y;
+			if (c == 'i' || c == 'I' || c == '!' || c == 'i' || c == ',' || c == '.')
+			{
+				fontSize *=  0.3;
+			}
+
+			if (c == '\n')
+			{
+				posy -= fontSize * 1.2;
+				posx = position.x;
+				continue;
+			}
+
 			texture_glyph_t* glyph = texture_font_get_glyph(FTFont, c);
 			if (glyph != NULL)
 			{
@@ -131,7 +147,7 @@ namespace graphics {
 
 				Sprite* sprite = new Sprite();
 				memcpy(sprite, spriteLabel, sizeof(Sprite));
-				sprite->setScale(math::Vector2(fontSize, fontSize));
+				sprite->setScale(math::Vector2(fontSize, fontSizeIn));
 				sprite->setPosition(math::Vector2(symbolPos.x, symbolPos.y));
 				sprite->setTextureCoordinates(math::Vector2(u0, v1), 0);
 				sprite->setTextureCoordinates(math::Vector2(u0, v0), 1);

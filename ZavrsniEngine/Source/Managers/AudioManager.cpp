@@ -1,4 +1,5 @@
 #include "AudioManager.h"
+#include <iostream>
 
 namespace audio {
 
@@ -10,7 +11,7 @@ namespace audio {
 	void AudioManager::init()
 	{
 		gc_initialize(0);
-		_manager = gau_manager_create();
+		_manager = gau_manager_create_custom(GA_DEVICE_TYPE_XAUDIO2, GAU_THREAD_POLICY_SINGLE, 4, 512);
 		_mixer = gau_manager_mixer(_manager);
 	}
 
@@ -44,6 +45,7 @@ namespace audio {
 	{
 		for (int i = 0; i < _audios.size(); ++i)
 		{
+			if(i == 0)
 			_audios[i]->stop();
 			delete _audios[i];
 		}

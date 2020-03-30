@@ -4,6 +4,7 @@
 #include "Weapons/Rifle.h"
 #include "Weapons/Laser.h"
 #include "Spawners/Spawner.h"
+#include "Score.h"
 
 class Game : public engine::Engine
 {
@@ -12,11 +13,12 @@ class Game : public engine::Engine
 	graphics::Font* font = new graphics::Font("Assets/arial.ttf");
 	math::Vector2 mousePosition;
 	std::vector<objects::Weapon*> weapons;
-	std::vector<Spawner*> spawners;
+	Spawner* spawner = nullptr;
 	std::vector<math::Vector2> spawnerLocations;
 
 	void (Game::*level)();
 	bool skipRender = false;
+	unsigned int currentScore = 0;
 	
 	void init() //First level on init - MAIN MENU
 	{
@@ -71,13 +73,11 @@ class Game : public engine::Engine
 		weapons.clear();
 
 		//clearSpawners
-		spawners.erase(
-			std::remove_if(spawners.begin(), spawners.end(),
-				[](Spawner* x) {
-					delete x;
-					return true;
-				}),
-			spawners.end());
+		if (spawner != nullptr)
+		{
+			delete spawner;
+			spawner = nullptr;
+		}
 		
 		//clear layer
 		layer->clear();
@@ -144,6 +144,7 @@ class Game : public engine::Engine
 			score->setColor(0xff8a8a8a);
 			if (window->getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 			{
+				swapLevel(&Game::levelScoreInit, &Game::levelScore);
 			}
 		}
 		else if (quit->isHit(mousePosition))
@@ -161,6 +162,54 @@ class Game : public engine::Engine
 			quit->setColor(0xffffffff);
 		}
 	}
+
+
+	void levelScoreInit()
+	{
+		graphics::TextureManager::add(new graphics::Texture("Assets/ScoreBG.png"), "scoreBG");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Scoreboard.png"), "scoreboard");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Back.png"), "back");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Cursor4.png"), "menuCursor");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Cursor5.png"), "menuCursor2");
+		lam::LevelAssetManager::add(new graphics::Label("0", -14.0f, 8.0f, 0xff00ff00, 0.3f, font, 4), "FPS");
+		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 32.0f, 18.0f, graphics::TextureManager::get("scoreBG"), 0), "scoreBG");
+		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 10.0f, 12.0f, graphics::TextureManager::get("scoreboard"), 0), "scoreboard");
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(0.0f, -7.0f, 4.0f, 1.3f, graphics::TextureManager::get("back"), 3), 0), "back");
+		lam::LevelAssetManager::add(new graphics::Sprite(0.0f, 0.0f, 1.5f, 1.5f, graphics::TextureManager::get("menuCursor"), 100), "menuCursor");
+		lam::LevelAssetManager::add(new graphics::Label(get_scores(), -1.8f, 2.5f, 0xffffffff, 0.5f, font, 102), "score");
+	
+	}
+
+	void levelScore()
+	{
+		window->getMousePosition(mousePosition);
+		graphics::Sprite* cursor = lam::LevelAssetManager::getSprite("menuCursor");
+
+		cursor->setPosition(mousePosition);
+		if (window->getMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+			cursor->swapTexture(graphics::TextureManager::get("menuCursor2"));
+		else
+			cursor->swapTexture(graphics::TextureManager::get("menuCursor"));
+
+		objects::GameObject* back = lam::LevelAssetManager::getGameObject("back");
+
+		mousePosition.x -= cursor->getSize().x / 2;
+		mousePosition.y += cursor->getSize().y / 2;
+		if (back->isHit(mousePosition))
+		{
+			back->setColor(0xff8a8a8a);
+			if (window->getMouseButton(GLFW_MOUSE_BUTTON_LEFT))
+			{
+				swapLevel(&Game::levelMenuInit, &Game::levelMenu);
+			}
+		}
+		else
+		{
+			back->setColor(0xffffffff);
+		}
+	}
+
+
 
 	//DEMO LEVEL CODE
 	void levelDemoInit()
@@ -249,7 +298,13 @@ class Game : public engine::Engine
 					lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(x, -y, 2.0f, 2.0f, graphics::TextureManager::get("wallTexture"), 1), 0, true), "WALL" + std::to_string(-x) + "." + std::to_string(y));
 			}
 		}
-		//WALLS END
+		
+		//OBJECTS 
+
+		graphics::TextureManager::add(new graphics::Texture("Assets/Car1.png"), "Car1");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Car2.png"), "Car2");
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(-3, -3, 1.5f, 3.0f, graphics::TextureManager::get("Car1"), 1), 500), "CAR1" );
+		lam::LevelAssetManager::add(new objects::GameObject(graphics::Sprite(3, 3, 1.5f, 3.0f, graphics::TextureManager::get("Car2"), 1), 300), "CAR2");
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_idle.png"), "Main_idle");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Main_walking1.png"), "Main_walking1");
@@ -262,13 +317,14 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_dead.png"), "Enemy_dead");
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/rifle.png"), "Rifle");
+		graphics::TextureManager::add(new graphics::Texture("Assets/ammo.png"), "ammo");
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/HPBar.png"), "HPBar");
 		graphics::TextureManager::add(new graphics::Texture("Assets/UIAmmo.png"), "UIAmmo");
 		graphics::TextureManager::add(new graphics::Texture("Assets/iconReload.png"), "iconReload");
 
 		//PLAYER SETUP
-		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 5), 100,
+		lam::LevelAssetManager::setPlayer(new objects::Player(objects::GameObject(graphics::Sprite(0.0f, 0.0f, 2.0f, 2.0f, graphics::TextureManager::get("Main_idle"), 3), 100,
 			objects::Shape::SQUARE,1.5f), 100, 150));
 		lam::LevelAssetManager::getPlayer()->setAllegiance(objects::Allegiance::GOOD);
 		lam::LevelAssetManager::getPlayer()->addTexture(graphics::TextureManager::get("Main_walking1"), objects::ActorState::STATE_MOVING);
@@ -287,14 +343,14 @@ class Game : public engine::Engine
 		prototype.addTexture(graphics::TextureManager::get("Enemy_walking1"), objects::ActorState::STATE_MOVING);
 		prototype.addTexture(graphics::TextureManager::get("Enemy_walking2"), objects::ActorState::STATE_MOVING);
 		prototype.addTexture(graphics::TextureManager::get("Enemy_dead"), objects::ActorState::STATE_DEAD);
+		prototype.setAnimationTimerForState(0.3f, objects::ActorState::STATE_MOVING);
 
 		spawnerLocations.push_back(math::Vector2(-31, -40)); //dolje ljevo
 		spawnerLocations.push_back(math::Vector2(31, -41)); //dolje desno
 		spawnerLocations.push_back(math::Vector2(31, 32)); //gore desno
 		spawnerLocations.push_back(math::Vector2(-41, 32)); //gore ljevo
 
-		Spawner* spawner = new Spawner(prototype,spawnerLocations.at(0), lam::LevelAssetManager::getPlayer()->getPosition(), 1.0f,1);
-		spawners.push_back(spawner);
+		spawner = new Spawner(prototype,spawnerLocations.at(0), lam::LevelAssetManager::getPlayer()->getPosition(), 1.0f,1);
 
 		weapons.push_back(new Rifle(math::Vector2(1.0f, 0.5f), math::Vector2(-0.5f, 0.0f), math::Vector2(1.0f, 0.0f), graphics::TextureManager::get("Rifle")));	
 		weapons.push_back(new Laser());
@@ -325,8 +381,11 @@ class Game : public engine::Engine
 		lam::LevelAssetManager::add(new graphics::Label("PAUSED", 0.0f, 0.0f, 0x00696969, 2.0f, font, 102), "PAUSED");
 		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("PAUSED"), "PAUSED", math::Vector2(-8.0f, 0.0f));
 
-		lam::LevelAssetManager::add(new graphics::Label("PRESS Q TO QU1T", 0.0f, 0.0f, 0x00696969, 0.5f, font, 102), "QUIT");
+		lam::LevelAssetManager::add(new graphics::Label("PRESS Q TO QUIT", 0.0f, 0.0f, 0x00696969, 0.5f, font, 102), "QUIT");
 		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("QUIT"), "QUIT", math::Vector2(-8.0f, -4.0f));
+
+		lam::LevelAssetManager::add(new graphics::Label("0", 0.0f, 0.0f, 0xff00a5ff, 0.5f, font, 102), "score");
+		lam::LevelAssetManager::addUI(lam::LevelAssetManager::getLabel("score"), "score", math::Vector2(-12.0f, -7.8f));	
 
 		//SOUNDS
 
@@ -349,25 +408,22 @@ class Game : public engine::Engine
 
 		if (!engine::Timer::isPaused())
 		{
-			//SPAWNERI
-			for (Spawner* spawner : spawners)
+			//SPAWNER
+			math::Vector2& spawnerLoc = spawnerLocations.at(rand() % 4);
+			if (!lam::LevelAssetManager::checkForNpcs(spawnerLoc))
 			{
-				math::Vector2& spawnerLoc = spawnerLocations.at(rand() % 4);
-				if (!lam::LevelAssetManager::checkForNpcs(spawnerLoc))
+				spawner->setSpawnLocation(spawnerLoc);
+				spawner->setDestination(lam::LevelAssetManager::getPlayer()->getPosition());
+
+
+				objects::NPC* npc = spawner->Spawn();
+				if (npc != nullptr)
 				{
-					spawner->setSpawnLocation(spawnerLoc);
-					spawner->setDestination(lam::LevelAssetManager::getPlayer()->getPosition());
-
-
-					objects::NPC* npc = spawner->Spawn();
-					if (npc != nullptr)
-					{
-						lam::LevelAssetManager::add(npc, spawner->getSpawnName());
-						objects::Weapon* weapon = (weapons.at(1));
-						weapon = weapon->clone();
-						weapons.push_back(weapon);
-						npc->setWeapon(weapon);
-					}
+					lam::LevelAssetManager::add(npc, spawner->getSpawnName());
+					objects::Weapon* weapon = (weapons.at(1));
+					weapon = weapon->clone();
+					weapons.push_back(weapon);
+					npc->setWeapon(weapon);
 				}
 			}
 
@@ -401,12 +457,18 @@ class Game : public engine::Engine
 			//PLAYER
 			if (lam::LevelAssetManager::getPlayer()->isDead())
 			{
-				lam::LevelAssetManager::getPlayer()->setZindex(2);
+				if (lam::LevelAssetManager::getPlayer()->getScale() == math::Vector2(1.0f, 1.0f))
+				{
+					set_scores(currentScore);
+					//just died
+				}
+
+				lam::LevelAssetManager::getPlayer()->setZindex(1);
 				lam::LevelAssetManager::getPlayer()->setScale(math::Vector2(1.4f, 0.8f));
 				lam::LevelAssetManager::getLabel("QUIT")->setColor(0xff696969);
 				if (window->getKeyPressed(GLFW_KEY_Q))
 				{
-					swapLevel(&Game::levelMenuInit, &Game::levelMenu);
+					swapLevel(&Game::levelScoreInit, &Game::levelScore);
 				}
 			}
 			else
@@ -420,18 +482,44 @@ class Game : public engine::Engine
 			}
 
 			//NPCS
-			objects::NPC* npc;
-			int i = 0;
-			while (true)
+			if (spawner != nullptr)
 			{
-				npc = lam::LevelAssetManager::getNPC(i);
-				if (npc == nullptr)
-					break;
-				if (npc->isDead())
+				objects::NPC* npc;
+				int i = 0;
+				bool levelOver = spawner->levelStarted();
+				while (true)
 				{
-					npc->setScale(math::Vector2(1.6f, 1.0f));
+					npc = lam::LevelAssetManager::getNPC(i);
+					if (npc == nullptr)
+						break;
+					if (npc->isDead())
+					{
+						if (npc->getScale() == math::Vector2(1.0f, 1.0f))
+						{
+							//just died
+							currentScore += 100;
+							lam::LevelAssetManager::getLabel("score")->setText(std::to_string(currentScore));
+							if (rand() % 100 < 25)
+							{
+								lam::LevelAssetManager::add(new objects::Ammo(graphics::Sprite(npc->getPosition().x, npc->getPosition().y, 0.7f, 0.7f, graphics::TextureManager::get("ammo"), 2), 20, 20),"A" + std::to_string(npc->getPosition().x));
+							} 
+						}
+
+						npc->setScale(math::Vector2(1.6f, 1.0f));
+						npc->setZindex(1);
+					}
+					else
+						levelOver = false;
+					++i;
 				}
-				++i;
+
+				if (levelOver)
+				{
+					spawner->LevelUp();
+					currentScore += 500;
+					lam::LevelAssetManager::getLabel("score")->setText(std::to_string(currentScore));
+					lam::LevelAssetManager::cleanNPCs();
+				}
 			}
 		}
 		else
@@ -445,6 +533,8 @@ class Game : public engine::Engine
 			}
 		}
 	}
+
+
 public:
 	~Game() {
 		delete layer;

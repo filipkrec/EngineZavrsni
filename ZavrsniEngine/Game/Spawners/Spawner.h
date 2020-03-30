@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Source/Engine.h"
-#define MAXSPAWN 2
+#define MAXSPAWN 5
 
 class Spawner
 {
@@ -11,6 +11,9 @@ class Spawner
 	unsigned int _spawnerId;
 	unsigned int _currentId;
 	float _spawnTime;
+	
+	unsigned int _level;
+	unsigned int _currentSpawned;
 
 public:
 	Spawner();
@@ -19,5 +22,7 @@ public:
 	void setSpawnLocation(const math::Vector2& spawnLocation);
 	void setDestination(const math::Vector2& destination);
 	std::string getSpawnName();
+	void LevelUp();
+	bool levelStarted();
 	objects::NPC* Spawn();
 };

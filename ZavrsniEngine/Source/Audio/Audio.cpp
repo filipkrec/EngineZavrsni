@@ -8,6 +8,7 @@ namespace audio {
 		*flag = 1;
 		Audio* currentAudio = (Audio*)in_handle->loop;
 		ga_handle_destroy(in_handle);
+		in_handle = nullptr;
 	}
 
 	Audio::Audio(const std::string& name, const std::string& filename)
@@ -33,6 +34,7 @@ namespace audio {
 
 	void Audio::pause()
 	{
+		if (_handle != nullptr)
 		if (ga_handle_playing(_handle)) {
 			ga_handle_stop(_handle);
 			_position = ga_handle_tell(_handle, GA_TELL_PARAM_CURRENT);
@@ -41,6 +43,7 @@ namespace audio {
 
 	void Audio::resume()
 	{
+		if (_handle != nullptr)
 		if (ga_handle_stopped(_handle))
 		{
 			ga_handle_play(_handle);
@@ -50,6 +53,7 @@ namespace audio {
 
 	void Audio::stop()
 	{
+		if(_handle != nullptr)
 		if (ga_handle_playing(_handle))
 		{
 			ga_handle_stop(_handle);
@@ -60,6 +64,7 @@ namespace audio {
 	void Audio::setGain(float gain)
 	{
 		_gain = gain;
+		if (_handle != nullptr)
 		if (ga_handle_playing(_handle))
 			ga_handle_setParamf(_handle, GA_HANDLE_PARAM_GAIN, gain);
 	}

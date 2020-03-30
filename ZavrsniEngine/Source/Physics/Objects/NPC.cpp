@@ -59,7 +59,7 @@ namespace objects {
 			else
 			{
 				rotate(_rotationGoal);
-				_rotationGoal == 0;
+				_rotationGoal = 0;
 			}
 		}
 
@@ -245,7 +245,7 @@ namespace objects {
 		if (_AIState == AIState::AI_STATE_DEFENSIVE)
 			setAIState(AIState::AI_STATE_ALERT);
 		setMoveToPoint(weapon->getPosition());
-		_rotationGoal = math::Vector2::getAngleBetween(_rotation,weapon->getPosition());
+		_rotationGoal = math::Vector2::getAngleBetween(_rotation, weapon->getPosition() - getPosition());
 	}
 	void NPC::addEnemyAllegiance(Allegiance allegiance)
 	{

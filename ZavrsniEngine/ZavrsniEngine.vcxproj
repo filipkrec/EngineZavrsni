@@ -71,8 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>${SolutionDir}Dependencies\GLFW\include;C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\External\freetype-gl;C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;C:\Users\ficom\source\repos\ZavrsniEngine\Dependencies\GorillaAudio\bin\win32\Debug;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)External\freetype-gl;$(SolutionDir)External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;$(SolutionDir)Dependencies\GorillaAudio\bin\win32\Debug;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\External\freetype-gl;${SolutionDir}Dependencies\GLFW\include;C:\Users\ficom\source\repos\ZavrsniEngine\ZavrsniEngine\External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;C:\Users\ficom\source\repos\ZavrsniEngine\Dependencies\GorillaAudio\bin\win32\Release;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)External\freetype-gl;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;$(SolutionDir)Dependencies\GorillaAudio\bin\win32\Release;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -225,6 +225,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Pickups\Ammo.h" />
+    <ClInclude Include="Game\Score.h" />
     <ClInclude Include="Game\Spawners\Spawner.h" />
     <ClInclude Include="Game\Weapons\Laser.h" />
     <ClInclude Include="Game\Weapons\Rifle.h" />

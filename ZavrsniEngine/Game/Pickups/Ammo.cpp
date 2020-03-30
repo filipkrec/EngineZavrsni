@@ -4,6 +4,10 @@ namespace objects {
 	{
 	}
 
+	Ammo::~Ammo()
+	{
+	}
+
 	Ammo::Ammo(const graphics::Sprite& sprite, float duration, unsigned int quantity)
 		:Pickup(sprite, duration), _quantity(quantity)
 	{
@@ -24,7 +28,7 @@ namespace objects {
 			{
 				weapon->setClipCurrent(weapon->getClipCurrent() + _quantity);
 				_quantity = 0;
-				destroy();
+				DestroySprite();
 			}
 
 			if (_quantity > 0)
@@ -38,14 +42,9 @@ namespace objects {
 				else if (_quantity != 0)
 				{
 					weapon->setAmmoCurrent(weapon->getAmmoCurrent() + _quantity);
-					destroy();
+					DestroySprite();
 				}
 			}
 		}
-	}
-
-	void Ammo::destroy()
-	{
-		Pickup::destroy();
 	}
 }
