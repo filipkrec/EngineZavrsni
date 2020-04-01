@@ -74,6 +74,7 @@
     <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)ZavrsniEngine\External\freetype-gl;$(SolutionDir)ZavrsniEngine\External\freetype\include;$(SolutionDir)Dependencies\Freeimage\include;$(SolutionDir)Dependencies\GorillaAudio\include;$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\Freeimage\lib;$(SolutionDir)Dependencies\GorillaAudio\bin\win32\Debug;$(SolutionDir)Dependencies\GLEW\lib;$(LibraryPath)</LibraryPath>
     <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(SolutionDir)\$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -100,7 +101,7 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;FreeImage.lib;gorillaD.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)DLLs\*.dll" "$(ProjectDir)$\"</Command>
+      <Command>xcopy /y /d  "$(SolutionDir)DLLs\*.dll" "$(SolutionDir)\$(Configuration)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
