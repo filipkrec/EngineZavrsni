@@ -174,13 +174,12 @@ namespace math {
 
 	float Vector2::getAngleBetween(float currentRotation, const math::Vector2& vectorDistanceToOther)
 	{
-		float pointMagnitude = sqrtf((vectorDistanceToOther.x * vectorDistanceToOther.x) + (vectorDistanceToOther.y * vectorDistanceToOther.y));
-		float goalRotation = acosf(vectorDistanceToOther.x / pointMagnitude);
-
-		if (vectorDistanceToOther.y < 0)
-			goalRotation = -goalRotation;
+		float goalRotation = atanf(vectorDistanceToOther.y / vectorDistanceToOther.x);
 
 		goalRotation = math::toDegrees(goalRotation);
+
+		if (vectorDistanceToOther.x < 0)
+			goalRotation += 180;
 
 		float rotationTop = goalRotation - currentRotation;
 		float rotationBottom = currentRotation - goalRotation;
