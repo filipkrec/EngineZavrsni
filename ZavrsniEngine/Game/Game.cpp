@@ -314,7 +314,7 @@ class Game : public engine::Engine
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_idle.png"), "Enemy_idle");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_walking1.png"), "Enemy_walking1");
 		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_walking2.png"), "Enemy_walking2");
-		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_dead.png"), "Enemy_dead");
+		graphics::TextureManager::add(new graphics::Texture("Assets/Character/Enemy_dead2.png"), "Enemy_dead");
 
 		graphics::TextureManager::add(new graphics::Texture("Assets/rifle.png"), "Rifle");
 		graphics::TextureManager::add(new graphics::Texture("Assets/ammo.png"), "ammo");
