@@ -34,7 +34,6 @@ namespace graphics {
 		glEnableVertexAttribArray(SHADER_TEXTURE_SLOT_INDEX);//enable
 		glEnableVertexAttribArray(SHADER_TEXTURE_CORDS_INDEX);//enable
 
-
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_INDEX_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW); //Odredivanje podataka u bufferu A velicine B, nullptr za data jer je mapirana kasnije, dynamic draw za brzi drawcall
 		glBindVertexArray(0);
 	}

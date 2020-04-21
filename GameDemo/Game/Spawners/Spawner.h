@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Source/Engine.h"
+#include "Engine.h"
 #define MAXSPAWN 5
 
 class Spawner

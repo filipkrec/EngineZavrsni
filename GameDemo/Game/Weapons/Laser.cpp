@@ -1,6 +1,7 @@
 #include "Laser.h"
 
 Laser::Laser()
+	:Weapon()
 {
 	_color = 0x00000000;
 	_reloadTime = 0.0f;

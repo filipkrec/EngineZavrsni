@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Source/Engine.h"
+#include "Engine.h"
 
 class Laser: public objects::Weapon
 {

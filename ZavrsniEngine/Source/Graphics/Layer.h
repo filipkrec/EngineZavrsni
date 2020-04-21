@@ -17,7 +17,7 @@ namespace graphics {
 		Shader _shader;
 	public:
 		Layer(
-			Shader shader = Shader("Source/Graphics/Shaders/Basic.vert", "Source/Graphics/Shaders/Basic.frag"),
+			Shader shader = Shader("../ZavrsniEngine/Source/Graphics/Shaders/Basic.vert", "../ZavrsniEngine/Source/Graphics/Shaders/Basic.frag"),
 			Renderer* renderer = new Renderer()
 			);
 		virtual ~Layer();

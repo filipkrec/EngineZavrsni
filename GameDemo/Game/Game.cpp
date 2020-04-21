@@ -1,5 +1,4 @@
-#if 1
-#include "../Source/Engine.h"
+#include "Engine.h"
 #include "Pickups/Ammo.h"
 #include "Weapons/Rifle.h"
 #include "Weapons/Laser.h"
@@ -550,4 +549,3 @@ int main()
 	graphics::TextureManager::clean();
 	return 0;
 }
-#endif
