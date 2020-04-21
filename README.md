@@ -8,7 +8,7 @@ Demo build instructions:
 
 2.Open DemoAssets
 
-3.Unpack Assets Folder into this folder (next to README file)
+3.Unpack Assets Folder into ZavrsniEngine/GameDemo
 
 4.Unpack and run dxwebsetup.exe 
 
