@@ -51,7 +51,7 @@ namespace graphics {
 
 		void begin();
 		void submit(const Sprite* renderable);
-		void submit(const math::Vector2 lineBegin, const math::Vector2 lineEnd, unsigned int color);
+		void submit(const math::Vector2 lineBegin, const math::Vector2 lineEnd, unsigned int color, float width = 0.05f);
 		void end();
 		void flush();
 	private:

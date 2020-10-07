@@ -1,6 +1,6 @@
 #include "LevelAssetManager.h"
 #define ASTEPDISTANCE 0.5f
-#define AFIDELITY 400
+#define AFIDELITY 1000
 
 
 namespace lam {

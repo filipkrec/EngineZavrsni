@@ -48,13 +48,13 @@ namespace graphics {
 		_indices = (unsigned int*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY); //mapiranje indices kao tocke unosa index buffer podataka;
 	}
 
-	void Renderer::submit(const math::Vector2 lineBegin, const math::Vector2 lineEnd, unsigned int color)
+	void Renderer::submit(const math::Vector2 lineBegin, const math::Vector2 lineEnd, unsigned int color, float width)
 	{
 		VertexData temp;
 
 		temp.Color = color;
 		temp.TextureSlot = -1;
-		float thickness = 0.05f;
+		float thickness = width;
 		math::Vector2 zeroVector = lineEnd - lineBegin;
 		math::Vector2 Clockwise = math::Vector2(zeroVector.y, -zeroVector.x);
 		Clockwise = math::Vector2::calculateUnitVector(Clockwise) * thickness;
