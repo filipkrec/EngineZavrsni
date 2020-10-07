@@ -17,11 +17,16 @@ namespace math {
 		Vector2& multiply(const Vector2& other);
 		Vector2& divide(const Vector2& other);
 
+		float dot(const Vector2& other);
+		float cross(const Vector2& other);
+
 		Vector2& divide(const float& scalar);
 		Vector2& multiply(const float& scalar);
 		float length() const;
 		static Vector2 calculateUnitVector(math::Vector2 vec);
 		static float getAngleBetween(float currentRotation, const math::Vector2& vectorDistanceToOther);
+		float getAngleBetween(const math::Vector2& other);
+		
 
 		friend Vector2 operator+(Vector2 left, const Vector2& right);
 		friend Vector2 operator-(Vector2 left, const Vector2& right);

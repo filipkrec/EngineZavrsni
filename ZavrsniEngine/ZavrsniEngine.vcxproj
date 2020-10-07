@@ -184,6 +184,7 @@
     <ClCompile Include="Source\Physics\Objects\Inventory\Weapon.cpp" />
     <ClCompile Include="Source\Physics\Objects\NPC.cpp" />
     <ClCompile Include="Source\Physics\Objects\Player.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsEngine\Rigidbody.cpp" />
     <ClCompile Include="Source\Util\Timer.cpp" />
     <ClCompile Include="Source\Window.cpp" />
     <ClCompile Include="External\freetype-gl\platform.c" />
@@ -232,6 +233,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Audio\Audio.h" />
+    <ClInclude Include="Source\Components\Component.h" />
     <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\Graphics\Camera.h" />
     <ClInclude Include="Source\Graphics\Font.h" />
@@ -261,6 +263,11 @@
     <ClInclude Include="Source\Physics\Objects\Inventory\WeaponObject.h" />
     <ClInclude Include="Source\Physics\Objects\NPC.h" />
     <ClInclude Include="Source\Physics\Objects\Player.h" />
+    <ClInclude Include="Source\Physics\PhysicsEngine\Primitives\AABB.h" />
+    <ClInclude Include="Source\Physics\PhysicsEngine\Primitives\Box2d.h" />
+    <ClInclude Include="Source\Physics\PhysicsEngine\Primitives\Circle.h" />
+    <ClInclude Include="Source\Physics\PhysicsEngine\Primitives\Collider2D.h" />
+    <ClInclude Include="Source\Physics\PhysicsEngine\Rigidbody.h" />
     <ClInclude Include="Source\Util\FileUtils.h" />
     <ClInclude Include="Source\Util\imageload.h" />
     <ClInclude Include="Source\Util\NPCThread.h" />

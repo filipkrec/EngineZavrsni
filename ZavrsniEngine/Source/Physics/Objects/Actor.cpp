@@ -174,20 +174,21 @@ namespace objects {
 
 		void Actor::rotateToPoint(math::Vector2 point)
 		{
+			const float rotationSpeed = 5.0f;
 			float rotation = math::Vector2::getAngleBetween(getRotation(), point);
 
 			if (rotation < 0)
 			{
-				if (rotation <= -5.0f)
-					rotate(-5.0f);
+				if (rotation <= -rotationSpeed)
+					rotate(-rotationSpeed);
 				else
 					rotate(rotation);
 
 			}
 			else if (rotation > 0)
 			{
-				if (rotation >= 5.0f)
-					rotate(5.0f);
+				if (rotation >= rotationSpeed)
+					rotate(rotationSpeed);
 				else
 					rotate(rotation);
 			}

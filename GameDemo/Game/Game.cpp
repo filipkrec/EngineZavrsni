@@ -543,9 +543,26 @@ public:
 
 int main()
 {
-	Game game;
-	game.start();
+	//Game game;
+	//game.start();
+
+	math::Vector2 x = math::Vector2(5, 9);
+	math::Vector2 y = math::Vector2(5, 10);
+	math::Vector2 z = math::Vector2(5, 11);
+
+	float cross = y.getAngleBetween(x);
+	float cross2 = y.getAngleBetween(z);
+
+	std::cout << cross << std::endl;
+	std::cout << cross2 << std::endl;
+	return 0;
 	lam::LevelAssetManager::clean();
 	graphics::TextureManager::clean();
 	return 0;
 }
+
+/*
+int main()
+{
+}
+*/

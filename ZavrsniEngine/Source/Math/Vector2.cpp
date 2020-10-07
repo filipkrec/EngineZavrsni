@@ -50,6 +50,17 @@ namespace math {
 		return *this;
 	}
 
+	float Vector2::dot(const Vector2& other)
+	{
+		return x * other.x + y * other.y;
+	}
+
+	float Vector2::cross(const Vector2& other)
+	{
+		return x * other.y - y * other.x;
+	}
+
+
 	Vector2& Vector2::divide(const float& scalar)
 	{
 		y /= scalar;
@@ -186,6 +197,12 @@ namespace math {
 		rotationBottom = rotationBottom < 0 ? rotationBottom + 360 : rotationBottom;
 		rotationTop = rotationTop < 0 ? rotationTop + 360 : rotationTop;
 		return rotationBottom < rotationTop ? -rotationBottom : rotationTop;
+	}
+
+
+	float Vector2::getAngleBetween(const math::Vector2& other)
+	{
+		return toDegrees(acos(dot(other) / (length() * other.length()))) * copysignf(1.0,cross(other));
 	}
 
 
